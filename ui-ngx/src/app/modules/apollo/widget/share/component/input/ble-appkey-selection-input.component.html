@@ -1,0 +1,8 @@
+<mat-form-field class="mat-block">
+  <mat-label>{{name}}</mat-label>
+  <mat-select #allSelected  [(ngModel)]="appKeys" [formControl]="formControl" multiple (selectionChange)="appKeysChange.emit(appKeys)">
+    <mat-option (click)="optionClick()"
+                *ngFor="let key of datasource"
+                [value]="key?.key">{{key?.index}} - {{key.name}}</mat-option>
+  </mat-select>
+</mat-form-field>

@@ -1,0 +1,36 @@
+<div *ngIf="nodeTrees.length>0" class="container-device">
+  <div>
+    <div class="header-container-entity">Hub:</div>
+  </div>
+  <div #containerGateway class="content-container-entity" fxLayout="row" fxLayoutAlign="start  center">
+    <ng-container *ngFor="let entity of nodeTrees;let idx = index">
+      <div
+        [style.margin-left.px]="calcSpaceBetween(nodeTrees.length,containerGateway.clientWidth - 10,100)"
+        class="parent__container">
+      <tb-hub-icon (nodeTreeClick)="nodeTreeClick.emit(entity)"
+                   [apollo]="apollo"
+                   [nodeTree]="entity"
+                   [isEdited]="isEdited">
+      </tb-hub-icon>
+
+      <!--      <div (click)="clickNodeTree($event,entity)" class="entity-icon" fxLayout="column"
+                 fxLayoutAlign="center center">
+
+              <div>
+                <mat-icon style="width: 50px;height: 50px"
+                          svgIcon="hub_v1"></mat-icon>
+              </div>
+              <div>  {{entity?.name}} </div>
+
+              <div *ngIf="isEdited" fxLayout="row" fxLayoutAlign="end center" style="width: 100%;">
+                <mat-icon (click)="removeNodeTree($event,entity)" matTooltip="Xóa"
+                          style="margin-right: 20px;color: red;">delete
+                </mat-icon>
+                <mat-icon (click)="settingNodeTree($event,entity)" matTooltip="Cài đặt">settings
+                </mat-icon>
+              </div>
+            </div>-->
+      </div>
+    </ng-container>
+  </div>
+</div>

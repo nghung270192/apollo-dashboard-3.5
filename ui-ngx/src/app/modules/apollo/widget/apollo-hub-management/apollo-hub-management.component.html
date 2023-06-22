@@ -1,0 +1,93 @@
+<div class="hubs-table-container">
+  <table [dataSource]="dataSource" [matSortActive]="pageLink?.sortOrder?.property"
+         [matSortDirection]="pageLink?.sortDirection()" mat-table matSort matSortDisableClear>
+
+    <ng-container matColumnDef="No">
+      <mat-header-cell *matHeaderCellDef style="width: 5%"> No.
+      </mat-header-cell>
+      <mat-cell *matCellDef="let relation; let idx = index">
+        {{ idx}}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="createdTime">
+      <mat-header-cell *matHeaderCellDef mat-sort-header
+                       style="width: 5%;"> Thời gian tạo
+      </mat-header-cell>
+      <mat-cell *matCellDef="let relation">
+        <div fxFlex fxLayout="row" fxLayoutAlign="end">
+          {{relation?.createdTime|date: 'HH:mm:ss dd/MM/yyyy'}}
+        </div>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Tên
+      </mat-header-cell>
+      <mat-cell *matCellDef="let relation">
+        {{ relation?.name }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="active">
+      <mat-header-cell *matHeaderCellDef> Active
+      </mat-header-cell>
+      <mat-cell *matCellDef="let relation">
+        {{ relation?.active }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="version">
+      <mat-header-cell *matHeaderCellDef> Version
+      </mat-header-cell>
+      <mat-cell *matCellDef="let relation">
+        {{ relation?.version }}
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="Tool" stickyEnd>
+      <mat-header-cell *matHeaderCellDef style="width: 20%;">
+      </mat-header-cell>
+      <mat-cell *matCellDef="let relation">
+
+        <div fxFlex fxLayout="row" fxLayoutAlign="end">
+
+          <button (click)="setting(relation)" mat-icon-button>
+            <mat-icon color="warn">edit</mat-icon>
+          </button>
+
+        </div>
+
+        <!--        <button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu" mat-icon-button>
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button (click)="remove(relation?.name, relation?.id?.id)" mat-menu-item>
+                    <mat-icon color="warn">delete</mat-icon>
+                    <span>Xóa</span>
+                  </button>
+                  <button (click)="setting(relation)" mat-menu-item>
+                    <mat-icon>edit</mat-icon>
+                    <span>Chỉnh sửa</span>
+                  </button>
+                </mat-menu>-->
+
+
+      </mat-cell>
+    </ng-container>
+    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"
+                    [ngClass]="{'mat-row-select': true}"></mat-header-row>
+    <mat-row
+      *matRowDef="let relation; columns: displayedColumns; let idx=index"
+    ></mat-row>
+  </table>
+  <span [fxShow]="dataSource.length==0"
+        class="no-data-found"
+        fxLayoutAlign="center center">Không tìm thấy thông tin.</span>
+</div>
+<mat-divider></mat-divider>
+<mat-paginator [hidePageSize]="hidePageSize"
+               [length]="totalElements"
+               [pageIndex]="pageLink?.page"
+               [pageSizeOptions]="[10, 20, 30]"
+               [pageSize]="pageLink?.pageSize"></mat-paginator>

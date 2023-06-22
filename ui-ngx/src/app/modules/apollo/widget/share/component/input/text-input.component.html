@@ -1,0 +1,10 @@
+<mat-form-field class="mat-block">
+  <mat-label>{{name}}</mat-label>
+  <label>
+    <input (change)="textChangeEvent()" [(ngModel)]="text" [disabled]="disable" matInput type="text">
+  </label>
+  <button (click)="text=''" *ngIf="text" [disabled]="disable" aria-label="Clear" mat-icon-button matSuffix>
+    <mat-icon>close</mat-icon>
+  </button>
+</mat-form-field>
+

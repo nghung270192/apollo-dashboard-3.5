@@ -1,0 +1,28 @@
+<div style="min-width: 390px">
+  <mat-toolbar color="primary">
+    <h2>Cấu hình: {{addr}}</h2>
+    <span fxFlex></span>
+    <!--    <div [tb-help]="helpLinkId()"></div>-->
+    <button mat-icon-button
+            (click)="dialogRef.close()"
+            type="button">
+      <mat-icon class="material-icons">close</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <div style="min-width: 390px" mat-dialog-content>
+    <tb-text-input [(text)]="name" name="Tên thiết bị">
+    </tb-text-input>
+
+    <tb-zigbee-model-selection [(selection)]="model"
+                               name="Model thiết bị">
+    </tb-zigbee-model-selection>
+  </div>
+
+
+  <div mat-dialog-actions align="center">
+    <button (click)="save($event)"
+            mat-button mat-dialog-close>Ok
+    </button>
+  </div>
+</div>

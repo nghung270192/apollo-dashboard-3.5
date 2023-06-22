@@ -1,0 +1,23 @@
+<tb-node-tree-selection (selectionChange)="getEntityFromGateway($event)"
+                        [datasource]="gwNodeTreeSource"
+                        name="Nguồn Gateway">
+</tb-node-tree-selection>
+
+
+<tb-dq-smart-domain-selection [(selection)]="domains"
+                              name="Entity Domain">
+</tb-dq-smart-domain-selection>
+
+<tb-dqsmart-entity-selection (selectionChange)="renderDqSmartNodeTree($event)"
+                             [datasource]="iotDeviceSource"
+                             [domains]="domains"
+                             multiple="true"
+                             name="Dqsmart Entities">
+</tb-dqsmart-entity-selection>
+<!--
+
+
+<tb-button-with-processing (onClick)="save()" [disable]="loading" name="Tạo">
+
+</tb-button-with-processing>
+-->

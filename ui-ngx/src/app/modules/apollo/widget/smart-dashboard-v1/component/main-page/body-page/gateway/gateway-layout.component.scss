@@ -1,0 +1,30 @@
+.container-device {
+  width: 100%;
+}
+.header-container-entity{
+  font-size: 20px;
+  padding: 5px;
+  font-weight: bold;
+}
+.content-container-entity{
+
+  display: flex; flex-wrap: wrap;width: 100%;
+  align-items: center;
+  justify-content: center;
+
+}
+.header-container-entity{
+  font-size: 20px;
+  padding: 5px;
+  font-weight: bold;
+}
+
+
+.parent__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  width: 100px;
+  height: 100px;
+}

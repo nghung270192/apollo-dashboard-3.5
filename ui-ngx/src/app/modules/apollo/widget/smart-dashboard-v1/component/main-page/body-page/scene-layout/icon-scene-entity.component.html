@@ -1,0 +1,48 @@
+<div fxLayout="column" fxLayoutAlign="start center" style="margin-top: 10px;">
+  <div (click)="entityClick($event)"
+       [style.font-size.px]="size*0.10"
+       [style.height.px]="size"
+       [style.width.px]="size"
+       class="entity-box" fxLayout="column"
+       fxLayoutAlign="space-evenly center">
+    <div class="entity-top" fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="entity-icon" fxLayout="column" fxLayoutAlign="center center">
+        <mat-icon [style.color]="getColor()"
+                  [style.height.px]="size*0.3"
+                  [style.width.px]="size*0.3"
+                  [svgIcon]="getIcon()"></mat-icon>
+      </div>
+      <div class="entity-switch" fxLayout="column" fxLayoutAlign="center center">
+        <!--todo: insert button feature at here-->
+
+      </div>
+    </div>
+    <div class="entity-body cut-text">
+      {{name}}
+    </div>
+    <div *ngIf="isEdited==false" class="entity-bottom" fxLayout="row" fxLayoutAlign="space-between center">
+      <div class="entity-state cut-text size-text">
+        <div *ngIf="!deviceNode" [style.color]="getColor()">
+          Chưa hỗ trợ
+        </div>
+      </div>
+      <div class="entity-spinder">
+        <apollo-processing [show]="isProcessing" size="20"></apollo-processing>
+      </div>
+    </div>
+    <div *ngIf="isEdited==true" class="entity-bottom" fxLayout="row" fxLayoutAlign="end center">
+      <tb-edit-entity (removeEvent)="removeClick($event, true); " (settingEvent)="settingEvent.emit($event);"
+                      [(selection)]="selection"
+                      [apollo]="apollo"
+                      [nodeTree]="nodeTree">
+
+      </tb-edit-entity>
+      <!--      <div>
+              <mat-icon (click)="settingEvent.emit($event);" style="color: black;">settings</mat-icon>
+            </div>
+            <div>
+              <mat-icon (click)="removeClick($event);" style="color: red;">delete</mat-icon>
+            </div>-->
+    </div>
+  </div>
+</div>

@@ -1,0 +1,72 @@
+<div [formGroup]="formGroup" style="min-width: 380px;">
+
+  <mat-toolbar color="primary">
+    <h2>Thêm lệnh tự động</h2>
+    <span fxFlex></span>
+    <button (click)="cancel()"
+            mat-icon-button
+            type="button">
+      <mat-icon class="material-icons">close</mat-icon>
+    </button>
+  </mat-toolbar>
+  <mat-progress-bar *ngIf="isLoading$ | async" color="warn" mode="indeterminate">
+  </mat-progress-bar>
+  <div *ngIf="!(isLoading$ | async)" style="height: 4px;"></div>
+
+  <div mat-dialog-content>
+    <tb-entity-model-select [entityTypeModel]="ApolloEntityTypeModel.GatewayModel"
+                            formControlName="model">
+    </tb-entity-model-select>
+
+    <ng-container [ngSwitch]="formGroup.get('model').value">
+      <ng-container *ngSwitchCase="EntityModel.APOLLO">
+        <tb-automation-from-apollo [addTrigger]="addTrigger" (createEvent)="createAndSave($event)"
+                                   [(node)]="autoNodeTree"
+                                   [apollo]="data?.apollo"
+                                   [parentNodeTree]="data.parentNodeTree"
+                                   [type]="type">
+        </tb-automation-from-apollo>
+      </ng-container>
+      <ng-container *ngSwitchCase="EntityModel.DQSMART">
+        Đang phát triển. Vui lòng thử các model khác.
+
+      </ng-container>
+      <ng-container *ngSwitchCase="EntityModel.PELAB_LORA">
+        Đang phát triển. Vui lòng thử các model khác.
+
+      </ng-container>
+      <!--          <ng-container *ngSwitchCase="EntityModel.YELIGHT">-->
+      <!--            Đang phát triển. Vui lòng thử các model khác.-->
+
+      <!--          </ng-container>-->
+      <!--          <ng-container *ngSwitchCase="EntityModel.XIAOMI">-->
+      <!--            Đang phát triển. Vui lòng thử các model khác.-->
+
+      <!--          </ng-container>-->
+      <!--          <ng-container *ngSwitchCase="EntityModel.TUYA">-->
+      <!--            Đang phát triển. Vui lòng thử các model khác.-->
+
+      <!--          </ng-container>-->
+      <!--          <ng-container *ngSwitchCase="EntityModel.SONOFF">-->
+      <!--            Đang phát triển. Vui lòng thử các model khác.-->
+      <!--          </ng-container>-->
+    </ng-container>
+  </div>
+
+  <div fxLayoutAlign="end center" mat-dialog-actions>
+    <button (click)="cancel()" [disabled]="(isLoading$ | async)"
+            cdkFocusInitial
+            color="primary"
+            mat-button
+            type="button">
+      {{ 'action.cancel' | translate }}
+    </button>
+    <button (click)="addTrigger = !addTrigger;" [disabled]="(isLoading$ | async)"
+            color="primary"
+            mat-raised-button
+            type="submit">
+      {{ 'action.add' | translate }}
+    </button>
+  </div>
+
+</div>

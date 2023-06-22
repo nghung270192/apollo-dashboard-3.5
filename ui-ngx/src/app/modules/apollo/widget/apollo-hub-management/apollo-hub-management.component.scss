@@ -1,0 +1,39 @@
+:host{
+  .hubs-table-container {
+    position: relative;
+    min-height: 200px;
+    max-height: 600px;
+    overflow: auto;
+  }
+
+}
+
+table {
+  width: 100%;
+}
+
+th.mat-sort-header-sorted {
+  color: black;
+
+}
+
+mat-header-cell {
+  font-size: 15px;
+  font-weight: bold;
+}
+
+
+.example-flex-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.example-button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.example-button-row a {
+  margin-right: 8px;
+}

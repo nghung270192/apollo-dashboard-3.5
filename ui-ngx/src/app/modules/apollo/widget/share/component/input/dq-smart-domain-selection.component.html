@@ -1,0 +1,9 @@
+<mat-form-field  class="mat-block">
+  <mat-label>{{name}}</mat-label>
+  <mat-select (closed)="closeEvent.emit()" (selectionChange)="selectionChange.emit(selection)" [(ngModel)]="selection"
+              [formControl]="formControl" multiple>
+    <mat-option
+      *ngFor="let key of HassDomain "
+      [value]="key">{{HassDomainMappingLable[key]}}</mat-option>
+  </mat-select>
+</mat-form-field>

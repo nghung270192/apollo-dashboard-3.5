@@ -1,0 +1,86 @@
+<div fxLayout="column" fxLayoutAlign="start center">
+  <div class="menu" fxLayout="row" fxLayoutAlign="space-around center">
+    <button (click)="deleteNetwork('deleteNetwork')" [disabled]="buttons['deleteNetwork']['loading']"
+            class="button"
+            color="warn" mat-raised-button>
+      <i [ngClass]="{'fa-spin fa-spinner': buttons['deleteNetwork']['loading']}" class="fa"
+         style="font-size: 30px;"></i>
+      Delete Network
+    </button>
+<!--    <button (click)="initNetwork('initNetwork')" [disabled]="buttons['initNetwork']['loading']" class="button"
+            color="primary" mat-raised-button><i [ngClass]="{'fa-spin fa-spinner': buttons['initNetwork']['loading']}"
+                                                 class="fa" style="font-size: 30px;"></i>
+      Init Network
+    </button>-->
+<!--    <button (click)="startPermitJoin('startPermitJoin')" [disabled]="buttons['startPermitJoin']['loading']"
+            class="button"
+            color="primary" mat-raised-button><i
+      [ngClass]="{'fa-spin fa-spinner': buttons['startPermitJoin']['loading']}"
+      class="fa" style="font-size: 30px;"></i>
+      Start Permit Join
+    </button>
+    <button (click)="stopPermitJoin('stopPermitJoin')" [disabled]="buttons['stopPermitJoin']['loading']" class="button"
+            color="accent" mat-raised-button><i [ngClass]="{'fa-spin fa-spinner': buttons['stopPermitJoin']['loading']}"
+                                                class="fa" style="font-size: 30px;"></i>
+      Stop Permit Join
+    </button>-->
+
+  </div>
+  <div class="content">
+    <mat-tab-group   animationDuration="0ms" class="matab">
+      <mat-tab label="Groups">
+<!--
+        <mat-table
+          [dataSource]="datasource"
+          class="mat-elevation-z8" style="color: black;">
+          <ng-container matColumnDef="No">
+            <mat-header-cell *matHeaderCellDef class="table-header" mat-header-cell> STT</mat-header-cell>
+            <mat-cell *matCellDef="let element; let row = index;"
+                      class="table-cell"
+                      mat-cell> {{row + 1}}
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="Address">
+            <mat-header-cell *matHeaderCellDef class="table-header" mat-header-cell> Địa chỉ</mat-header-cell>
+            <mat-cell *matCellDef="let element; let row = index;" class="table-cell" mat-cell>
+              {{element?.addr}}
+            </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="Name">
+            <mat-header-cell *matHeaderCellDef class="table-header" mat-header-cell> Tên</mat-header-cell>
+            <mat-cell *matCellDef="let element;" class="table-cell" mat-cell>
+              {{element?.name}}
+            </mat-cell>
+          </ng-container>
+          <ng-container matColumnDef="Model">
+            <mat-header-cell *matHeaderCellDef class="table-header" mat-header-cell> Model</mat-header-cell>
+            <mat-cell *matCellDef="let element;" class="table-cell" mat-cell>
+              {{element?.model}}
+            </mat-cell>
+          </ng-container>
+
+          <mat-header-row
+            *matHeaderRowDef="columnsAnalyze">
+          </mat-header-row>
+          <mat-row
+            *matRowDef="let row; let idx = index; columns:columnsAnalyze;  ">
+          </mat-row>
+        </mat-table>-->
+      </mat-tab>
+
+      <mat-tab label="Scenes">
+
+      </mat-tab>
+
+      <mat-tab label="Nodes">
+
+      </mat-tab>
+
+    </mat-tab-group>
+
+  </div>
+</div>
+
+

@@ -1,0 +1,221 @@
+<div style="min-width: 400px">
+  <mat-toolbar color="primary">
+    <h2>Cấu hình Hub </h2>
+    <span fxFlex></span>
+    <!--    <div [tb-help]="helpLinkId()"></div>-->
+    <button (click)="cancel()"
+            mat-icon-button
+            type="button">
+      <mat-icon class="material-icons">close</mat-icon>
+    </button>
+  </mat-toolbar>
+  <mat-progress-bar *ngIf="isLoading$ | async" color="warn" mode="indeterminate">
+  </mat-progress-bar>
+  <div *ngIf="!(isLoading$ | async)" style="height: 4px;"></div>
+
+  <div mat-dialog-content>
+    <tb-text-input [(text)]="name" name="Tên">
+    </tb-text-input>
+    <tb-hub-model-selection [(selection)]="model" name="Chuẩn hub">
+    </tb-hub-model-selection>
+    <mat-form-field class="mat-block">
+      <mat-label>Nguồn Hub</mat-label>
+      <mat-select (selectionChange)="reloadGatewaySource()" [(ngModel)]="hubSource"
+                  [formControl]="formControlHubSource">
+        <mat-option
+          *ngFor="let key of hubSources "
+          [value]="key">{{key}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="hubSource==HubSource.GATEWAY" class="mat-block">
+      <mat-label>Gateway</mat-label>
+      <mat-select (selectionChange)="reloadHubDevicesFromGateway()" [(ngModel)]="gatewaySource"
+                  [formControl]="formControlGatewaySource">
+        <mat-option
+          *ngFor="let key of GatewaySources "
+          [value]="key.id.id">{{key.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="hubSource==HubSource.DEVICES" class="mat-block">
+      <mat-label>Thiết bị</mat-label>
+      <mat-select (closed)="loadNetwork()" [(ngModel)]="hubDevice" [formControl]="formControlHubDevice">
+        <mat-option
+          *ngFor="let key of HubDevices "
+          [value]="key.id.id">{{key.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-accordion multi="true">
+      <mat-expansion-panel *ngIf="model==HubModel.APOLLO_HUB_BLE_MESH ||model==HubModel.APOLLO_HUB_BLE_ZIGBEE"
+                           [expanded]="true"
+                           hideToggle style="margin-top: 20px;">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            BLE SigMesh
+          </mat-panel-title>
+          <mat-panel-description style="height: 25px;">
+            <mat-icon style="width: 20px; height: 20px;" svgIcon="bluetooth"></mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+
+        <ble-group-selection-input (closedEvent)="reloadNodeFromGroup()"
+                                   [(groups)]="groups"
+                                   [datasource]="groupsSource"
+                                   multiple="true"
+                                   name="Chọn Group">
+        </ble-group-selection-input>
+        <tb-ble-node-selection-input [(nodes)]="nodes"
+                                     [datasource]="nodesSource"
+                                     multiple="true">
+
+        </tb-ble-node-selection-input>
+        <ble-scene-selection-input [(selection)]="scenes" [datasource]="scenesSource" multiple=true>
+        </ble-scene-selection-input>
+      </mat-expansion-panel>
+      <mat-expansion-panel *ngIf="model==HubModel.APOLLO_HUB_ZIGBEE ||model==HubModel.APOLLO_HUB_BLE_ZIGBEE"
+                           style="margin-top: 20px;">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Zigbee
+          </mat-panel-title>
+          <mat-panel-description style="height: 25px;">
+            <mat-icon style="width: 20px; height: 20px;" svgIcon="zigbee"></mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+
+    </mat-accordion>
+
+
+  </div>
+
+  <div fxLayoutAlign="end center" mat-dialog-actions>
+    <button (click)="cancel()" [disabled]="(isLoading$ | async)"
+            cdkFocusInitial
+            color="primary"
+            mat-button
+            type="button">
+      {{ 'action.cancel' | translate }}
+    </button>
+    <button (click)="save($event)" [disabled]="(isLoading$ | async)"
+            color="primary"
+            mat-raised-button
+            type="submit">
+      {{ 'action.add' | translate }}
+    </button>
+  </div>
+
+</div>
+
+<!--
+
+
+<h3 mat-dialog-controller-title>Cấu hình Hub {{name}}</h3>
+
+<div class="mat-dialog-controller-content" mat-dialog-controller-content>
+  <mat-stepper #stepper labelPosition="bottom">
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Chọn Hub model</ng-template>
+
+        <tb-text-input [(text)]="name" name="Tên">
+        </tb-text-input>
+        <tb-hub-model-selection [(selection)]="model" name="Hub model">
+        </tb-hub-model-selection>
+        <div class="button-right">
+          <button mat-button matStepperNext>Tiếp theo</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Nguồn Hub</ng-template>
+
+      <mat-form-field appearance="outline" class="form-filed">
+        <mat-label>Nguồn Hub</mat-label>
+        <mat-select (selectionChange)="reloadGatewaySource()" [(ngModel)]="hubSource"
+                    [formControl]="formControlHubSource">
+          <mat-option
+            *ngFor="let key of hubSources "
+            [value]="key">{{key}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+
+      <mat-form-field *ngIf="hubSource==HubSource.GATEWAY" appearance="outline" class="form-filed">
+        <mat-label>Gateway</mat-label>
+        <mat-select (selectionChange)="reloadHubDevicesFromGateway()" [(ngModel)]="gatewaySource"
+                    [formControl]="formControlGatewaySource">
+          <mat-option
+            *ngFor="let key of GatewaySources "
+            [value]="key.id.id">{{key.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+
+      <mat-form-field *ngIf="hubSource==HubSource.DEVICES" appearance="outline" class="form-filed">
+        <mat-label>Thiết bị</mat-label>
+        <mat-select (closed)="loadNetwork()" [(ngModel)]="hubDevice" [formControl]="formControlHubDevice">
+          <mat-option
+            *ngFor="let key of HubDevices "
+            [value]="key.id.id">{{key.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="button-right">
+        <button mat-button matStepperPrevious>Quay lại</button>
+        <button mat-button matStepperNext>Tiếp theo</button>
+      </div>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Cấu hình BLE Sig Mesh</ng-template>
+      <div fxLayout="column" fxLayoutAlign="start start">
+
+        <div>
+
+
+          <ble-group-selection-input (closedEvent)="reloadNodeFromGroup()"
+                                     [(groups)]="groups"
+                                     [datasource]="groupsSource"
+                                     multiple="true"
+                                     name="Chọn Group">
+          </ble-group-selection-input>
+
+
+          <tb-ble-node-selection-input [(nodes)]="nodes"
+                                       [datasource]="nodesSource"
+                                       multiple="true">
+
+          </tb-ble-node-selection-input>
+
+          <ble-scene-selection-input [(selection)]="scenes" [datasource]="scenesSource" multiple=true>
+
+          </ble-scene-selection-input>
+
+        </div>
+      </div>
+      <div class="button-right">
+        <button mat-button matStepperPrevious>Quay lại</button>
+        <button mat-button matStepperNext>Tiếp theo</button>
+      </div>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Kết thúc</ng-template>
+      {{this.status1}}
+      <div class="button-right">
+        <button mat-button matStepperPrevious>Quay lại</button>
+        <button (click)="save($event)" mat-button>Lưu</button>
+      </div>
+    </mat-step>
+  </mat-stepper>
+
+</div>
+
+
+<div align="center" mat-dialog-controller-actions>
+  <button
+    cdkFocusInitial mat-button mat-dialog-controller-close>Hủy
+  </button>
+</div>
+
+-->

@@ -1,0 +1,72 @@
+<h3 mat-dialog-title>Thêm thực thể mới</h3>
+
+<div class="mat-dialog-content" mat-dialog-content>
+  <mat-stepper #stepper labelPosition="bottom">
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Loại thực thể</ng-template>
+        <tb-node-tree-type-selection [(selection)]="type">
+
+        </tb-node-tree-type-selection>
+        <div class="button-right">
+          <button mat-button matStepperNext>Tiếp theo</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Thêm thông tin</ng-template>
+        <ng-container [ngSwitch]="type">
+          <ng-container *ngSwitchCase="NodeTreeType.AUTOMATION">
+            <button (click)="tranformToCreateOther(type);" color="primary" mat-button>Chuyển sang thêm tự động hóa
+            </button>
+          </ng-container>
+          <ng-container *ngSwitchCase="NodeTreeType.SCHEDULER">
+            <button (click)="tranformToCreateOther(type);" color="primary" mat-button>Chuyển sang thêm hẹn giờ</button>
+          </ng-container>
+          <ng-container *ngSwitchCase="NodeTreeType.DEVICE">
+            <button (click)="tranformToCreateOther(type);" color="primary" mat-button>Chuyển sang thêm thiết bị</button>
+          </ng-container>
+          <ng-container *ngSwitchCase="NodeTreeType.SCENE">
+            <button (click)="tranformToCreateOther(type);" color="primary" mat-button>Chuyển sang thêm Ngữ cảnh</button>
+          </ng-container>
+          <ng-container *ngSwitchCase="NodeTreeType.GROUP">
+            <button (click)="tranformToCreateOther(type);" color="primary" mat-button>Chuyển sang thêm Nhóm</button>
+          </ng-container>
+
+          <ng-container *ngSwitchDefault>
+            <tb-text-input [(text)]="name" name="Đặt tên"></tb-text-input>
+            <div class="button-right">
+              <button mat-button matStepperPrevious>Quay lại</button>
+              <button (click)="createAndSave($event)" mat-button>Tạo</button>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <!--        <div class="button-right">
+                  <button mat-button matStepperPrevious>Quay lại</button>
+                  <button mat-button matStepperNext>Tiếp theo</button>
+                </div>-->
+      </form>
+    </mat-step>
+    <!--    <mat-step>
+          <ng-template matStepLabel>Kết thúc</ng-template>
+          <p> {{status1}}</p>
+
+        </mat-step>-->
+  </mat-stepper>
+  <!--    <div fxLayout="row" fxLayoutAlign="start start">
+        <div fxLayout="column" fxLayoutAlign="start center">
+          <tb-text-input [(text)]="name" name="Layout"></tb-text-input>
+        </div>
+      </div>-->
+
+</div>
+
+
+<div align="center" mat-dialog-actions>
+  <button
+    cdkFocusInitial mat-button mat-dialog-close>Hủy
+  </button>
+</div>
+

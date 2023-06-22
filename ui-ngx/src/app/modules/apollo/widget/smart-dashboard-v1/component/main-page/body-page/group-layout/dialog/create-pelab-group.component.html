@@ -1,0 +1,23 @@
+<div [formGroup]="formGroup">
+  <tb-text-input [(text)]="name" name="Tên nhóm">
+
+  </tb-text-input>
+  <tb-node-tree-selection (selectionChange)="getEntityFromGateway($event)"
+                          [datasource]="gwNodeTreeSource"
+                          name="Nguồn Gateway">
+  </tb-node-tree-selection>
+
+  <tb-pelab-entity-selection (closeEvent)="renderDqSmartNodeTree($event)"
+                             [datasource]="pelabEntities"
+                             multiple="true"
+                             name="Danh sách thiết bị">
+  </tb-pelab-entity-selection>
+
+</div>
+
+
+<!--
+<tb-button-with-processing (onClick)="save()" [disable]="loading" name="Tạo">
+
+</tb-button-with-processing>
+-->

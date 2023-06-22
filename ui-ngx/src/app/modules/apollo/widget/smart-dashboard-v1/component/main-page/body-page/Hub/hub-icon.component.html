@@ -1,0 +1,26 @@
+<div (click)="clickNodeTree($event)" class="entity-icon" fxLayout="column"
+     fxLayoutAlign="center center">
+
+  <div>
+    <mat-icon style="width: 50px;height: 50px" [style.color]="isOnline ? 'green' : 'black'"
+              [matTooltip]="isOnline ? 'Online' : 'Offline'"
+              matTooltipPosition="above"
+              svgIcon="hub_v1"></mat-icon>
+  </div>
+  <div>  {{node?.name}}</div>
+
+  <div *ngIf="isEdited" fxLayout="row" fxLayoutAlign="end center" style="width: 100%;">
+    <tb-edit-entity (settingEvent)="settingNodeTree($event)"
+                    [(selection)]="selection"
+                    [apollo]="apollo"
+                    [nodeTree]="node" hasSetting="true">
+
+    </tb-edit-entity>
+
+    <!--    <mat-icon (click)="removeNodeTree($event,node)" matTooltip="Xóa"
+                  style="margin-right: 20px;color: red;">delete
+        </mat-icon>
+        <mat-icon (click)="settingNodeTree($event,entity)" matTooltip="Cài đặt">settings
+        </mat-icon>-->
+  </div>
+</div>

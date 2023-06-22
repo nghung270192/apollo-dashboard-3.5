@@ -1,0 +1,12 @@
+<svg width="200px" height="200px"
+     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+ <g>
+   <path id="svg_1" d="m79.70588,5.14706l-60,0c-8.284,0 -15,6.716 -15,15l0,60c0,8.284 6.716,15 15,15l60,0c8.284,0 15,-6.716 15,-15l0,-60c0,-8.284 -6.716,-15 -15,-15zm7.5,75c0,4.135 -3.365,7.5 -7.5,7.5l-60,0c-4.135,0 -7.5,-3.365 -7.5,-7.5l0,-60c0,-4.135 3.365,-7.5 7.5,-7.5l60,0c4.135,0 7.5,3.365 7.5,7.5l0,60z"/>
+  <rect stroke="null" id="svg_4" height="53.82342" width="20.19409" y="22.33514" x="15.81184"/>
+  <path fill="#ffffff" id="svg_3" d="m23.06183,66.3059l5,0l0,5l-5,0l0,-5z" opacity="undefined"/>
+  <rect stroke="null" id="svg_8" height="53.82342" width="20.19409" y="22.73514" x="39.61175"/>
+  <path fill="#ffffff" id="svg_9" d="m46.86174,66.7059l5,0l0,5l-5,0l0,-5z" opacity="undefined"/>
+  <rect stroke="null" id="svg_10" height="53.82342" width="20.19409" y="22.73514" x="63.21167"/>
+  <path fill="#ffffff" id="svg_11" d="m70.46165,66.7059l5,0l0,5l-5,0l0,-5z" opacity="undefined"/>
+ </g>
+</svg>

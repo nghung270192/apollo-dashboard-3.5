@@ -1,0 +1,11 @@
+<mat-form-field class="mat-block">
+  <mat-label>{{name}}</mat-label>
+  <mat-select (closed)="closeEvent.emit()"
+              (selectionChange)="selectionChange.emit(selection)"
+              [(ngModel)]="selection"
+              [formControl]="formControl">
+    <mat-option
+      *ngFor="let key of autoTypeControls "
+      [value]="key">{{key}}</mat-option>
+  </mat-select>
+</mat-form-field>

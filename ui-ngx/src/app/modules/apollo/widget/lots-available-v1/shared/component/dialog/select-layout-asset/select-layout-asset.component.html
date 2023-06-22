@@ -1,0 +1,29 @@
+<div style="min-width: 390px;">
+  <tb-toolbar-shared name="Chọn giao diện" (cancel)="cancel()"
+  >
+  </tb-toolbar-shared>
+  <div class="select-layout-asset-container">
+    <form [formGroup]="formGroup">
+      <mat-form-field>
+        <mat-label>Select an option</mat-label>
+        <mat-select formControlName="assetId" [compareWith]="compareInput">
+          <mat-option *ngFor="let layout of layouts" [value]="layout.id.id">{{layout.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+    </form>
+    <div class="function-button" fxLayout="row" fxLayoutAlign="end center">
+      <button *ngIf="formGroup.get('assetId').value!==null" mat-raised-button
+              (click)="addNewLayout()"> Thêm
+      </button>
+      <button *ngIf="formGroup.get('assetId').value!==null" mat-raised-button
+              (click)="close()"> OK
+      </button>
+
+    </div>
+
+    <mat-divider></mat-divider>
+    <p>Asset Type: LOTS AVAILABLE</p>
+    <p>Layout seleted: {{formGroup.get('assetId').value}}</p>
+  </div>
+</div>

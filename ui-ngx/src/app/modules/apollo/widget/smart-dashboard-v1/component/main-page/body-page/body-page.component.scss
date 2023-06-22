@@ -1,0 +1,26 @@
+:host {
+  .body-item-container {
+    width: 100%;
+    height: calc(100% - 30px);
+    margin-bottom: 10px;
+
+    .body-sidenav-content {
+      display: inline;
+      height: calc(100% - 15px);
+      width: 100%;
+      align-items: center;
+      //justify-content: center;
+
+      .add-new-entity {
+        width: 200px;
+        height: 150px;
+        font-size: 20px;
+        border: black dashed 1px;
+      }
+
+    }
+
+  }
+
+
+}

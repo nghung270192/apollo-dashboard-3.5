@@ -1,0 +1,18 @@
+<tb-node-tree-selection (selectionChange)="getEntityFromGateway($event)"
+                        [datasource]="gwNodeTreeSource"
+                        name="Nguồn Gateway">
+</tb-node-tree-selection>
+
+
+<tb-pelab-entity-selection (closeEvent)="renderDqSmartNodeTree($event)"
+                           [datasource]="pelabEntities"
+                           multiple="true"
+                           name="Pelab Entities">
+</tb-pelab-entity-selection>
+
+
+<!--
+<tb-button-with-processing (onClick)="save()" [disable]="loading" name="Tạo">
+
+</tb-button-with-processing>
+-->

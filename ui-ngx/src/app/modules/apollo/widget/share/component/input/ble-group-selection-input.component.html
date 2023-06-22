@@ -1,0 +1,18 @@
+<mat-form-field class="mat-block">
+  <mat-label>{{name}} </mat-label>
+  <mat-select (closed)="closedEvent.emit()" (selectionChange)="groupsChange.emit(groups)" *ngIf="multiple"
+              [(ngModel)]="groups"
+              [formControl]="formControl"
+              multiple>
+    <mat-option
+      *ngFor="let key of datasource"
+      [value]="key.address">{{key?.address}} - {{key?.name}}</mat-option>
+  </mat-select>
+  <mat-select (closed)="closedEvent.emit()" (selectionChange)="groupsChange.emit(groups)" *ngIf="!multiple"
+              [(ngModel)]="groups"
+              [formControl]="formControl">
+    <mat-option
+      *ngFor="let key of datasource"
+      [value]="key.address">{{key?.address}} - {{key?.name}}</mat-option>
+  </mat-select>
+</mat-form-field>

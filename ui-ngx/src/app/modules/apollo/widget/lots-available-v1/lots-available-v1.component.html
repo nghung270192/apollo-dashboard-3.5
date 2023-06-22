@@ -1,0 +1,57 @@
+<div style="width: 100%; height: 100%; display: flex; flex-direction: column">
+  <div class="lac-header">
+    <mat-toolbar color="primary">
+      <button
+        mat-icon-button
+        class="example-icon"
+        aria-label="Select layout"
+        (click)="selectLayoutAsset()">
+        <mat-icon>settings</mat-icon>
+      </button>
+      <button (click)="uploadNetwork()"
+              mat-icon-button
+              class="example-icon"
+              aria-label="Hub setting">
+        <mat-icon>upload</mat-icon>
+      </button>
+      <!--
+            <input #fileInput (change)="uploadJsonNetwork($event)" accept=".json" name="imageUpload"
+                   type="file" style="display: none"/>-->
+      <span class="example-spacer"></span>
+      <!--      <button
+              mat-icon-button
+              class="example-icon favorite-icon"
+              aria-label="Example icon-button with heart icon"
+            >
+              <mat-icon>favorite</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              class="example-icon"
+              aria-label="Example icon-button with share icon"
+            >
+              <mat-icon>settings</mat-icon>
+            </button>-->
+    </mat-toolbar>
+  </div>
+  <div class="lac-body">
+    <ng-container>
+      <div class="lb-overview-report">
+        <tb-report-box label="Test 1" value="123"></tb-report-box>
+        <tb-report-box label="Test 2" value="345"></tb-report-box>
+        <tb-report-box label="Test 1" value="123"></tb-report-box>
+        <tb-report-box label="Test 2" value="345"></tb-report-box>
+      </div>
+      <mat-divider></mat-divider>
+      <div class="lb-detail-area-report">
+        <tb-area-report-box [eventCallback]="eventCallback">
+        </tb-area-report-box>
+        <tb-area-report-box [eventCallback]="eventCallback">
+        </tb-area-report-box>
+      </div>
+    </ng-container>
+    <ng-container>
+      <tb-floor-report-detail></tb-floor-report-detail>
+    </ng-container>
+  </div>
+</div>

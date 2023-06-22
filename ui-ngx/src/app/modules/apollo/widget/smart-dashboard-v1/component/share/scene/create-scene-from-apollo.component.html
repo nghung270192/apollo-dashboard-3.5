@@ -1,0 +1,101 @@
+<div [formGroup]="formGroup">
+  <tb-entity-model-select [entityTypeModel]="ApolloEntityTypeModel.ApolloDeviceModel" formControlName="sceneModel">
+
+  </tb-entity-model-select>
+  <!--  <tb-entity-model-select [entityTypeModel]="ApolloEntityTypeModel.ApolloSceneSource" formControlName="sceneSource">
+
+    </tb-entity-model-select>-->
+  <div [ngSwitch]="this.formGroup.get('sceneModel').value" style="width: 100%;">
+    <ng-container *ngSwitchCase="ApolloDeviceType.BLE_SIG_MESH">
+      <tb-node-tree-selection (closeEvent)="reloadSceneFromHub()" [(selection)]="hubNodeTreeSelected"
+                              [datasource]="hubNodeTrees"
+                              name="Chọn Hub">
+      </tb-node-tree-selection>
+
+      <ble-scene-selection-input
+        [(selection)]="bleScene"
+        [datasource]="bleSceneSource" multiple="true"
+        name="Chọn Ngữ Cảnh">
+      </ble-scene-selection-input>
+
+      <ble-group-selection-input *ngIf="sceneSource==ApolloSceneSource.GROUP"
+                                 [(groups)]="groupTarget"
+                                 [datasource]="bleGroupSource"
+                                 name="Chọn Group">
+      </ble-group-selection-input>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="ApolloDeviceType.ZIGBEE">
+      Chưa hỗ trợ. Vui lòng quay lại sau
+    </ng-container>
+
+  </div>
+</div>
+<!--
+<div fxLayout="column" fxLayoutAlign="start start" style="width: 100%">
+  <div style=" width: 100%;">
+    <mat-radio-group [(ngModel)]='deviceType' aria-label="Select an option">
+      <table>
+        <tr>
+          <td style="width: 200px;">
+            <label>Nguồn ngữ cảnh: </label>
+          </td>
+          <td *ngFor="let type of DeviceTypeArray" style="width: 150px;">
+            <mat-radio-button [value]="type">
+              {{type}}
+            </mat-radio-button>
+          </td>
+        </tr>
+      </table>
+    </mat-radio-group>
+  </div>
+  <div style="width: 100%;">
+    <mat-radio-group [(ngModel)]='sceneSource'
+                     aria-label="Select an option">
+      <table>
+        <tr>
+          <td style="width: 200px;">
+            <label>Nguồn: </label>
+          </td>
+          <td *ngFor="let source of ApolloSceneSourceArray" style="width: 150px;">
+            <mat-radio-button
+              [value]="source">{{source}}</mat-radio-button>
+          </td>
+        </tr>
+      </table>
+    </mat-radio-group>
+  </div>
+
+  <div [ngSwitch]="this.formGroup.get('sceneModel').value" style="width: 100%;">
+    <ng-container *ngSwitchCase="ApolloDeviceType.BLE_SIG_MESH">
+         <tb-node-tree-selection (closeEvent)="reloadSceneFromHub()" [(selection)]="hubNodeTreeSelected"
+                                [datasource]="hubNodeTrees"
+                                name="Chọn Hub">
+        </tb-node-tree-selection>
+
+        <ble-scene-selection-input
+          [(selection)]="bleScene"
+          [datasource]="bleSceneSource" multiple="true"
+          name="Chọn Ngữ Cảnh">
+        </ble-scene-selection-input>
+
+        <ble-group-selection-input *ngIf="sceneSource==ApolloSceneSource.GROUP"
+                                   [(groups)]="groupTarget"
+                                   [datasource]="bleGroupSource"
+                                   name="Chọn Group">
+        </ble-group-selection-input>
+     </ng-container>
+
+    <ng-container *ngSwitchCase="ApolloDeviceType.ZIGBEE">
+      Chưa hỗ trợ. Vui lòng quay lại sau
+    </ng-container>
+
+  </div>
+</div>
+
+<tb-button-with-processing (onClick)="save()" [disable]="loading" name="Tạo">
+
+</tb-button-with-processing>
+
+
+-->

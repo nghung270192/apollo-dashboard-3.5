@@ -1,0 +1,23 @@
+:host {
+  width: 100%;
+
+  .year-selector {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    font-size: 25px;
+  }
+
+  .year {
+    //margin: 0 10px;
+  }
+
+  .year-selector {
+    //margin: 0 5px;
+  }
+
+
+  .mat-icon:hover {
+    background-color: #dadada;
+  }
+}

@@ -1,0 +1,437 @@
+<div [formGroup]="formGroup" style="min-width: 400px;">
+  <mat-toolbar color="primary">
+    <h2>Tạo nhóm mới</h2>
+    <span fxFlex></span>
+    <!--    <div [tb-help]="helpLinkId()"></div>-->
+    <button (click)="cancel()"
+            mat-icon-button
+            type="button">
+      <mat-icon class="material-icons">close</mat-icon>
+    </button>
+  </mat-toolbar>
+  <mat-progress-bar *ngIf="isLoading$ | async" color="warn" mode="indeterminate">
+  </mat-progress-bar>
+  <div *ngIf="!(isLoading$ | async)" style="height: 4px;"></div>
+  <div mat-dialog-content>
+    <tb-entity-model-select [entityTypeModel]="ApolloEntityTypeModel.GatewayModel" formControlName="model">
+
+    </tb-entity-model-select>
+    <ng-container [ngSwitch]="formGroup.get('model').value">
+      <ng-container *ngSwitchCase="EntityModel.APOLLO">
+        <!--        <tb-entity-model-select [entityTypeModel]="ApolloEntityTypeModel.ApolloDeviceModel"
+                                        formControlName="deviceType">
+
+                </tb-entity-model-select>
+                <ng-container [ngSwitch]="formGroup.get('deviceType').value">
+                  <ng-container *ngSwitchCase="ApolloDeviceType.BLE_SIG_MESH">
+                    <tb-create-ble-device-from-apollo (createEvent)="createAndSave($event)" [(nodes)]="nodeTrees"
+                                                      [addTrigger]="addTrigger"
+                                                      [apollo]="data.apollo"
+                                                      [parentNodeTree]="data.parentNodeTree">
+                    </tb-create-ble-device-from-apollo>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="ApolloDeviceType.ZIGBEE">
+                    <tb-create-zb-device-from-apollo (createEvent)="createAndSave($event)" [(nodes)]="nodeTrees"
+                                                     [addTrigger]="addTrigger"
+                                                     [apollo]="data.apollo"
+                                                     [parentNodeTree]="data.parentNodeTree">
+                    </tb-create-zb-device-from-apollo>
+                  </ng-container>
+
+                </ng-container>-->
+        <tb-group-from-apollo (createEvent)="createAndSave($event)" [addTrigger]="addTrigger"
+                              [apollo]="data.apollo"
+                              [parentNodeTree]="data.parentNodeTree">
+
+        </tb-group-from-apollo>
+      </ng-container>
+      <ng-container *ngSwitchCase="EntityModel.DQSMART">
+
+
+      </ng-container>
+      <ng-container *ngSwitchCase="EntityModel.PELAB_LORA">
+        <tb-create-pelab-group (createEvent)="createAndSave($event)" [addTrigger]="addTrigger"
+                               [apollo]="data.apollo"
+                               [parentNodeTree]="data.parentNodeTree">
+
+        </tb-create-pelab-group>
+
+      </ng-container>
+    </ng-container>
+    <div fxLayoutAlign="end center" mat-dialog-actions>
+      <button (click)="cancel()" [disabled]="(isLoading$ | async)"
+              cdkFocusInitial
+              color="primary"
+              mat-button
+              type="button">
+        {{ 'action.cancel' | translate }}
+      </button>
+      <button (click)="addTrigger = !addTrigger;" [disabled]="(isLoading$ | async)"
+              color="primary"
+              mat-raised-button
+              type="submit">
+        {{ 'action.add' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+<!--    <mat-stepper #stepper labelPosition="bottom">
+      <mat-step [stepControl]="firstFormGroup">
+        <form [formGroup]="firstFormGroup">
+          <ng-template matStepLabel>Chọn model</ng-template>
+          <tb-gateway-model-selection [(selection)]="model" name="Gateway model">
+          </tb-gateway-model-selection>
+          <div class="button-right">
+            <button mat-button matStepperNext>Tiếp theo</button>
+          </div>
+        </form>
+      </mat-step>
+      <mat-step [stepControl]="secondFormGroup">
+        <form [formGroup]="secondFormGroup">
+          <ng-template matStepLabel>Thêm thông tin</ng-template>
+
+          <ng-container [ngSwitch]="model">
+            <ng-container *ngSwitchCase="EntityModel.APOLLO">
+
+              <div fxLayout="column" fxLayoutAlign="start start" style="width: 100%">
+                <div style=" width: 100%;">
+                  <mat-radio-group [(ngModel)]='deviceType' [formControl]="formControl" aria-label="Select an option">
+                    <table>
+                      <tr>
+                        <td style="width: 200px;">
+                          <label>Nguồn thiết bị: </label>
+                        </td>
+                        <td *ngFor="let type of DeviceTypeArray" style="width: 150px;">
+                          <mat-radio-button [value]="type">
+                            {{type}}
+                          </mat-radio-button>
+                        </td>
+                      </tr>
+                    </table>
+                  </mat-radio-group>
+                </div>
+              </div>
+
+              <ng-container [ngSwitch]="deviceType">
+                <ng-container *ngSwitchCase="ApolloDeviceType.BLE_SIG_MESH">
+                  <tb-create-ble-device-from-apollo (createEvent)="createAndSave($event)"
+                                                    [(nodes)]="nodeTrees"
+                                                    [apollo]="data.apollo"
+                                                    [parentNodeTree]="data.parentNodeTree">
+                  </tb-create-ble-device-from-apollo>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="ApolloDeviceType.ZIGBEE">
+
+                  <tb-create-zb-device-from-apollo (createEvent)="createAndSave($event)"
+                                                   [(nodes)]="nodeTrees"
+                                                   [apollo]="data.apollo"
+                                                   [parentNodeTree]="data.parentNodeTree">
+                  </tb-create-zb-device-from-apollo>
+                </ng-container>
+
+              </ng-container>
+
+            </ng-container>
+            <ng-container *ngSwitchCase="EntityModel.DQSMART">
+
+              <tb-create-dqsmart-device (createEvent)="createAndSave($event)"
+                                        [apollo]="data.apollo"
+                                        [parentNodeTree]="data.parentNodeTree">
+              </tb-create-dqsmart-device>
+            </ng-container>
+            <ng-container *ngSwitchCase="EntityModel.PELAB_LORA">
+              <tb-create-pelab-device (createEvent)="createAndSave($event)"
+                                      [apollo]="data.apollo"
+                                      [parentNodeTree]="data.parentNodeTree">
+              </tb-create-pelab-device>
+
+            </ng-container>
+            &lt;!&ndash;          <ng-container *ngSwitchCase="EntityModel.YELIGHT">&ndash;&gt;
+            &lt;!&ndash;            Đang phát triển. Vui lòng thử các model khác.&ndash;&gt;
+
+            &lt;!&ndash;          </ng-container>&ndash;&gt;
+            &lt;!&ndash;          <ng-container *ngSwitchCase="EntityModel.XIAOMI">&ndash;&gt;
+            &lt;!&ndash;            Đang phát triển. Vui lòng thử các model khác.&ndash;&gt;
+
+            &lt;!&ndash;          </ng-container>&ndash;&gt;
+            &lt;!&ndash;          <ng-container *ngSwitchCase="EntityModel.TUYA">&ndash;&gt;
+            &lt;!&ndash;            Đang phát triển. Vui lòng thử các model khác.&ndash;&gt;
+
+            &lt;!&ndash;          </ng-container>&ndash;&gt;
+            &lt;!&ndash;          <ng-container *ngSwitchCase="EntityModel.SONOFF">&ndash;&gt;
+            &lt;!&ndash;            Đang phát triển. Vui lòng thử các model khác.&ndash;&gt;
+            &lt;!&ndash;          </ng-container>&ndash;&gt;
+          </ng-container>
+
+          <div class="button-right">
+            <button mat-button matStepperPrevious>Quay lại</button>
+            &lt;!&ndash;
+                      <button mat-button matStepperNext>Tiếp theo</button>
+            &ndash;&gt;
+            &lt;!&ndash;          <div mat-dialog-controller-actions align="center">
+                        <button (click)="createAndSave($event)"
+                                cdkFocusInitial mat-button mat-dialog-controller-close>Ok
+                        </button>
+                      </div>&ndash;&gt;
+          </div>
+        </form>
+      </mat-step>
+      &lt;!&ndash;    <mat-step>
+            <ng-template matStepLabel>Tạo thực thể</ng-template>
+            <p> {{status1}}</p>
+            <div class="button-right">
+              <button mat-button matStepperPrevious>Quay lại</button>
+              <button (click)="startConfig($event)" mat-button>Tạo</button>
+
+            </div>
+          </mat-step>&ndash;&gt;
+    </mat-stepper>-->
+
+<!--  <div fxLayoutAlign="end center" mat-dialog-controller-actions>
+    &lt;!&ndash;    <button mat-button color="primary"
+                type="button"
+                cdkFocusInitial
+                [disabled]="(isLoading$ | async)"
+                (click)="cancel()">
+          {{ 'action.cancel' | translate }}
+        </button>
+        <button mat-raised-button color="primary"
+                type="submit"
+                [disabled]="(isLoading$ | async) || detailsForm?.invalid || !detailsForm?.dirty">
+          {{ 'action.add' | translate }}
+        </button>&ndash;&gt;
+  </div>-->
+
+
+<!--
+<h3 mat-dialog-controller-title>Thêm thực thể</h3>
+
+<div class="mat-dialog-controller-content" mat-dialog-controller-content>
+  <mat-stepper #stepper labelPosition="bottom">
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Chọn model</ng-template>
+
+        <tb-gateway-model-selection [(selection)]="model" name="Gateway model">
+        </tb-gateway-model-selection>
+        <div class="button-right">
+          <button mat-button matStepperNext>Tiếp theo</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Thêm thông tin</ng-template>
+
+        <ng-container [ngSwitch]="model">
+          <ng-container *ngSwitchCase="EntityModel.APOLLO">
+
+            <div fxLayout="column" fxLayoutAlign="start start" style="width: 100%">
+              <div style=" width: 100%;">
+                <mat-radio-group [(ngModel)]='deviceType' [formControl]="formControl" aria-label="Select an option">
+                  <table>
+                    <tr>
+                      <td style="width: 200px;">
+                        <label>Nguồn thiết bị: </label>
+                      </td>
+                      <td *ngFor="let type of DeviceTypeArray" style="width: 150px;">
+                        <mat-radio-button [value]="type">
+                          {{type}}
+                        </mat-radio-button>
+                      </td>
+                    </tr>
+                  </table>
+                </mat-radio-group>
+              </div>
+            </div>
+
+            <ng-container [ngSwitch]="deviceType">
+              <ng-container *ngSwitchCase="ApolloDeviceType.BLE_SIG_MESH">
+                <tb-create-ble-device-from-apollo (createEvent)="createAndSave($event)"
+                                                  [(nodes)]="nodeTrees"
+                                                  [apollo]="data.apollo"
+                                                  [parentNodeTree]="data.parentNodeTree">
+                </tb-create-ble-device-from-apollo>
+              </ng-container>
+
+              <ng-container *ngSwitchCase="ApolloDeviceType.ZIGBEE">
+
+                <tb-create-zb-device-from-apollo (createEvent)="createAndSave($event)"
+                                                 [(nodes)]="nodeTrees"
+                                                 [apollo]="data.apollo"
+                                                 [parentNodeTree]="data.parentNodeTree">
+                </tb-create-zb-device-from-apollo>
+              </ng-container>
+
+            </ng-container>
+
+          </ng-container>
+          <ng-container *ngSwitchCase="EntityModel.DQSMART">
+
+            <tb-create-dqsmart-device (createEvent)="createAndSave($event)"
+                                    [apollo]="data.apollo"
+                                    [parentNodeTree]="data.parentNodeTree">
+            </tb-create-dqsmart-device>
+          </ng-container>
+          <ng-container *ngSwitchCase="EntityModel.PELAB_LORA">
+            <tb-create-pelab-device (createEvent)="createAndSave($event)"
+                                    [apollo]="data.apollo"
+                                    [parentNodeTree]="data.parentNodeTree">
+            </tb-create-pelab-device>
+
+          </ng-container>
+&lt;!&ndash;          <ng-container *ngSwitchCase="EntityModel.YELIGHT">&ndash;&gt;
+&lt;!&ndash;            Đang phát triển. Vui lòng thử các model khác.&ndash;&gt;
+
+&lt;!&ndash;          </ng-container>&ndash;&gt;
+&lt;!&ndash;          <ng-container *ngSwitchCase="EntityModel.XIAOMI">&ndash;&gt;
+&lt;!&ndash;            Đang phát triển. Vui lòng thử các model khác.&ndash;&gt;
+
+&lt;!&ndash;          </ng-container>&ndash;&gt;
+&lt;!&ndash;          <ng-container *ngSwitchCase="EntityModel.TUYA">&ndash;&gt;
+&lt;!&ndash;            Đang phát triển. Vui lòng thử các model khác.&ndash;&gt;
+
+&lt;!&ndash;          </ng-container>&ndash;&gt;
+&lt;!&ndash;          <ng-container *ngSwitchCase="EntityModel.SONOFF">&ndash;&gt;
+&lt;!&ndash;            Đang phát triển. Vui lòng thử các model khác.&ndash;&gt;
+&lt;!&ndash;          </ng-container>&ndash;&gt;
+        </ng-container>
+
+        <div class="button-right">
+          <button mat-button matStepperPrevious>Quay lại</button>
+          &lt;!&ndash;
+                    <button mat-button matStepperNext>Tiếp theo</button>
+          &ndash;&gt;
+          &lt;!&ndash;          <div mat-dialog-controller-actions align="center">
+                      <button (click)="createAndSave($event)"
+                              cdkFocusInitial mat-button mat-dialog-controller-close>Ok
+                      </button>
+                    </div>&ndash;&gt;
+        </div>
+      </form>
+    </mat-step>
+    &lt;!&ndash;    <mat-step>
+          <ng-template matStepLabel>Tạo thực thể</ng-template>
+          <p> {{status1}}</p>
+          <div class="button-right">
+            <button mat-button matStepperPrevious>Quay lại</button>
+            <button (click)="startConfig($event)" mat-button>Tạo</button>
+
+          </div>
+        </mat-step>&ndash;&gt;
+  </mat-stepper>
+
+</div>
+
+
+<div align="center" mat-dialog-controller-actions>
+  <button (click)="createAndSave($event)"
+          cdkFocusInitial mat-button mat-dialog-controller-close>Close
+  </button>
+</div>
+
+-->
+<!--
+
+<h3 mat-dialog-controller-title>Tạo {{data.title}}</h3>
+
+<div class="mat-dialog-controller-content" mat-dialog-controller-content>
+  <mat-stepper #stepper labelPosition="bottom">
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Chọn model</ng-template>
+
+        <tb-gateway-model-selection [(selection)]="model" name="Gateway model">
+        </tb-gateway-model-selection>
+        <div class="button-right">
+          <button mat-button matStepperNext>Tiếp theo</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Thêm thông tin</ng-template>
+
+        <ng-container [ngSwitch]="model">
+          <ng-container *ngSwitchCase="EntityModel.APOLLO">
+            <tb-group-from-apollo (createEvent)="createAndSave($event)"
+                                  [apollo]="data.apollo"
+                                  [parentNodeTree]="data.parentNodeTree">
+
+            </tb-group-from-apollo>
+          </ng-container>
+          <ng-container *ngSwitchCase="EntityModel.DQSMART">
+            &lt;!&ndash;            <tb-group-from-dqsmart (createEvent)="createAndSave($event)"
+                                               [apollo]="data.apollo"
+                                               [parentNodeTree]="data.parentNodeTree">
+
+                        </tb-group-from-dqsmart>&ndash;&gt;
+
+            Đang phát triển. Vui lòng thử các model khác.
+          </ng-container>
+          <ng-container *ngSwitchCase="EntityModel.PELAB_LORA">
+
+            <tb-create-pelab-group (createEvent)="createAndSave($event)"
+                                   [apollo]="data.apollo"
+                                   [parentNodeTree]="data.parentNodeTree">
+
+            </tb-create-pelab-group>
+
+          </ng-container>
+&lt;!&ndash;          <ng-container *ngSwitchCase="EntityModel.YELIGHT">&ndash;&gt;
+&lt;!&ndash;            Đang phát triển. Vui lòng thử các model khác.&ndash;&gt;
+
+&lt;!&ndash;          </ng-container>&ndash;&gt;
+&lt;!&ndash;          <ng-container *ngSwitchCase="EntityModel.XIAOMI">&ndash;&gt;
+&lt;!&ndash;            Đang phát triển. Vui lòng thử các model khác.&ndash;&gt;
+
+&lt;!&ndash;          </ng-container>&ndash;&gt;
+&lt;!&ndash;          <ng-container *ngSwitchCase="EntityModel.TUYA">&ndash;&gt;
+&lt;!&ndash;            Đang phát triển. Vui lòng thử các model khác.&ndash;&gt;
+
+&lt;!&ndash;          </ng-container>&ndash;&gt;
+&lt;!&ndash;          <ng-container *ngSwitchCase="EntityModel.SONOFF">&ndash;&gt;
+&lt;!&ndash;            Đang phát triển. Vui lòng thử các model khác.&ndash;&gt;
+&lt;!&ndash;          </ng-container>&ndash;&gt;
+        </ng-container>
+
+        <div class="button-right">
+          <button mat-button matStepperPrevious>Quay lại</button>
+          &lt;!&ndash;          <button mat-button matStepperNext>Tiếp theo</button>&ndash;&gt;
+          &lt;!&ndash;          <div mat-dialog-controller-actions align="center">
+                      <button (click)="createAndSave($event)"
+                              cdkFocusInitial mat-button mat-dialog-controller-close>Ok
+                      </button>
+                    </div>&ndash;&gt;
+        </div>
+      </form>
+    </mat-step>
+    &lt;!&ndash;    <mat-step>
+          <ng-template matStepLabel>Tạo thực thể</ng-template>
+          <p> {{status1}}</p>
+          <div class="button-right">
+            <button mat-button matStepperPrevious>Quay lại</button>
+            <button (click)="startConfig($event)" mat-button>Tạo</button>
+            &lt;!&ndash;
+                    <button (click)="stepper.reset()" mat-button>Làm lại</button>
+            &ndash;&gt;
+          </div>
+        </mat-step>&ndash;&gt;
+  </mat-stepper>
+  &lt;!&ndash;    <div fxLayout="row" fxLayoutAlign="start start">
+        <div fxLayout="column" fxLayoutAlign="start center">
+          <tb-text-input [(text)]="name" name="Layout"></tb-text-input>
+        </div>
+      </div>&ndash;&gt;
+
+</div>
+
+
+<div align="center" mat-dialog-controller-actions>
+  <button (click)="createAndSave($event)"
+          cdkFocusInitial mat-button mat-dialog-controller-close>Ok
+  </button>
+</div>-->
+

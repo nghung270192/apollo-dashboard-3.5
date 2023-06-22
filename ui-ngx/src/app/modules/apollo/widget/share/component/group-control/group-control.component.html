@@ -1,0 +1,19 @@
+<div [style.height.px]="size*1.1" [style.width.px]="size"
+     fxLayout="column" fxLayoutAlign="center center" style=" justify-content: center">
+
+  <apollo-round-slider *ngIf="enable_fast_control" (stateChange)="eventStateChange($event)"
+                       (valueChange)="eventLightnessChange($event)"
+                       [id]="id"
+                       [radius]="size/2.5"
+                       [size]='size/2.5'
+                       [value]="lightness"
+                       showValue='true'
+  ></apollo-round-slider>
+
+
+  <apollo-fast-lightness-control *ngIf="enable_fast_control"
+                                 (valueChange)="eventLightnessChange($event)"
+                                 [(value)]="lightness" [size]="size*0.2"
+                                 class="container-center">
+  </apollo-fast-lightness-control>
+</div>

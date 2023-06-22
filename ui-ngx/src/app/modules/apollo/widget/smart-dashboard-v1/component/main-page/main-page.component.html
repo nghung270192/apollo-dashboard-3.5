@@ -1,0 +1,178 @@
+<div class="main-page">
+  <div class="header">
+    <tb-common-menu (automationViewEvent)="autoBtnEventClick()"
+                    (backEvent)="backEvent()"
+                    (mapViewEvent)="mapBtnEventClick()"
+                    (schedulerToggle)="schedulerBtnEventClick()"
+                    (toggleTool)="toggleTool()"
+                    [(isEdited)]="isEdited"
+                    [(sizeIcon)]="sizeIcon"
+                    [apollo]="apollo"
+                    [nameLayout]="nameLayout"
+                    [parentNodeTree]="parentNodeTree" [rootNodeTree]="rootNodeTree">
+
+    </tb-common-menu>
+  </div>
+
+  <div class="body-container" fxLayout="column" fxLayoutAlign="space-between start">
+
+    <div style="height: 1px;width: 100%">
+      <mat-progress-bar *ngIf="loading" aria-label="Loading" color="warn" mode="indeterminate"></mat-progress-bar>
+    </div>
+
+    <h6 *ngIf="layoutLoading">Đang tải giao diện...</h6>
+
+    <ng-container *ngIf="this.pageView === PageView.NORMAL && parentNodeTree?.type!== NodeTreeType.GATEWAY
+                          && parentNodeTree?.type!== NodeTreeType.HUB ">
+
+      <mat-toolbar [fxShow]="!textSearchMode && !layoutLoading" class = "mat-mdc-table-toolbar" style="width: 100%">
+        <div style="height: 10px; font-size: 10px;font-weight: bold;">{{getPath()}}</div>
+        <div class="mat-toolbar-tools">
+          <span fxFlex></span>
+          <button (click)="removeEntities()" *ngIf="apollo.isAdmin && isEdited"
+                  mat-icon-button
+                  matTooltip="Xóa thực thể"
+                  matTooltipPosition="above"
+                  type="button">
+            <mat-icon>delete</mat-icon>
+          </button>
+
+          <button *ngIf="apollo.isAdmin && isEdited "
+                  [matMenuTriggerFor]="menu"
+                  aria-label="Example icon-button with a menu" mat-icon-button matTooltip="Thêm thực thể">
+            <mat-icon>add</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu" xPosition="before">
+            <button (click)=" createApolloNodeTreeV1(NodeTreeType.AREA)" mat-menu-item>
+              <mat-icon>picture_in_picture</mat-icon>
+              <span>Khu vực</span>
+            </button>
+            <button (click)="createDevice()" mat-menu-item>
+              <mat-icon svgIcon="light-bulb-v2"></mat-icon>
+              <span>Thiết bị</span>
+            </button>
+            <button (click)="createGroup()" mat-menu-item>
+              <mat-icon svgIcon="iot-group-light"></mat-icon>
+              <span>Nhóm</span>
+            </button>
+            <button (click)="createScene()" mat-menu-item>
+              <mat-icon svgIcon="iot-scene"></mat-icon>
+              <span>Ngữ cảnh</span>
+            </button>
+            <button (click)="createApolloNodeTreeV1(NodeTreeType.GATEWAY)" mat-menu-item>
+              <mat-icon svgIcon="gateway_v1"></mat-icon>
+              <span>Gateway</span>
+            </button>
+            <button (click)="createApolloNodeTreeV1(NodeTreeType.HUB)" mat-menu-item>
+              <mat-icon svgIcon="hub_v1"></mat-icon>
+              <span>Hub</span>
+            </button>
+          </mat-menu>
+
+          <ng-container *ngIf="apollo.isAdmin && isEdited">
+            <button (click)="saveDatabase()"
+                    mat-icon-button
+                    matTooltip="Lưu giao diện"
+                    matTooltipPosition="above"
+                    type="button">
+              <mat-icon *ngIf="apollo.apolloNodeTreeService.isChanged===false">save</mat-icon>
+              <mat-icon *ngIf="apollo.apolloNodeTreeService.isChanged===true" style="color: red;">save</mat-icon>
+            </button>
+          </ng-container>
+          <button (click)="isEdited = !isEdited;" *ngIf="apollo.isAdmin"
+                  [disabled]="apollo.apolloNodeTreeService.isChanged"
+                  mat-icon-button
+                  matTooltip="Chỉnh sửa"
+                  matTooltipPosition="below"
+                  type="button">
+            <mat-icon *ngIf="isEdited===false">edit</mat-icon>
+            <mat-icon *ngIf="isEdited===true" style="color: red;">edit</mat-icon>
+          </button>
+          <button (click)="enterFilterMode()" mat-icon-button
+                  matTooltip="Tìm thực thể"
+                  matTooltipPosition="below"
+                  type="button">
+            <mat-icon>search</mat-icon>
+          </button>
+        </div>
+      </mat-toolbar>
+      <mat-toolbar [fxShow]="textSearchMode" class = "mat-mdc-table-toolbar">
+        <div class="mat-toolbar-tools" style="margin-top: 10px;">
+          <button mat-icon-button
+                  matTooltip="Tìm thực thể"
+                  matTooltipPosition="below">
+            <mat-icon>search</mat-icon>
+          </button>
+          <mat-form-field fxFlex style="margin-top: 10px;">
+            <input #searchInput [(ngModel)]="pageLink.textSearch" matInput
+                   placeholder="Nhóm, khu vực, thiết bị, area, group, device, hub, gateway, tầng 1, nhiệt độ...."
+                   style="font-size: 13px"/>
+          </mat-form-field>
+          <button (click)="exitFilterMode()" mat-icon-button
+                  matTooltip="Đóng tìm kiếm"
+                  matTooltipPosition="above">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </mat-toolbar>
+    </ng-container>
+
+    <div class="body-content">
+      <ng-container *ngIf=" !layoutLoading && hasLayout===true">
+        <div *ngIf="isEnableMiddleAddEntity===false" class="body-sidenav-content" fxLayout="row"
+             fxLayoutAlign="space-around center">
+          <button *ngIf="apollo.isAdmin && isEdited" [matMenuTriggerFor]="menu1"
+                  aria-label="Example icon-button with a menu"
+                  class="add-entity-button" mat-flat-button matTooltip="Thêm thực thể">
+            <mat-icon>add</mat-icon>
+          </button>
+          <mat-menu #menu1="matMenu" xPosition="before">
+            <button (click)=" createApolloNodeTreeV1(NodeTreeType.AREA)" mat-menu-item>
+              <mat-icon>picture_in_picture</mat-icon>
+              <span>Khu vực</span>
+            </button>
+            <button (click)="createDevice()" mat-menu-item>
+              <mat-icon svgIcon="light-bulb-v2"></mat-icon>
+              <span>Thiết bị</span>
+            </button>
+            <button (click)="createGroup()" mat-menu-item>
+              <mat-icon svgIcon="iot-group-light"></mat-icon>
+              <span>Nhóm</span>
+            </button>
+            <button (click)="createScene()" mat-menu-item>
+              <mat-icon svgIcon="iot-scene"></mat-icon>
+              <span>Ngữ cảnh</span>
+            </button>
+            <button (click)="createApolloNodeTreeV1(NodeTreeType.GATEWAY)" mat-menu-item>
+              <mat-icon svgIcon="gateway_v1"></mat-icon>
+              <span>Gateway</span>
+            </button>
+            <button (click)="createApolloNodeTreeV1(NodeTreeType.HUB)" mat-menu-item>
+              <mat-icon svgIcon="hub_v1"></mat-icon>
+              <span>Hub</span>
+            </button>
+          </mat-menu>
+
+          <p *ngIf="!isEdited"> Layout đang trống </p>
+        </div>
+        <div *ngIf="isEnableMiddleAddEntity===true" class="body-sidenav-content">
+
+          <tb-body-page (clickEvent)="clickEvent($event)"
+                        (reloadEvent)="reloadEvent()" *ngIf="parentNodeTree"
+                        [apollo]="apollo"
+                        [childrenNodetree]="childrenNodetreeFilter"
+                        [isEdited]="isEdited"
+                        [pageView]="pageView"
+                        [parentNodeTree]="parentNodeTree"
+                        [rootNodeTree]="rootNodeTree" [sizeIcon]="sizeIcon"
+                        [callbackEvent]="callbackEvent">
+          </tb-body-page>
+        </div>
+
+      </ng-container>
+      <ng-container *ngIf=" !layoutLoading && hasLayout===false">
+        <p>Không tìm thấy giao diện. Vui lòng vào cài đặt để chọn giao diện hoặc tạo mới</p>
+      </ng-container>
+    </div>
+  </div>
+</div>

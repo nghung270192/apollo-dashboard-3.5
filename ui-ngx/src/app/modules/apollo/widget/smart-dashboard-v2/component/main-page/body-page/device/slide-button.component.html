@@ -1,0 +1,7 @@
+<label [style.height.px]="size*0.15"
+       [style.width.px]="size*0.3"
+       class="switch"
+       (click)="slideTogle.emit($event)">
+  <input [checked]="state ===true" type="checkbox">
+  <span class="slider round"></span>
+</label>

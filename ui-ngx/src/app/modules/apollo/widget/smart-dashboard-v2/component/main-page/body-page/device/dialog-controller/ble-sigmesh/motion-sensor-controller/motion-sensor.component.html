@@ -1,0 +1,220 @@
+<div *ngIf="data.nodeTreeController" style="min-width: 390px;">
+  <!--  <h4 mat-dialog-controller-title style="">{{data.nodeTreeController.renderName()}}</h4>-->
+  <tb-toolbar-shared [name]="data?.nodeTreeController?.renderName()"
+                     [icon]="data?.nodeTreeController?.renderIcon()"
+                     (cancel)="cancel()"></tb-toolbar-shared>
+  <!--  <mat-progress-bar *ngIf="isLoading$ | async" color="warn" mode="indeterminate">
+    </mat-progress-bar>
+    <div *ngIf="!(isLoading$ | async)" style="height: 4px;"></div>-->
+  <div mat-dialog-content>
+
+    <table>
+      <tr>
+        <td> Status:</td>
+        <td>
+          {{status}}
+        </td>
+        <td>
+        </td>
+      </tr>
+      <tr>
+        <td> Ambient brightness:</td>
+        <td>
+          {{ambientBrightness}}
+        </td>
+        <td>
+        </td>
+      </tr>
+
+      <tr>
+        <td> Delay(s):</td>
+        <td>
+          <form class="form-key-select">
+            <mat-form-field appearance="outline" class="form-key-select">
+              <input [(ngModel)]="delay" matInput max=36000 min=0 name="delay" step="5" type="number">
+            </mat-form-field>
+          </form>
+        </td>
+        <td>
+          <button
+            (click)="delaySet()"
+            color="primary"
+            mat-raised-button
+            style="margin-top:10px;width:50px;">Set
+          </button>
+        </td>
+        <td>
+          <button
+            (click)="hlkTimeGet()"
+            color="primary"
+            mat-raised-button
+            style="margin-top:10px;width:50px;">Get
+          </button>
+        </td>
+      </tr>
+
+      <tr>
+        <td> High Level(%):</td>
+        <td>
+          <form class="form-key-select">
+            <mat-form-field appearance="outline" class="form-key-select">
+              <input [(ngModel)]="levelHigh" matInput max=100 min=0 name="highLevel" step="5" type="number">
+            </mat-form-field>
+          </form>
+        </td>
+        <td>
+          <button
+            (click)="levelSet()"
+            color="primary"
+            mat-raised-button
+            style="margin-top:10px;width:50px;">Set
+          </button>
+        </td>
+        <td>
+          <button
+            (click)="hlkTimeGet()"
+            color="primary"
+            mat-raised-button
+            style="margin-top:10px;width:50px;">Get
+          </button>
+        </td>
+      </tr>
+
+      <tr>
+        <td> Low Level(%):</td>
+        <td>
+          <form class="form-key-select">
+            <mat-form-field appearance="outline" class="form-key-select">
+              <input [(ngModel)]="levelLow" matInput max=100 min=0 name="lowLevel" step="5" type="number">
+            </mat-form-field>
+          </form>
+        </td>
+        <td>
+          <button
+            (click)="levelSet()"
+            color="primary"
+            mat-raised-button
+            style="margin-top:10px;width:50px;">Set
+          </button>
+        </td>
+        <td>
+          <button
+            (click)="hlkTimeGet()"
+            color="primary"
+            mat-raised-button
+            style="margin-top:10px;width:50px;">Get
+          </button>
+        </td>
+      </tr>
+
+      <tr>
+        <td> Brightness:</td>
+        <td>
+          <form class="form-key-select">
+            <mat-form-field appearance="outline" class="form-key-select">
+              <input [(ngModel)]="brightness" matInput max=5000 min=0 name="brightness" step="1" type="number">
+            </mat-form-field>
+          </form>
+        </td>
+        <td>
+          <button
+            (click)="brightnessSet()"
+            color="primary"
+            mat-raised-button
+            style="margin-top:10px;width:50px;">Set
+          </button>
+        </td>
+        <td>
+          <button
+            (click)="hlkTimeGet()"
+            color="primary"
+            mat-raised-button
+            style="margin-top:10px;width:50px;">Get
+          </button>
+        </td>
+      </tr>
+
+      <tr>
+        <td> HLK Distance:</td>
+        <td>
+          <form class="form-key-select">
+            <mat-form-field appearance="outline" class="form-key-select">
+              <input [(ngModel)]="hlkDistance" matInput max=5000 min=0 name="brightness" step="1" type="number">
+            </mat-form-field>
+          </form>
+        </td>
+        <td>
+          <button
+            (click)="hlkDistanceSet()"
+            color="primary"
+            mat-raised-button
+            style="margin-top:10px;width:50px;">Set
+          </button>
+        </td>
+
+        <td>
+          <button
+            (click)="hlkDistanceGet()"
+            color="primary"
+            mat-raised-button
+            style="margin-top:10px;width:50px;">Get
+          </button>
+        </td>
+
+      </tr>
+
+      <tr>
+        <td> HLK Active Time:</td>
+        <td>
+          <form class="form-key-select">
+            <mat-form-field appearance="outline" class="form-key-select">
+              <input [(ngModel)]="hlkTime" matInput max=5000 min=0 name="brightness" step="1" type="number">
+            </mat-form-field>
+          </form>
+        </td>
+        <td>
+          <button
+            (click)="hlkTimeSet()"
+            color="primary"
+            mat-raised-button
+            style="margin-top:10px;width:50px;">Set
+          </button>
+        </td>
+
+        <td>
+          <button
+            (click)="hlkTimeGet()"
+            color="primary"
+            mat-raised-button
+            style="margin-top:10px;width:50px;">Get
+          </button>
+        </td>
+
+      </tr>
+
+    </table>
+
+    <div fxLayout="row" fxLayoutAlign="center center" style="width: 100%">
+      <button
+        (click)="sensorGet()"
+        color="primary"
+        mat-raised-button
+        style="margin-top:10px;width:50px;">Get
+      </button>
+      <div>
+        <apollo-processing [show]="isProcessing" size="20">
+
+        </apollo-processing>
+      </div>
+      <div>
+        <mat-icon *ngIf="isError" style="height: 30px;width: 30px;color: red;"> warning</mat-icon>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+<div *ngIf="!data.nodeTreeController">
+  <h5>Không tìm thấy node</h5>
+</div>
+

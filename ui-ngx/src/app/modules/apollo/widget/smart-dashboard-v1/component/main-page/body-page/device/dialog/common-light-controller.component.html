@@ -1,0 +1,50 @@
+<div *ngIf="data.entityController" style="width: 100%">
+  <mat-toolbar color="primary">
+    <h2>{{data.entityController.renderName()}}</h2>
+    <span fxFlex></span>
+    <button (click)="cancel()"
+            mat-icon-button
+            type="button">
+      <mat-icon class="material-icons">close</mat-icon>
+    </button>
+  </mat-toolbar>
+  <mat-progress-bar *ngIf="isLoading$ | async" color="warn" mode="indeterminate">
+  </mat-progress-bar>
+  <div *ngIf="(isLoading$ | async)===false" style="height: 4px;"></div>
+
+  <div mat-dialog-content style="width: 100%;">
+     <div *ngFor="let element of maxElementIndex" fxLayout="column" fxLayoutAlign="space-between center"
+         style="width: 100%;">
+      <label>Đèn {{element}}</label>
+      <div fxLayout="row" fxLayoutAlign="center start">
+        <div>
+          <div (click)="setState($event,1,element)" class="on-button" matTooltip="ON">
+            <mat-icon> power_settings_new</mat-icon>
+          </div>
+          <div (click)="setState($event,0,element)" class="off-button" matTooltip="OFF">
+            <mat-icon>power_settings_new</mat-icon>
+          </div>
+        </div>
+        <apollo-group-control *ngIf="hasLightness"
+                              (lightnessChange)="lightnessChange($event,element)"
+                              [lightness]="lightness"
+                              [size]="!data?.apollo.ctx.isMobile?250:200">
+        </apollo-group-control>
+      </div>
+      <div fxLayout="row" fxLayoutAlign="center start" style="height: 100%">
+        <div>
+          <apollo-color-control (hslDefaultChange)="hslChange($event,element)"
+                                *ngIf="hasHsl"
+                                [size]="!data.apollo.ctx.isMobile?215:150">
+          </apollo-color-control>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div *ngIf="!data.entityController">
+  <h5>Không tìm thấy node</h5>
+</div>
+

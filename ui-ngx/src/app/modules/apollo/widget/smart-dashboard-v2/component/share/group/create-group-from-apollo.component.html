@@ -1,0 +1,100 @@
+<div [formGroup]="formGroup">
+
+  <tb-entity-model-select [entityTypeModel]="ApolloEntityTypeModel.ApolloDeviceModel" formControlName="groupModel">
+  </tb-entity-model-select>
+  <ng-container [ngSwitch]="formGroup.get('groupModel').value">
+    <ng-container *ngSwitchCase="ApolloDeviceType.BLE_SIG_MESH">
+      <mat-form-field class="mat-block">
+        <mat-label>Multiple</mat-label>
+        <mat-select   formControlName="multiple">
+          <mat-option
+            *ngFor="let key of [{value:true, name:'Nhóm tập trung'},{value:false, name:'Nhóm riêng biệt'}]"
+            [value]="key.value">{{key.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <tb-text-input *ngIf="formGroup.get('multiple').value" [(text)]="name" name="Tên nhóm"></tb-text-input>
+      <tb-node-tree-selection
+        (closeEvent)="reloadSceneFromHub()" [(selection)]="hubNodeTreeSelected"
+        [datasource]="hubNodeTrees"
+        name="Chọn Hub">
+      </tb-node-tree-selection>
+      <ble-group-selection-input (closedEvent)="createNodeEntity()"
+                                 [(groups)]="groupTarget"
+                                 [datasource]="bleGroupSource"
+                                 multiple='false' name="Chọn Group">
+      </ble-group-selection-input>
+    </ng-container>
+    <ng-container *ngSwitchCase="ApolloDeviceType.ZIGBEE">
+      List thiet bi tu zigbee
+    </ng-container>
+  </ng-container>
+</div>
+
+
+<!--
+<div fxLayout="column" fxLayoutAlign="start start" style="width: 100%">
+  <div style=" width: 100%;">
+
+
+    <mat-radio-group [(ngModel)]='deviceType' aria-label="Select an option">
+      <table>
+        <tr>
+          <td style="width: 200px;">
+            <label>Nguồn nhóm: </label>
+          </td>
+          <td *ngFor="let type of DeviceTypeArray" style="width: 150px;">
+            <mat-radio-button [value]="type">
+              {{type}}
+            </mat-radio-button>
+          </td>
+        </tr>
+      </table>
+    </mat-radio-group>
+  </div>
+  <div style="width: 100%;">
+    <mat-radio-group [(ngModel)]='sceneSource'
+                     aria-label="Select an option">
+      <table>
+        <tr>
+          <td style="width: 200px;">
+            <label>Nguồn: </label>
+          </td>
+          <td *ngFor="let source of ApolloSceneSourceArray" style="width: 150px;">
+            <mat-radio-button
+              [value]="source">{{source}}</mat-radio-button>
+          </td>
+        </tr>
+      </table>
+    </mat-radio-group>
+  </div>
+
+  <div [ngSwitch]="deviceType" style="width: 100%;">
+    <ng-container *ngSwitchCase="ApolloDeviceType.BLE_SIG_MESH">
+      <div>
+        <tb-node-tree-selection (closeEvent)="reloadSceneFromHub()" [(selection)]="hubNodeTreeSelected"
+                                [datasource]="hubNodeTrees"
+                                name="Chọn Hub">
+        </tb-node-tree-selection>
+        &lt;!&ndash;        <button (click)="reloadSceneFromHub()"> Load Data</button>&ndash;&gt;
+      </div>
+      <div>
+        <ble-group-selection-input (closedEvent)="createNodeEntity()"
+                                   *ngIf="sceneSource==ApolloSceneSource.GROUP"
+                                   [(groups)]="groupTarget"
+                                   [datasource]="bleGroupSource"
+                                   multiple='false' name="Chọn Group">
+        </ble-group-selection-input>
+      </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="ApolloDeviceType.ZIGBEE">
+      List thiet bi tu zigbee
+    </ng-container>
+
+  </div>
+</div>
+
+
+<tb-button-with-processing (onClick)="save()" [disable]="loading" name="Tạo">
+
+</tb-button-with-processing>
+-->

@@ -1,0 +1,54 @@
+<h3 mat-dialog-title>Rèm: {{data?.iotDevice?.name}}</h3>
+
+<div mat-dialog-content>
+  <div fxLayout="column" fxLayoutAlign="center center " style="width: 250px;">
+    <div class="button">
+      <tb-button-with-processing (onClick)="closeCover('closeCover')"
+                                 [disable]="buttons.closeCover.loading"
+                                 [name]="buttons.closeCover.name"
+                                 size="150">
+      </tb-button-with-processing>
+
+    </div>
+<!--    <div class="button">
+
+      <tb-button-with-processing (onClick)="closeCoverTilt('closeCoverTilt')"
+                                 [disable]="buttons.closeCoverTilt.loading"
+                                 [name]="buttons.closeCoverTilt.name"
+                                 size="150">
+      </tb-button-with-processing>
+    </div>-->
+    <div class="button">
+      <tb-button-with-processing (onClick)="openCover('openCover')"
+                                 [disable]="buttons.openCover.loading"
+                                 [name]="buttons.openCover.name"
+                                 size="150">
+      </tb-button-with-processing>
+    </div>
+<!--    <div class="button">
+      <tb-button-with-processing (onClick)="openCoverTilt('openCoverTilt')"
+                                 [disable]="buttons.openCoverTilt.loading"
+                                 [name]="buttons.openCoverTilt.name"
+                                 size="150">
+      </tb-button-with-processing>
+    </div>-->
+    <div class="button">
+      <tb-button-with-processing (onClick)="stopCover('stopCover')"
+                                 [disable]="buttons.stopCover.loading"
+                                 [name]="buttons.stopCover.name"
+                                 size="150">
+      </tb-button-with-processing>
+    </div>
+<!--    <div class="button">
+      <tb-button-with-processing (onClick)="stopCoverTilt('stopCoverTilt')"
+                                 [disable]="buttons.stopCoverTilt.loading"
+                                 [name]="buttons.stopCoverTilt.name"
+                                 size="150">
+      </tb-button-with-processing>
+    </div>-->
+  </div>
+</div>
+<div mat-dialog-actions align="center">
+  <button cdkFocusInitial mat-button mat-dialog-close>Ok</button>
+</div>
+

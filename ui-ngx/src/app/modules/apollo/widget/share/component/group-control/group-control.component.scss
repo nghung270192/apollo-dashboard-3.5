@@ -1,0 +1,14 @@
+:host {
+
+  .container {
+    justify-content: space-between;
+    flex-direction: column;
+    height: 100vh;
+  }
+
+  .container .container-center {
+    justify-content: center;
+    /* display: flex; */
+  }
+
+}

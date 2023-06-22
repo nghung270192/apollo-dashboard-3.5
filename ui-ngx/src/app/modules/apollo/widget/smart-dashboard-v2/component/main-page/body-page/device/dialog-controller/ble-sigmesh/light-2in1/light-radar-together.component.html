@@ -1,0 +1,129 @@
+<div *ngIf="dataIsValid()" style="min-width: 390px;align-items: center;">
+  <!--  <mat-toolbar color="primary">
+      <h2>{{data?.nodeTreeController?.renderName()}}</h2>
+      <span fxFlex></span>
+      <button (click)="cancel()"
+              mat-icon-button
+              type="button">
+        <mat-icon class="material-icons">close</mat-icon>
+      </button>
+    </mat-toolbar>-->
+  <tb-toolbar-shared [name]="data?.nodeTreeController?.renderName()"
+                     [icon]="data?.nodeTreeController?.renderIcon()"
+                     (cancel)="cancel()"></tb-toolbar-shared>
+
+  <div class="dialog-content" fxLayout="column" fxLayoutAlign="space-around center">
+    <mat-tab-group>
+      <mat-tab label="Đèn">
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <apollo-group-control
+            (lightnessChange)="lightnessChange($event,0)"
+            [lightness]="lightness"
+            [size]="!data.nodeTreeController.apollo.ctx.isMobile?250:250">
+          </apollo-group-control>
+        </div>
+      </mat-tab>
+      <mat-tab label="Cảm biến Radar">
+        <form [formGroup]="formGroup" fxLayout="column" fxLayoutAlign="center center"
+              style="width: 100%;">
+          <div fxLayout="column" fxLayoutAlign="center center" style="width: 100%;">
+            <div *ngFor="let params of parametersArray" fxLayout="row" fxLayoutAlign="center center"
+                 style="width: 100%;align-items: center; align-items: center;padding: 0; ">
+              <div fxFlex>
+
+                <mat-form-field class="mat-block" style="width: 90%">
+                  <mat-label>{{params.name}}{{params.unit}}</mat-label>
+                  <input matInput
+                         [formControlName]="params.formName"
+                         placeholder="Giá trị: ({{params.min.toString()}} - {{params.max.toString()}})"
+                         type="number"
+                         [max]="params.max" [min]="params.min">
+                </mat-form-field>
+              </div>
+              <div *ngIf="!!params?.get" style="width: 60px; padding: 0;align-items: center;">
+                <button style="width: 50px;"> Get</button>
+              </div>
+              <div *ngIf="!!params?.set" style="width: 60px; padding: 0;align-items: center;">
+                <button style="width: 50px;"> Set</button>
+              </div>
+            </div>
+          </div>
+          <!-- <table cellspacing="0" style="width: 100%">
+             <tr *ngFor="let params of parametersArray">
+               <td>
+                 <mat-form-field
+                   class="mat-block">
+                   <mat-label>{{params.name}}({{params.unit}})</mat-label>
+                   <input matInput
+                          [formControlName]="params.formName"
+                          placeholder="Giá trị: ({{params.min.toString()}} - {{params.max.toString()}})"
+                          type="number"
+                          [max]="params.max" [min]="params.min">
+                 </mat-form-field>
+               </td>
+               <td>
+                 <button> Get</button>
+               </td>
+               <td>
+                 <button> Set</button>
+               </td>
+             </tr>
+
+           </table>-->
+          <div fxFlex style="padding: 10px;">
+            <button mat-button color="primary" (click)="getAll()">Get All</button>
+            <button mat-button color="primary" (click)="setAll()">Set All</button>
+          </div>
+        </form>
+      </mat-tab>
+    </mat-tab-group>
+
+
+    <!--
+        <mat-button-toggle-group [(ngModel)]="elementIndex" color="primary" name="fontStyle" aria-label="Font Style"
+                                 style="width: 100%">
+          <mat-button-toggle color="primary" *ngFor="let element of data.nodeTreeController.bleNodeViewer.elements"
+
+                             [value]="element.index">Đèn {{element.index + 1}}
+          </mat-button-toggle>
+
+        </mat-button-toggle-group>
+
+        <div fxLayout="column" fxLayoutAlign="center center" style="width: 100%;">
+          <div fxLayout="column" fxLayoutAlign="space-between center" style="width: 100%;">
+            <div fxLayout="column" fxLayoutAlign="space-around center" style="align-items: center;">
+              <ng-container *ngIf="data.nodeTreeController.bleNodeViewer.product.model===ProductModel.light">
+                <div fxLayout="row" fxLayoutAlign="center start">
+                  <apollo-group-control
+                    (lightnessChange)="lightnessChange($event,elementIndex)"
+                    (stateChange)="stateChange($event,elementIndex)"
+                    [lightness]="lightness"
+                    [size]="!data.nodeTreeController.apollo.ctx.isMobile?270:270">
+                  </apollo-group-control>
+                </div>
+                <div fxLayout="row" fxLayoutAlign="center start" style="height: 100%">
+                  <div>
+                    <apollo-color-control (hslDefaultChange)="hslChange($event,elementIndex)"
+                                          *ngIf="data.nodeTreeController.bleNodeViewer.hasModelOfElement('1307',elementIndex)===true"
+                                          [size]="!data.nodeTreeController.apollo.ctx.isMobile?220:220">
+                    </apollo-color-control>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+            <mat-divider>
+
+            </mat-divider>
+          </div>
+
+        </div>
+    -->
+
+  </div>
+
+</div>
+
+<div *ngIf="!dataIsValid()">
+  <h5>Không tìm thấy công cụ điều khiển</h5>
+</div>
+

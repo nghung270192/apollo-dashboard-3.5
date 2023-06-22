@@ -1,0 +1,273 @@
+<div style="min-width: 400px">
+  <mat-toolbar color="primary">
+    <h2>Cấu hình Gateway </h2>
+    <span fxFlex></span>
+    <!--    <div [tb-help]="helpLinkId()"></div>-->
+    <button (click)="cancel()"
+            mat-icon-button
+            type="button">
+      <mat-icon class="material-icons">close</mat-icon>
+    </button>
+  </mat-toolbar>
+  <mat-progress-bar *ngIf="isLoading$ | async" color="warn" mode="indeterminate">
+  </mat-progress-bar>
+  <div *ngIf="!(isLoading$ | async)" style="height: 4px;"></div>
+
+  <div mat-dialog-content>
+    <tb-text-input [(text)]="name" name="Tên">
+    </tb-text-input>
+    <tb-gateway-model-selection [(selection)]="model" name="Chuẩn gateway">
+    </tb-gateway-model-selection>
+    <ng-container [ngSwitch]="model">
+      <ng-container *ngSwitchCase="GatewayModel.APOLLO">
+        <fieldset class="fields-group">
+          <legend> Gateway Apollo</legend>
+          <tb-apollo-gateway-additional-infor
+            [(additionalInfor)]="additionalInfo"
+            [apollo]="data.apollo">
+          </tb-apollo-gateway-additional-infor>
+          <input #fileInput (change)="importEvent($event) " accept=".json" id="imageUpload" name="imageUpload"
+                 type="file"/>
+          <label>{{importStatus}}</label>
+        </fieldset>
+      </ng-container>
+      <ng-container *ngSwitchCase="GatewayModel.DQSMART">
+        <fieldset class="fields-group">
+          <legend> Gateway DqSmart</legend>
+          <tb-dqsmart-setting (saveDone)="close()" [addTrigger]="addTrigger" [apollo]="data.apollo" [name]="name"
+                              [nodeTree]="data.nodeTree">
+
+          </tb-dqsmart-setting>
+        </fieldset>
+      </ng-container>
+      <ng-container *ngSwitchCase="GatewayModel.PELAB_LORA">
+
+        <fieldset class="fields-group">
+          <legend> Gateway Pelab Lora</legend>
+          <tb-pelab-setting (saveDone)="close();" [addTrigger]="addTrigger" [apollo]="data.apollo" [name]="name"
+                            [nodeTree]="data.nodeTree">
+
+          </tb-pelab-setting>
+        </fieldset>
+      </ng-container>
+      <!--<ng-container *ngSwitchCase="GatewayModel.SONOFF">
+        <label>Đang phát triển. Vui lòng chọn model khác. Xin cảm ơn.</label>
+
+      </ng-container>
+      <ng-container *ngSwitchCase="GatewayModel.TUYA">
+        <label>Đang phát triển. Vui lòng chọn model khác. Xin cảm ơn.</label>
+
+      </ng-container>
+      <ng-container *ngSwitchCase="GatewayModel.YELIGHT">
+        <label>Đang phát triển. Vui lòng chọn model khác. Xin cảm ơn.</label>
+
+      </ng-container>
+      <ng-container *ngSwitchCase="GatewayModel.UNKNOWN">
+        <label>Đang phát triển. Vui lòng chọn model khác. Xin cảm ơn.</label>
+
+      </ng-container>-->
+    </ng-container>
+
+    <!--<tb-text-input [(text)]="name" name="Tên">
+    </tb-text-input>
+    <tb-hub-model-selection [(selection)]="model" name="Chuẩn hub">
+    </tb-hub-model-selection>
+    <mat-form-field class="mat-block">
+      <mat-label>Nguồn Hub</mat-label>
+      <mat-select (selectionChange)="reloadGatewaySource()" [(ngModel)]="hubSource"
+                  [formControl]="formControlHubSource">
+        <mat-option
+          *ngFor="let key of hubSources "
+          [value]="key">{{key}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="hubSource==HubSource.GATEWAY" class="mat-block">
+      <mat-label>Gateway</mat-label>
+      <mat-select (selectionChange)="reloadHubDevicesFromGateway()" [(ngModel)]="gatewaySource"
+                  [formControl]="formControlGatewaySource">
+        <mat-option
+          *ngFor="let key of GatewaySources "
+          [value]="key.id.id">{{key.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="hubSource==HubSource.DEVICES" class="mat-block">
+      <mat-label>Thiết bị</mat-label>
+      <mat-select (closed)="loadNetwork()" [(ngModel)]="hubDevice" [formControl]="formControlHubDevice">
+        <mat-option
+          *ngFor="let key of HubDevices "
+          [value]="key.id.id">{{key.name}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-accordion multi="true">
+      <mat-expansion-panel *ngIf="model==HubModel.APOLLO_HUB_BLE_MESH ||model==HubModel.APOLLO_HUB_BLE_ZIGBEE"
+                           [expanded]="true"
+                           hideToggle style="margin-top: 20px;">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Cấu hình chuẩn Bluetooth SIG Mesh
+          </mat-panel-title>
+          <mat-panel-description style="height: 25px;">
+            <mat-icon style="width: 20px; height: 20px;" svgIcon="bluetooth"></mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+
+        <ble-group-selection-input (closedEvent)="reloadNodeFromGroup()"
+                                   [(groups)]="groups"
+                                   [datasource]="groupsSource"
+                                   multiple="true"
+                                   name="Chọn Group">
+        </ble-group-selection-input>
+        <tb-ble-node-selection-input [(nodes)]="nodes"
+                                     [datasource]="nodesSource"
+                                     multiple="true">
+
+        </tb-ble-node-selection-input>
+        <ble-scene-selection-input [(selection)]="scenes" [datasource]="scenesSource" multiple=true>
+        </ble-scene-selection-input>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel *ngIf="model==HubModel.APOLLO_HUB_ZIGBEE ||model==HubModel.APOLLO_HUB_BLE_ZIGBEE"
+                           style="margin-top: 20px;">
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            Cấu hình chuẩn Bluetooth SIG Mesh
+          </mat-panel-title>
+          <mat-panel-description style="height: 25px;">
+            <mat-icon style="width: 20px; height: 20px;" svgIcon="zigbee"></mat-icon>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+
+    </mat-accordion>
+-->
+
+  </div>
+
+  <div fxLayoutAlign="end center" mat-dialog-actions>
+    <button (click)="cancel()" [disabled]="(isLoading$ | async)"
+            cdkFocusInitial
+            color="primary"
+            mat-button
+            type="button">
+      {{ 'action.cancel' | translate }}
+    </button>
+    <button (click)="addTrigger=!addTrigger;" [disabled]="(isLoading$ | async)"
+            color="primary"
+            mat-raised-button
+            type="submit">
+      {{ 'action.add' | translate }}
+    </button>
+  </div>
+
+</div>
+<!--
+
+<h3 mat-dialog-controller-title>Cấu hình gateway {{name}}</h3>
+
+<div class="mat-dialog-controller-content" mat-dialog-controller-content>
+  <mat-stepper #stepper labelPosition="bottom">
+    <mat-step [stepControl]="firstFormGroup">
+      <form [formGroup]="firstFormGroup">
+        <ng-template matStepLabel>Chọn gateway model</ng-template>
+
+        <tb-text-input [(text)]="name" name="Tên">
+        </tb-text-input>
+        <tb-gateway-model-selection [(selection)]="model" name="Gateway model">
+        </tb-gateway-model-selection>
+        <div style="text-align: right;align-items: end;">
+          <button mat-button matStepperNext>Tiếp theo</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step *ngIf="model==GatewayModel.APOLLO" [stepControl]="secondFormGroup">
+      <form [formGroup]="secondFormGroup">
+        <ng-template matStepLabel>Gán thiết bị</ng-template>
+        <tb-apollo-gateway-additional-infor *ngIf="model==GatewayModel.APOLLO"
+                                            [(additionalInfor)]="additionalInfo"
+                                            [apollo]="data.apollo">
+        </tb-apollo-gateway-additional-infor>
+        <div style="text-align: right;align-items: end;">
+          <button mat-button matStepperPrevious>Quay lại</button>
+          <button mat-button matStepperNext>Tiếp theo</button>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step [stepControl]="thirdFormGroup">
+      <form [formGroup]="thirdFormGroup">
+        <ng-template matStepLabel>Cấu hình</ng-template>
+        <ng-container [ngSwitch]="model">
+          <ng-container *ngSwitchCase="GatewayModel.APOLLO">
+            <input #fileInput (change)="importEvent($event) " accept=".json" id="imageUpload" name="imageUpload"
+                   type="file"/>
+            <label>{{importStatus}}</label>
+          </ng-container>
+          <ng-container *ngSwitchCase="GatewayModel.DQSMART">
+            <tb-dqsmart-setting (saveDone)="close()" [apollo]="data.apollo" [name]="name" [nodeTree]="data.nodeTree">
+
+            </tb-dqsmart-setting>
+          </ng-container>
+          <ng-container *ngSwitchCase="GatewayModel.PELAB_LORA">
+            <tb-pelab-setting [apollo]="data.apollo" [name]="name" [nodeTree]="data.nodeTree" (saveDone)="close();">
+
+            </tb-pelab-setting>
+          </ng-container>
+          &lt;!&ndash;<ng-container *ngSwitchCase="GatewayModel.SONOFF">
+            <label>Đang phát triển. Vui lòng chọn model khác. Xin cảm ơn.</label>
+
+          </ng-container>
+          <ng-container *ngSwitchCase="GatewayModel.TUYA">
+            <label>Đang phát triển. Vui lòng chọn model khác. Xin cảm ơn.</label>
+
+          </ng-container>
+          <ng-container *ngSwitchCase="GatewayModel.YELIGHT">
+            <label>Đang phát triển. Vui lòng chọn model khác. Xin cảm ơn.</label>
+
+          </ng-container>
+          <ng-container *ngSwitchCase="GatewayModel.UNKNOWN">
+            <label>Đang phát triển. Vui lòng chọn model khác. Xin cảm ơn.</label>
+
+          </ng-container>&ndash;&gt;
+        </ng-container>
+
+        &lt;!&ndash;        <div fxLayout="row" fxLayoutAlign="end  stretch" style="height: 40px;margin-top: 5px; text-align: right;">
+                  <span (click)="fileInput.click()" class="menu-span" mat-icon-button >
+                  <label for="import">Import</label>
+                  <mat-icon [matTooltip]=" " class="menu-icon" id="import">file_upload</mat-icon>  </span>
+
+                  <input #fileInput (change)="importEvent($event) " accept=".json" id="imageUpload" name="imageUpload"
+                         style="display: none" type="file"/>
+
+                  <span (click)="exportEvent()" class="menu-span" mat-icon-button >
+                  <label for="export">Export</label>  </span>
+                  <mat-icon [matTooltip]=" " class="menu-icon" id="export">file_download</mat-icon>
+
+                </div>&ndash;&gt;
+        &lt;!&ndash;        <div style="text-align: right;align-items: end;">
+                  <button mat-button matStepperPrevious>Quay lại</button>
+                  <button mat-button matStepperNext>Tiếp theo</button>
+                </div>&ndash;&gt;
+      </form>
+    </mat-step>
+    &lt;!&ndash;       <mat-step [stepControl]="fourthFormGroup">
+             <form [formGroup]="fourthFormGroup">
+               <ng-template matStepLabel>Kết thúc</ng-template>
+               <p> {{status1}}</p>
+               <div style="text-align: right;align-items: end;">
+                 <button mat-button matStepperPrevious>Quay lại</button>
+                 <button (click)="save($event)" mat-button>Lưu</button>
+               </div>
+             </form>
+           </mat-step>&ndash;&gt;
+
+  </mat-stepper>
+</div>
+
+
+<div align="center" mat-dialog-controller-actions>
+  <button (click)="close()" cdkFocusInitial mat-button mat-dialog-controller-close>Hủy
+  </button>
+</div>
+
+-->

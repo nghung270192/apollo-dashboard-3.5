@@ -1,0 +1,23 @@
+<div fxLayout="row" fxLayoutAlign="end center">
+  <div *ngIf="hasRemove">
+    <!--
+        <mat-checkbox disableRipple=false
+                      (change)="selectionChange.emit(selection);
+                      changeEvent.emit()"
+                      (click)="$event.stopPropagation(); " [(ngModel)]="selection"
+                      [formControl]="checkBoxForm" style="color: black; margin-right: 10px;">
+        </mat-checkbox>-->
+    <input type="checkbox"
+           (change)="selectionChange.emit(selection); changeEvent.emit()"
+           (click)="$event.stopPropagation(); " [(ngModel)]="selection"
+           style="color: black; margin-right: 10px;">
+  </div>
+
+  <div *ngIf="hasSetting">
+    <mat-icon (click)="settingEvent.emit($event);" style="color: black;margin-right: 5px;">settings</mat-icon>
+  </div>
+
+  <div *ngIf="hasRemove">
+    <!--    <mat-icon (click)="removeNodeTree($event)" style="color: red;">delete</mat-icon>-->
+  </div>
+</div>

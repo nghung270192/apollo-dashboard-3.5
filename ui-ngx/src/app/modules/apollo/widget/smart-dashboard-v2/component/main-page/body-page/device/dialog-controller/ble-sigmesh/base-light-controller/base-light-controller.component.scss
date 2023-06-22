@@ -1,0 +1,30 @@
+.example-radio-group {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  align-items: flex-start;
+}
+
+.example-radio-button {
+  margin: 15px;
+}
+
+.mat-button-toggle-group {
+  align-items: center;
+  padding: 0;
+
+}
+
+.mat-button-toggle {
+  background-color: #c7c7c7;
+  width: 100px;
+}
+
+.mat-button-toggle:hover {
+  //color: red;
+  background-color: #96ff70;
+}
+
+.mat-button-toggle-checked {
+  background-color: #006fff;
+}

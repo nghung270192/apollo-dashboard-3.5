@@ -1,0 +1,15 @@
+<mat-toolbar color="primary">
+  <mat-icon style="color: white" [svgIcon]="icon"></mat-icon>
+  <h2>{{name}}</h2>
+  <span fxFlex></span>
+  <button *ngIf="isBackButton" style="margin-right: 0" (click)="back.emit($event)"
+          mat-icon-button
+          type="button">
+    <mat-icon class="material-icons">assignment_return</mat-icon>
+  </button>
+  <button style="margin-right: 0" (click)="cancel.emit($event)"
+          mat-icon-button
+          type="button">
+    <mat-icon class="material-icons">close</mat-icon>
+  </button>
+</mat-toolbar>

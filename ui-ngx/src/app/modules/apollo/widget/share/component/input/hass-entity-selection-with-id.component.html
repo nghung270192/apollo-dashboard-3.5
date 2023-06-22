@@ -1,0 +1,8 @@
+<mat-form-field class="mat-block">
+  <mat-label>{{name}}</mat-label>
+  <mat-select [(ngModel)]="entities" [formControl]="formControl" (selectionChange)="entitiesChange.emit(entities)">
+    <mat-option
+      *ngFor="let key of datasource "
+      [value]="key.entity_id">{{key.attributes?.friendly_name}}</mat-option>
+  </mat-select>
+</mat-form-field>

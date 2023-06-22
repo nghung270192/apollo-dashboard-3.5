@@ -1,0 +1,20 @@
+:host {
+  .fast-controller-container {
+    text-align: center;
+
+    button {
+      border: 1px black dashed;
+      //solve the vertical centering
+      margin: 3px;
+      line-height: 1.25rem;
+      //solve the horizontal centering
+      padding: 0;
+    }
+
+    button:hover {
+      box-shadow: rgba(45, 35, 66, 0.3) 0 4px 8px, rgba(45, 35, 66, 0.2) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+      transform: translateY(-2px);
+
+    }
+  }
+}

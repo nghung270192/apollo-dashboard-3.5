@@ -1,0 +1,29 @@
+<div style="min-width: 390px">
+  <tb-toolbar-shared name="Chọn giao diện" (cancel)="cancel()">
+  </tb-toolbar-shared>
+  <div class="upload-network-file">
+    <p>Chọn network json</p>
+    <div>
+      <input type="file" (change)="uploadJsonNetwork($event)" />
+    </div>
+
+    <div class="function-button" fxLayout="row" fxLayoutAlign="end center">
+      <button
+        *ngIf="isFileValid"
+        mat-raised-button
+        (click)="saveJsonNetworkToAsset()" >
+        Đăng tải
+      </button>
+    </div>
+
+    <mat-divider> </mat-divider>
+    <div class="network-reviewer">
+      <p>Name: {{ bleNetwork?.network?.meshName }}</p>
+      <p>Network: {{ bleNetwork?.netKeys?.netKeyArray?.length }}</p>
+      <p>Appkey: {{ bleNetwork?.appKeys?.appKeyArray()?.length }}</p>
+      <p>Nodes: {{ bleNetwork?.network?.nodes?.length }}</p>
+      <p>Group: {{ bleNetwork?.groups?.groupArray?.length }}</p>
+      <p>Scene: {{ bleNetwork?.scenes?.sceneArray?.length }}</p>
+    </div>
+  </div>
+</div>

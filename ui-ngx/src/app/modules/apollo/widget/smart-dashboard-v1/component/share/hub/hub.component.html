@@ -1,0 +1,95 @@
+<!--
+
+    Copyright © 2016-2022 The Thingsboard Authors
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<!--<div class="tb-details-buttons" fxLayout.xs="column">
+  <button mat-raised-button color="primary"
+          [disabled]="(isLoading$ | async)"
+          (click)="onEntityAction($event, 'open')"
+          [fxShow]="!isEdit && !isDetailsPage">
+    {{'common.open-details-page' | translate }}
+  </button>
+  <button mat-raised-button color="primary"
+          [disabled]="(isLoading$ | async)"
+          (click)="onEntityAction($event, 'makePublic')"
+          [fxShow]="!isEdit && assetScope === 'tenant' && !isAssignedToCustomer(entity) && !entity?.customerIsPublic">
+    {{'asset.make-public' | translate }}
+  </button>
+  <button mat-raised-button color="primary"
+          [disabled]="(isLoading$ | async)"
+          (click)="onEntityAction($event, 'assignToCustomer')"
+          [fxShow]="!isEdit && assetScope === 'tenant' && !isAssignedToCustomer(entity)">
+    {{'asset.assign-to-customer' | translate }}
+  </button>
+  <button mat-raised-button color="primary"
+          [disabled]="(isLoading$ | async)"
+          (click)="onEntityAction($event, 'unassignFromCustomer')"
+          [fxShow]="!isEdit && (assetScope === 'customer' || assetScope === 'tenant') && isAssignedToCustomer(entity)">
+    {{ (entity?.customerIsPublic ? 'asset.make-private' : 'asset.unassign-from-customer') | translate }}
+  </button>
+  <button mat-raised-button color="primary"
+          [disabled]="(isLoading$ | async)"
+          (click)="onEntityAction($event, 'unassignFromEdge')"
+          [fxShow]="!isEdit && assetScope === 'edge'">
+    {{ 'edge.unassign-from-edge' | translate }}
+  </button>
+  <button mat-raised-button color="primary"
+          [disabled]="(isLoading$ | async)"
+          (click)="onEntityAction($event, 'delete')"
+          [fxShow]="!hideDelete() && !isEdit">
+    {{'asset.delete' | translate }}
+  </button>
+  <div fxLayout="row" fxLayout.xs="column">
+    <button mat-raised-button
+            ngxClipboard
+            (cbOnSuccess)="onAssetIdCopied($event)"
+            [cbContent]="entity?.id?.id"
+            [fxShow]="!isEdit">
+      <mat-icon svgIcon="mdi:clipboard-arrow-left"></mat-icon>
+      <span translate>asset.copyId</span>
+    </button>
+  </div>
+</div>-->
+<div class="mat-padding" fxLayout="column">
+  <form [formGroup]="entityForm">
+    <fieldset>
+      <mat-form-field class="mat-block">
+        <mat-label translate>asset.name</mat-label>
+        <input formControlName="name" matInput required>
+        <mat-error *ngIf="entityForm.get('name').hasError('required')">
+          {{ 'asset.name-required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="entityForm.get('name').hasError('maxlength')">
+          {{ 'asset.name-max-length' | translate }}
+        </mat-error>
+      </mat-form-field>
+      <tb-entity-model-select [entityTypeModel]="ApolloEntityTypeModel.HubModel" formControlName="model">
+
+      </tb-entity-model-select>
+
+      <mat-form-field class="mat-block">
+        <mat-label translate>asset.label</mat-label>
+        <input [value]="entityForm.get('label').value" formControlName="label" matInput>
+        <mat-error *ngIf="entityForm.get('label').hasError('maxlength')">
+          {{ 'asset.label-max-length' | translate }}
+        </mat-error>
+      </mat-form-field>
+      <!--      <tb-node-tree-type-select formControlName="type">
+            </tb-node-tree-type-select>-->
+      <!--      <my-dropdown formControlName="type"></my-dropdown>-->
+    </fieldset>
+  </form>
+</div>

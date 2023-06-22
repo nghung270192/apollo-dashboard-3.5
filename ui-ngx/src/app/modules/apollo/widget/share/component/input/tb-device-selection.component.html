@@ -1,0 +1,8 @@
+<mat-form-field class="mat-block">
+  <mat-label>{{name}}</mat-label>
+  <mat-select [(ngModel)]="selection" [formControl]="formControl" (selectionChange)="selectionChange.emit(selection)">
+    <mat-option
+      *ngFor="let key of devices "
+      [value]="key.id.id">{{key.name}}</mat-option>
+  </mat-select>
+</mat-form-field>

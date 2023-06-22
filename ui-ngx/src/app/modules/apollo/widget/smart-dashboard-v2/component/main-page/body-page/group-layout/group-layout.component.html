@@ -1,0 +1,28 @@
+<div *ngIf="nodeTrees.length>0" class="container-areas">
+  <div>
+    <div class="header-container-areas">Nhóm:</div>
+    <div style="width: 100%; align-items: end;">
+      <mat-paginator [disabled]="totalItems<30" [length]="totalItems"
+                     [pageSize]="30"
+                     [hidePageSize]="true"
+                     [fxHide]="totalItems<30"
+                     [pageSizeOptions]="[30]">
+      </mat-paginator>
+    </div>
+  </div>
+  <div #containerGateway class="content-container-entity" fxLayout="row" fxLayoutAlign="start  center">
+    <ng-container *ngFor="let entity of dataSource;let idx = index">
+      <div style="width: 120px"
+           [style.margin-left.px]="calcSpaceBetween(dataSource.length,containerGateway.clientWidth - 10,120)"
+           class="parent__container">
+        <icon-group-entity (settingEvent)="settingNodeTree($event,entity)"
+                           [apollo]="apollo"
+                           [isEdited]="isEdited"
+                           [nodeTree]="entity"
+                           size="120">
+        </icon-group-entity>
+      </div>
+    </ng-container>
+
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<div class="rb-container" fxLayout="column">
+  <div fxLayout="row" fxLayoutAlign="space-between center">
+    <div fxFlex><p>Khu A</p></div>
+    <div style="width: 20px;margin-right: 10px;">
+      <mat-icon (click)="openNew()">open_in_new</mat-icon>
+    </div>
+  </div>
+  <tb-params-report>
+
+  </tb-params-report>
+  <mat-divider></mat-divider>
+  <!--  <div fxLayout="row" fxLayoutGap="20px">
+      <div style="width: 300px; background-color: #00C851;">Element 1</div>
+      <div style="width: 300px; background-color: #00C851;">Element 2</div>
+      <div style="width: 300px; background-color: #00C851;">Element 3</div>
+    </div>-->
+  <div class="rb-area-floor-container" fxLayoutGap="10px">
+    <tb-floor-report-box [eventCallback]="eventCallback" label="Test 1" value="123">
+
+    </tb-floor-report-box>
+
+    <tb-floor-report-box [eventCallback]="eventCallback" label="Test 2" value="345">
+
+    </tb-floor-report-box>
+    <tb-floor-report-box [eventCallback]="eventCallback" label="Test 1" value="123">
+
+    </tb-floor-report-box>
+
+    <tb-floor-report-box [eventCallback]="eventCallback" label="Test 2" value="345">
+
+    </tb-floor-report-box>
+    <tb-floor-report-box [eventCallback]="eventCallback" label="Test 2" value="345">
+
+    </tb-floor-report-box>
+  </div>
+</div>

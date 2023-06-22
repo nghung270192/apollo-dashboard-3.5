@@ -1,0 +1,139 @@
+<div class="hub-setting-dialog">
+  <mat-toolbar color="primary">
+    <h2>Cấu hình {{data.device.name}} </h2>
+    <span fxFlex></span>
+    <!--    <div [tb-help]="helpLinkId()"></div>-->
+    <button (click)="cancel()" mat-icon-button type="button">
+      <mat-icon class="material-icons">close</mat-icon>
+    </button>
+  </mat-toolbar>
+  <div  mat-dialog-content>
+    <mat-accordion >
+      <mat-expansion-panel expanded hideToggle>
+        <mat-expansion-panel-header style="background-color: #00a3ff">
+          <mat-panel-title>
+            BLE Sig Mesh
+          </mat-panel-title>
+          <mat-panel-description>
+            Cấu hình thông số BleTooth
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div fxLayout="column" fxLayoutAlign="start start">
+
+          <div>
+            <input #fileInput (change)="importEvent($event)" accept=".json" id="imageUpload" name="imageUpload"
+                   type="file" style="margin: 5px;"/>
+            <mat-divider></mat-divider>
+            <tb-text-input [(text)]="unicastAddress" name="Địa chỉ">
+            </tb-text-input>
+            <tb-ble-netkey-selection-input [(netKeys)]="netKeys" [datasource]="bleNetwork?.netKeys?.netKeyArray"
+                                           name="Chọn Netkey">
+            </tb-ble-netkey-selection-input>
+            <ble-appkey-selection-input [(appKeys)]="appKeys" [datasource]="bleNetwork?.appKeys?.appKeyArray()"
+                                        name="Chọn Appkey">
+            </ble-appkey-selection-input>
+
+            <ble-group-selection-input (closedEvent)="reloadNodeFromGroup()"
+                                       [(groups)]="groups"
+                                       [datasource]="groupsSource" multiple="true"
+                                       name="Chọn Group">
+            </ble-group-selection-input>
+
+
+            <tb-ble-node-selection-input [(nodes)]="nodes"
+                                         [datasource]="nodesSource" multiple="true">
+            </tb-ble-node-selection-input>
+
+            <ble-scene-selection-input [(selection)]="scenes" [datasource]="scenesSource" multiple=true>
+
+            </ble-scene-selection-input>
+
+          </div>
+          <mat-divider> </mat-divider>
+          <div style="width:100%;border-style:double;" fxLayout="column" fxLayoutAlign="start start">
+            <div style=" width:100%; margin-left:10%;">
+              <section style="text-align:left;font-size:20px;">
+                <label style="font-size:12px;"> Chọn thông số cài đặt </label>
+                <div>
+                  <mat-checkbox (change)="toggleSelectAllStepConfig($event);" style="font-size:15px;">Tất cả
+                  </mat-checkbox>
+                </div>
+                <div
+                  *ngFor="let data of processingStep">
+                  <mat-checkbox color="accent"
+                                [(ngModel)]="data.checked" style="font-size:15px;">
+                    <label [style.color]="data.color"> {{data.name}} </label>
+                  </mat-checkbox>
+                </div>
+              </section>
+            </div>
+            <mat-divider></mat-divider>
+            <div [innerHTML]="processingHistory"
+                 style="width:100%;overflow:auto; text-align:left;padding-left:20px;">
+            </div>
+
+          </div>
+          <div style="text-align: center; margin-top:10px">
+            <button (click)="startConfig($event)" color="primary" mat-raised-button
+                    style="margin-right:20px;width:100px;">Bắt đầu
+            </button>
+          </div>
+        </div>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel expanded hideToggle>
+        <mat-expansion-panel-header style="background-color: #00a3ff">
+          <mat-panel-title>
+            Zigbee
+          </mat-panel-title>
+          <mat-panel-description>
+            Cấu hình thông số Zigbee
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <!--<mat-tab-group animationDuration="0ms" class="matab">
+      <mat-tab label="BLE Sig Mesh">
+
+        <div class="configure">
+          <div style="height: 100%; width:100%;border-style:double;display: flex;">
+            <div style=" height:100%;width:50%">
+              <div style="height:100%; width:80%; margin-left:10%;">
+                <section style="text-align:left;font-size:20px;">
+                  <label style="font-size:12px;"> Chọn thông số cài đặt </label>
+                  <div>
+                    <mat-checkbox (change)="toggleSelectAllStepConfig($event);" style="font-size:15px;">Tất cả
+                    </mat-checkbox>
+                  </div>
+                  <div
+                    *ngFor="let data of processingStep">
+                    <mat-checkbox color="accent"
+                                  [(ngModel)]="data.checked" style="font-size:15px;">
+                      <label [style.color]="data.color"> {{data.name}} </label>
+                    </mat-checkbox>
+                  </div>
+                </section>
+              </div>
+            </div>
+            <div
+              [innerHTML]="processingHistory"
+              style="overflow:auto; height:100%;width:50%;text-align:left;padding-left:20px;">
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-top:10px">
+            <button (click)="startConfig($event)" color="primary" mat-raised-button
+                    style="margin-right:20px;width:100px;">Bắt đầu
+            </button>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="Zigbee">
+
+      </mat-tab>
+
+    </mat-tab-group>-->
+  </div>
+
+</div>

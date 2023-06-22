@@ -1,0 +1,21 @@
+:host {
+  p {
+    margin: 0;
+    padding: 0;
+    font-size: 15px;
+  }
+
+  mat-divider {
+    margin: 10px 0;
+  }
+
+  .select-layout-asset-container {
+    padding-bottom: 10px;
+  }
+
+  .function-button {
+    button {
+      margin: 0 5px;
+    }
+  }
+}

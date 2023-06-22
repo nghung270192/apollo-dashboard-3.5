@@ -1,0 +1,23 @@
+<div class="ble-mesh-view-body" fxLayout="column" fxLayoutAlign="start center">
+  <h5>Trang quản lý thiết bị {{nodeTree.name}}</h5>
+  <div *ngIf="checkJconConfig" style="width:100%; height: calc(100% - 50px);border-style: dot-dash;">
+    <mat-tab-group [(selectedIndex)]="selectedIndex" animationDuration="0ms" class="matab">
+      <mat-tab label="BLE Sig Mesh">
+        <tb-ble-sig-mesh-tab [apollo]="apollo" [nodeTree]="nodeTree">
+
+        </tb-ble-sig-mesh-tab>
+      </mat-tab>
+
+      <mat-tab label="Zigbee">
+        <tb-zigbee-tab [apollo]="apollo" [nodeTree]="nodeTree">
+
+        </tb-zigbee-tab>
+      </mat-tab>
+
+    </mat-tab-group>
+  </div>
+  <div *ngIf="!checkJconConfig" style="width:100%;">
+    <h6>Vui lòng nhập file cấu hình</h6>
+  </div>
+</div>
+

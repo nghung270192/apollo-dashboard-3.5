@@ -1,0 +1,18 @@
+<mat-form-field class="mat-block">
+  <mat-label>{{name}} </mat-label>
+  <mat-select  *ngIf="multiple" [(ngModel)]="nodeId" [formControl]="formControl" multiple
+               (selectionChange)="nodeIdChange.emit(nodeId)"
+               (closed)="closedEvent.emit()">
+    <mat-option
+      *ngFor="let key of datasource"
+      [value]="key.addr">{{key?.addr}} - {{key?.name}}</mat-option>
+  </mat-select>
+
+  <mat-select  *ngIf="!multiple" [(ngModel)]="nodeId" [formControl]="formControl"
+               (selectionChange)="nodeIdChange.emit(nodeId)" multiple = "false"
+               (closed)="closedEvent.emit()">
+    <mat-option
+      *ngFor="let key of datasource"
+      [value]="key.addr">{{key?.addr}} - {{key?.name}}</mat-option>
+  </mat-select>
+</mat-form-field>

@@ -1,0 +1,17 @@
+<mat-form-field  class="mat-block">
+  <mat-label>{{name}} </mat-label>
+  <mat-select  *ngIf="multiple" [(ngModel)]="nodes" [formControl]="formControl" multiple
+               (selectionChange)="nodesChange.emit(nodes)"
+               (closed)="closedEvent.emit()">
+    <mat-option
+      *ngFor="let key of datasource"
+      [value]="key.unicastAddress">{{key?.unicastAddress}} - {{key?.name?key?.name:"Unknown name"}}</mat-option>
+  </mat-select>
+  <mat-select  *ngIf="!multiple" [(ngModel)]="nodes" [formControl]="formControl"
+               (selectionChange)="nodesChange.emit(nodes)"
+               (closed)="closedEvent.emit()">
+    <mat-option
+      *ngFor="let key of datasource"
+      [value]="key.unicastAddress">{{key?.unicastAddress}} - {{key?.name?key?.name:"Unknown name"}}</mat-option>
+  </mat-select>
+</mat-form-field>

@@ -1,0 +1,33 @@
+<div fxLayout="row" fxLayoutAlign="space-around center" class="fast-controller-container">
+
+
+  <button *ngFor="let btn of DATA" (click)="buttonClick(btn['value'])"
+          mat-icon-button matSuffix
+          [style.width.px]="size*0.8"
+          [style.height.px]="size*0.8"
+          [style.font-size.px]="size/4"
+          style="font-weight: bold"
+  >
+    <!--<mat-icon svgIcon="set-lightness-0" style=" width: 200px !important;height: 200px; !important"></mat-icon>-->
+    {{btn['name']}}
+  </button>
+  <!--
+    <button (click)="buttonClick(10)" mat-icon-button matSuffix [style.width.px]="size" [style.height.px]="size">
+      10
+      &lt;!&ndash;    <mat-icon svgIcon="set-lightness-10" [style.width.px]="size" [style.height.px]="size"></mat-icon>&ndash;&gt;
+    </button>
+    <button (click)="buttonClick(50)" mat-icon-button matSuffix [style.width.px]="size" [style.height.px]="size">
+      50
+      &lt;!&ndash;    <mat-icon svgIcon="set-lightness-50" [style.width.px]="size" [style.height.px]="size"></mat-icon>&ndash;&gt;
+    </button>
+    <button (click)="buttonClick(80)" mat-icon-button matSuffix [style.width.px]="size" [style.height.px]="size">
+      80
+      &lt;!&ndash;    <mat-icon svgIcon="set-lightness-80" [style.width.px]="size" [style.height.px]="size"></mat-icon>&ndash;&gt;
+    </button>
+    <button (click)="buttonClick(100)" mat-icon-button matSuffix [style.width.px]="size" [style.height.px]="size">
+      100
+      &lt;!&ndash;    <mat-icon svgIcon="set-lightness-100" [style.width.px]="size" [style.height.px]="size"></mat-icon>&ndash;&gt;
+    </button>
+  -->
+
+</div>

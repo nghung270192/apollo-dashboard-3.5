@@ -1,0 +1,21 @@
+:host {
+  width: 100%;
+
+  mat-toolbar {
+    width: 100%;
+
+    h2 {
+      margin-left: 5px;
+    }
+
+
+    .fill-remaining-space {
+      /*
+      flex-grow: 1: The element will grow and take up any available space.
+      flex-shrink: 1: The element can shrink if necessary.
+      flex-basis: auto: The initial size of the element will be determined by its content.
+      */
+      flex: 1 1 auto;
+    }
+  }
+}

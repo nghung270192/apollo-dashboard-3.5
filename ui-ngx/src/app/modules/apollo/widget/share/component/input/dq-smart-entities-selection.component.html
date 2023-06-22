@@ -1,0 +1,17 @@
+<mat-form-field  class="mat-block">
+  <mat-label>{{name}}</mat-label>
+  <mat-select (closed)="closeEvent.emit(selection)" (selectionChange)="selectionChangeEvent()"
+              [(ngModel)]="selection"
+              [formControl]="formControl"
+              multiple>
+    <mat-option *ngFor="let obj of datasourceFilter "
+                [value]="obj"
+                style="white-space: normal;  height: unset;
+                line-height: 1.2em; padding-top: 0.9em; padding-bottom: 0.9em;">
+      <div style="font-size: 15px;font-weight: bold;">
+        {{obj.name ? obj.name : obj.entityId}}
+      </div>
+      <div style="color: green;font-size: 13px;"> {{obj.domainName ? obj.domainName : obj.domain}}</div>
+    </mat-option>
+  </mat-select>
+</mat-form-field>

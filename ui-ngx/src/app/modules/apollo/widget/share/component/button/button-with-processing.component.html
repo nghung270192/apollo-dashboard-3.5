@@ -1,0 +1,7 @@
+<button (click)="onClick.emit($event)"
+        [disabled]="disable"
+        [style.width.px]="size"
+        color="primary" mat-raised-button>
+  <i [ngClass]="{'fa-spin fa-spinner': disable}" class="fa" style="font-size: 30px;"></i>
+  {{name}}
+</button>

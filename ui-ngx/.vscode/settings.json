@@ -1,0 +1,6 @@
+{
+    "prettier.singleQuote": true,
+    "scssFormatter.singleQuote": true,
+    "prettier.jsxSingleQuote": true,
+    "angular.enable-strict-mode-prompt": false
+}

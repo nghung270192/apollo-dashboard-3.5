@@ -1,0 +1,76 @@
+<div *ngIf="!!data.nodeTreeController" class="energy-dialog" style=" min-width: 390px;">
+  <tb-toolbar-shared [name]="data?.nodeTreeController?.renderName()"
+                     [icon]="data?.nodeTreeController?.renderIcon()"
+                     (cancel)="cancel()"
+                     [isBackButton]="monthDataDetailMode"
+                     (back)="exitMonthDateMode()"
+  >
+
+  </tb-toolbar-shared>
+  <div *ngIf="!monthDataDetailMode" class="energy-content">
+    <div class="energy-header">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <p> Năng lượng tiêu thụ ({{energyParameters['energy']['unit']}})</p>
+        <p> {{energyParameters['date']['value']}}</p>
+      </div>
+      <div class="energy-kwh-value">
+        <p> {{energyParameters['energy']['value']}}</p>
+      </div>
+    </div>
+    <div class="energy-body" fxLayout="row" fxLayoutAlign="start center">
+
+      <div class="energy-params" *ngFor="let param of energyParametersKey">
+        <p class="param-name"> {{energyParameters[param]['name']}}</p>
+        <p class="param-unit"> ({{energyParameters[param]['unit']}})</p>
+        <p class="param-value">{{energyParameters[param]['value']}}</p>
+      </div>
+
+    </div>
+    <mat-divider></mat-divider>
+    <div class="energy-footer">
+      <div style="width: 100%; height: 100%;" fxLayout="column" fxLayoutAlign="start center">
+        <div style="width: 100%; height: 20px;" fxLayout="row" fxLayoutAlign="start center">
+          <tb-year-selector [(year)]="yearSelected" (yearChange)="updateYearDate($event)"></tb-year-selector>
+        </div>
+        <div *ngIf="isLoading" style="margin-top: 50px;">
+          <mat-progress-spinner style="width: 50px;height: 50px; margin: 0" color="accent"
+                                mode="indeterminate"></mat-progress-spinner>
+        </div>
+
+        <div style="width: 100%; height: 100%;" fxLayout="column" fxLayoutAlign="start stretch">
+          <div *ngFor="let mon of dataMonths; let idx = index;"
+               class="month-line-data" fxLayout="row" fxLayoutAlign="start center"
+               (click)="monthSelected = idx; enterMonthDateMode();">
+            <div class="energy-icon">
+              <mat-icon style="color: orangered">flash_on</mat-icon>
+            </div>
+            <div class="energy-month-name">Tháng {{idx + 1}}</div>
+            <div class="energy-data">{{mon.energyTotal}} KWh</div>
+            <div class="energy-icon" style="align-items: end;">
+              <mat-icon>arrow_forward</mat-icon>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="monthDataDetailMode" class="month-mode-energy-content">
+    <div class="energy-header">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <p> Tháng {{monthSelected + 1}} (KWh)</p>
+      </div>
+      <div class="energy-kwh-value">
+        <p> {{dataOfMonth?.energyTotal}}</p>
+      </div>
+    </div>
+    <div class="energy-chart">
+      <tb-base-chart [xValues]="xValues" [yValues]="yValues"></tb-base-chart>
+      <!-- <canvas id="myChart" width="100%" height="100%"></canvas>-->
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+</div>

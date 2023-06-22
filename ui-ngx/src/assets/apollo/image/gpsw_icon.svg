@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="129.267 158.509 157.241 199.723" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <rect x="129.911" y="159.116" width="155.963" height="198.47" style="fill: rgb(216, 216, 216); stroke: rgb(0, 0, 0);"
+        rx="7.201" ry="7.201"/>
+  <path
+    d="M 611.542 825.717 Q 614.267 816.61 616.992 825.717 L 632.503 877.555 Q 635.228 886.662 629.778 886.662 L 598.756 886.662 Q 593.306 886.662 596.031 877.555 Z"
+    style="stroke: rgb(0, 0, 0); fill: rgb(0, 255, 98);"
+    transform="matrix(-0.000773, -1, 1, -0.000773, -683.955078, 877.135559)"
+    bx:shape="triangle 593.306 816.61 41.922 70.052 0.5 0.13 1@402fd1ce"/>
+  <text
+    style="fill: rgb(255, 0, 0); font-family: Arial, sans-serif; font-size: 57px; font-weight: 700; paint-order: stroke markers; white-space: pre;"
+    x="135.288" y="345.181">10
+  </text>
+  <text
+    style="fill: rgb(8, 0, 255); font-family: Arial, sans-serif; font-size: 55.5px; font-weight: 700; paint-order: stroke markers; white-space: pre;"
+    x="217.501" y="344.367">20
+  </text>
+  <text
+    style="font-family: Arial, sans-serif; font-size: 87.1px; font-weight: 700; paint-order: stroke markers; white-space: pre;"
+    x="185.787" y="231.492">P
+  </text>
+  <path
+    d="M 611.542 825.717 Q 614.267 816.61 616.992 825.717 L 632.503 877.555 Q 635.228 886.662 629.778 886.662 L 598.756 886.662 Q 593.306 886.662 596.031 877.555 Z"
+    style="stroke: rgb(0, 0, 0); fill: rgb(0, 255, 98);"
+    transform="matrix(0.005163, 0.999987, -0.999987, 0.005163, 1096.099121, -355.890625)"
+    bx:shape="triangle 593.306 816.61 41.922 70.052 0.5 0.13 1@402fd1ce"/>
+</svg>

@@ -1,0 +1,13 @@
+<mat-form-field class="mat-block">
+  <mat-label>{{name}}</mat-label>
+  <mat-select
+    (selectionChange)="this.selectionChange.emit(selection)"
+    (closed)="closedEvent.emit()"
+    [(ngModel)]="selection"
+    [formControl]="formControl"
+    [multiple]="multiple">
+    <mat-option
+      *ngFor="let key of datasource "
+      [value]="key.number">{{key?.number}} - {{key?.name}}</mat-option>
+  </mat-select>
+</mat-form-field>

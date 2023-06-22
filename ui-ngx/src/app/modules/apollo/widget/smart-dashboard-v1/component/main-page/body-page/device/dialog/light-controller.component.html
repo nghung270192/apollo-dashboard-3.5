@@ -1,0 +1,68 @@
+<div *ngIf="data.nodeTreeController" style="width: 100%">
+  <!--  <h4 mat-dialog-controller-title style="">{{data.nodeTreeController.renderName()}}</h4>-->
+  <mat-toolbar color="primary">
+    <h2>{{data.nodeTreeController.renderName()}}</h2>
+    <span fxFlex></span>
+    <button (click)="cancel()"
+            mat-icon-button
+            type="button">
+      <mat-icon class="material-icons">close</mat-icon>
+    </button>
+  </mat-toolbar>
+  <div mat-dialog-content>
+    <mat-button-toggle-group [(ngModel)]="elementIndex" color="primary" name="fontStyle" aria-label="Font Style"
+                             style="width: 100%">
+      <mat-button-toggle color="primary" *ngFor="let element of data.nodeTreeController.bleNodeViewer.elements"
+
+                         [value]="element.index">Đèn {{element.index + 1}}
+      </mat-button-toggle>
+
+    </mat-button-toggle-group>
+
+    <div fxLayout="column" fxLayoutAlign="center center" style="width: 100%;">
+      <div fxLayout="column" fxLayoutAlign="space-between center" style="width: 100%;">
+        <div fxLayout="column" fxLayoutAlign="space-around center" style="align-items: center;">
+          <ng-container *ngIf="data.nodeTreeController.bleNodeViewer.product.model===ProductModel.light">
+            <div fxLayout="row" fxLayoutAlign="center start">
+              <apollo-group-control
+                (lightnessChange)="lightnessChange($event,elementIndex)"
+                (stateChange)="stateChange($event,elementIndex)"
+                [lightness]="lightness"
+                [size]="!data.nodeTreeController.apollo.ctx.isMobile?270:270">
+              </apollo-group-control>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="center start" style="height: 100%">
+              <div>
+                <apollo-color-control (hslDefaultChange)="hslChange($event,elementIndex)"
+                                      *ngIf="data.nodeTreeController.bleNodeViewer.hasModelOfElement('1307',elementIndex)===true"
+                                      [size]="!data.nodeTreeController.apollo.ctx.isMobile?220:220">
+                </apollo-color-control>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+        <mat-divider></mat-divider>
+      </div>
+
+      <!--      <div style="width: 100px;height: 100%">
+              <mat-radio-group
+                [(ngModel)]="elementIndex"
+                aria-labelledby="example-radio-group-label"
+                class="example-radio-group">
+                <mat-radio-button *ngFor="let element of data.nodeTreeController.bleNodeViewer.elements"
+                                  [value]="element.index"
+                                  class="example-radio-button">
+                  Đèn {{element.index + 1}}
+                </mat-radio-button>
+              </mat-radio-group>
+            </div>-->
+    </div>
+
+  </div>
+
+</div>
+
+<div *ngIf="!data.nodeTreeController">
+  <h5>Không tìm thấy node</h5>
+</div>
+

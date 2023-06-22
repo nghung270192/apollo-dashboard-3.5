@@ -1,0 +1,16 @@
+<mat-form-field class="mat-block">
+  <mat-label>{{name}}</mat-label>
+  <input [formControl]="myControl"
+         [matAutocomplete]="auto" aria-label="Model" matInput
+         placeholder="Pick one" type="text">
+
+  <mat-autocomplete class="mat-block" #auto="matAutocomplete" (optionSelected)="onOptionSelected($event)">
+    <mat-option *ngFor="let option of filteredOptions | async" [value]="option"
+                style="white-space: normal;  height: unset; line-height: 1.2em;
+          padding-top: 0.9em; padding-bottom: 0.9em;">
+      <div style="font-size: 14px;font-weight: bold;">
+        {{ZigbeeModelTypeLabelMapping[option]}} </div>
+      <div style="color: green">{{ option}}</div>
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

@@ -1,0 +1,198 @@
+<div fxLayout="column" fxLayoutAlign="start center" style="width: calc(100%);  ">
+  <h4>Trang quản lý Tự động</h4>
+
+  <mat-toolbar [fxShow]="!textSearchMode" class="mat-mdc-table-toolbar">
+    <div class="mat-toolbar-tools">
+      <span class="tb-entity-table-title">Danh sách lệnh cài đặt</span>
+      <span fxFlex></span>
+      <button (click)="createAutomation()" *ngIf="apollo.isAdmin &&isEdited"
+              mat-icon-button
+              matTooltip="Thêm lệnh tự động"
+              matTooltipPosition="above"
+              type="button">
+        <mat-icon>add</mat-icon>
+      </button>
+
+      <ng-container *ngIf="apollo.isAdmin && isEdited">
+        <button (click)="callbackEvent(EventTask.SAVE_DATABASE)"
+                mat-icon-button
+                matTooltip="Lưu giao diện"
+                matTooltipPosition="above"
+                type="button">
+          <mat-icon *ngIf="apollo.apolloNodeTreeService.isChanged==false">save</mat-icon>
+          <mat-icon *ngIf="apollo.apolloNodeTreeService.isChanged==true" style="color: red;">save</mat-icon>
+        </button>
+      </ng-container>
+      <button (click)="isEdited = !isEdited;" *ngIf="apollo.isAdmin"
+              [disabled]="apollo.apolloNodeTreeService.isChanged"
+              mat-icon-button
+              matTooltip="Chỉnh sửa"
+              matTooltipPosition="below"
+              type="button">
+        <mat-icon *ngIf="isEdited==false">edit</mat-icon>
+        <mat-icon *ngIf="isEdited==true" style="color: red;">edit</mat-icon>
+      </button>
+
+
+      <button (click)="enterFilterMode()" mat-icon-button
+              matTooltip="Tìm lệnh tự động"
+              matTooltipPosition="above"
+              type="button">
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+
+  <mat-toolbar [fxShow]="textSearchMode" class="mat-mdc-table-toolbar">
+    <div class="mat-toolbar-tools">
+      <button mat-icon-button
+              matTooltip="Tìm lệnh tự động"
+              matTooltipPosition="above">
+        <mat-icon>search</mat-icon>
+      </button>
+      <mat-form-field fxFlex>
+        <mat-label>&nbsp;</mat-label>
+        <input #searchInput [(ngModel)]="pageLink.textSearch"
+               matInput
+               placeholder="Nhập tên tìm kiếm"/>
+      </mat-form-field>
+      <button (click)="exitFilterMode()" mat-icon-button
+              matTooltip="Đóng tìm kiếm"
+              matTooltipPosition="above">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </mat-toolbar>
+  <div style="width:100%; height: calc(100% - 50px); ">
+    <section class="example-container mat-elevation-z8">
+      <mat-table [dataSource]="datasource"
+                 [matSortActive]="pageLink?.sortOrder?.property"
+                 [matSortDirection]="pageLink?.sortDirection()" matSort matSortDisableClear style="color: black;">
+        <ng-container matColumnDef="No">
+          <mat-header-cell *matHeaderCellDef class="table-header" mat-header-cell> STT</mat-header-cell>
+          <mat-cell *matCellDef="let element; let row = index;"
+                    class="table-cell"
+                    mat-cell> {{row + 1}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <mat-header-cell *matHeaderCellDef class="table-header" mat-header-cell mat-sort-header> Tên</mat-header-cell>
+          <mat-cell *matCellDef="let element; let row = index;" class="table-cell" mat-cell>
+            {{element?.name}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="createdTime">
+          <mat-header-cell *matHeaderCellDef class="table-header" mat-header-cell mat-sort-header> Ngày tạo
+          </mat-header-cell>
+          <mat-cell *matCellDef="let element; let row = index;" class="table-cell" mat-cell>
+            {{element?.createdTime|date:"HH:mm:ss dd/mm/yyyy"}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Time">
+          <mat-header-cell *matHeaderCellDef class="table-header" mat-header-cell> Nguồn điều khiển</mat-header-cell>
+          <mat-cell *matCellDef="let element; let row = index;" class="table-cell" mat-cell>
+
+            <!--          <div style="font-size: 18px;font-weight: bold">
+                        {{element?.additionalInfo?.inputScript|tbJson}}
+                      </div>-->
+
+            <div *ngIf="element?.additionalInfo?.inputScript?.fromDeviceModel" style="margin: 5px;">
+              Model: {{element?.additionalInfo?.inputScript?.fromDeviceModel}}
+            </div>
+            <div *ngIf="element?.additionalInfo?.inputScript?.fromZbName" style="margin: 5px;">
+              Name: {{element?.additionalInfo?.inputScript?.fromZbName}}
+            </div>
+            <div *ngIf="element?.additionalInfo?.inputScript?.fromZbNodes?.addr" style="margin: 5px;">
+              Address: {{element?.additionalInfo?.inputScript?.fromZbNodes?.addr}}
+            </div>
+            <div *ngIf="element?.additionalInfo?.inputScript?.fromZbEndpoint" style="margin: 5px;">
+              Endpoint: {{element?.additionalInfo?.inputScript?.fromZbEndpoint}}
+            </div>
+            <div *ngIf="element?.additionalInfo?.inputScript?.fromZbValue" style="margin: 5px;">
+              Value: {{element?.additionalInfo?.inputScript?.fromZbValue}}
+            </div>
+
+            <!--          <div style="color: green; margin-top: 10px;">
+                        {{convertWeekday(element?.additionalInfo?.inputScript?.fromWeekDays)}}.
+                      </div>-->
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Control">
+          <mat-header-cell *matHeaderCellDef class="table-header" mat-header-cell> Hành động</mat-header-cell>
+          <mat-cell *matCellDef="let element; let row = index;" class="table-cell" mat-cell>
+
+            <div *ngIf="element?.additionalInfo?.outputScript?.toDeviceModel" style="margin: 5px;">
+              Model: {{element?.additionalInfo?.outputScript?.toDeviceModel}}.
+            </div>
+            <div *ngIf="element?.additionalInfo?.outputScript?.toControlType" style="margin: 5px;">
+              Type: {{element?.additionalInfo?.outputScript?.toControlType}}
+            </div>
+            <div *ngIf="element?.additionalInfo?.outputScript?.toBleScene" style="margin: 5px;">
+              Scene: {{element?.additionalInfo?.outputScript?.toBleScene}}
+            </div>
+            <div *ngIf="element?.additionalInfo?.outputScript?.toBleGroup" style="margin: 5px;">
+              Group: {{element?.additionalInfo?.outputScript?.toBleGroup}}
+              - Value: {{element?.additionalInfo?.outputScript?.toBleValue}}
+            </div>
+
+          </mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="Enable">
+          <mat-header-cell *matHeaderCellDef class="table-header" mat-header-cell> Kích hoạt</mat-header-cell>
+          <mat-cell *matCellDef="let element;" class="table-cell" mat-cell>
+            {{element?.enable?.toString()}}
+
+            <mat-slide-toggle (change)="enableClick($event, element)" [(ngModel)]="element.additionalInfo.enable"
+                              [disabled]="!apollo.isAdmin || !isEdited">
+            </mat-slide-toggle>
+
+            <i [ngClass]="{'fa-spin fa-spinner': enableProcessing[element?.id?.id]}" class="fa"
+               style="font-size: 20px;">
+            </i>
+
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="Edit" stickyEnd>
+          <mat-header-cell *matHeaderCellDef class="table-header" mat-header-cell></mat-header-cell>
+          <mat-cell *matCellDef="let element;" class="table-cell" mat-cell>
+            <i [ngClass]="{'fa-spin fa-spinner': removeProcessing[element?.id?.id]}" class="fa"
+               style="font-size: 20px;">
+            </i>
+            <button (click)="copyNodeTree($event,element)" [disabled]="!apollo.isAdmin || !isEdited"
+                    aria-label="Clear" class="large" mat-icon-button matSuffix>
+              <mat-icon>content_copy</mat-icon>
+            </button>
+            <button (click)="removeNodeTree($event,element)" [disabled]="!apollo.isAdmin || !isEdited"
+                    aria-label="Clear" class="large" mat-icon-button matSuffix>
+              <mat-icon>delete</mat-icon>
+            </button>
+            <button (click)="clickNodeTree(element)" [disabled]="!apollo.isAdmin || !isEdited"
+                    aria-label="Clear" class="large" mat-icon-button matSuffix>
+              <mat-icon>edit</mat-icon>
+            </button>
+          </mat-cell>
+        </ng-container>
+
+        <mat-header-row
+          *matHeaderRowDef="columnsAnalyze">
+        </mat-header-row>
+        <mat-row
+          *matRowDef="let row; let idx = index; columns:columnsAnalyze;  ">
+        </mat-row>
+      </mat-table>
+      <mat-divider></mat-divider>
+      <mat-paginator [hidePageSize]="hidePageSize" [length]="totalElements"
+                     [pageIndex]="pageLink?.page"
+                     [pageSizeOptions]="[10, 20, 30]"
+                     [pageSize]="pageLink?.pageSize"
+                     style="width: 100%;"></mat-paginator>
+    </section>
+
+  </div>
+</div>
+

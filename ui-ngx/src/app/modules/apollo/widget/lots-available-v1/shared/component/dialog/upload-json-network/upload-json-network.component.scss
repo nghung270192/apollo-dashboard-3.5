@@ -1,0 +1,20 @@
+:host {
+
+  mat-divider{
+    margin: 10px 0;
+  }
+  .upload-network-file {
+    p {
+      margin: 5px;
+      padding: 5px;
+      font-size: 15px;
+    }
+    .network-reviewer{
+      p {
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+      }
+    }
+  }
+}

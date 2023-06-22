@@ -1,0 +1,8 @@
+<mat-form-field class="mat-block">
+  <mat-label>Loại thực thể</mat-label>
+  <mat-select [(ngModel)]="nodeTreeType"  (selectionChange)="onChange(nodeTreeType)">
+    <mat-option
+      *ngFor="let key of NodeTreeTypes "
+      [value]="key">{{NodeTreeTypeLabelMapping[key]}}</mat-option>
+  </mat-select>
+</mat-form-field>

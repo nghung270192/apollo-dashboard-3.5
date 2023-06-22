@@ -1,0 +1,14 @@
+<div class="params-rp-container" fxLayout="row" fxLayoutGap="20px">
+  <table>
+    <tr>
+      <th *ngFor="let param of paramArray">
+        {{param.label}}
+      </th>
+    </tr>
+    <tr>
+      <td *ngFor="let param of paramArray" [style.color]="param.color">
+        {{param.value}}
+      </td>
+    </tr>
+  </table>
+</div>

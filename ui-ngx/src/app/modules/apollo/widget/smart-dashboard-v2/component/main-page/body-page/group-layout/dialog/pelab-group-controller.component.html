@@ -1,0 +1,74 @@
+<ng-container *ngIf="controller">
+  <h4 mat-dialog-title style="">{{controller?.name}} </h4>
+  <div mat-dialog-content style="min-width:600px; width: 100%;height: 300px;">
+    <div style="width: 100%;">
+      <mat-card>
+        <mat-card>
+          <div fxLayout="row" fxLayoutAlign="start center" style="width: 100%;">
+            <mat-radio-group [(ngModel)]="modeControl" fxLayout="row"
+                             fxLayoutAlign="space-around ">
+              <label style="margin:10px;">Mode Control: </label>
+              <mat-radio-button [value]='PelabModeControl.manual' color="primary" style="margin:10px;">
+                <span> Manual</span>
+              </mat-radio-button>
+              <mat-radio-button [value]='PelabModeControl.auto' color="primary" style="margin:10px;">
+                <span>Auto</span>
+              </mat-radio-button>
+            </mat-radio-group>
+          </div>
+          <mat-divider></mat-divider>
+          <div *ngIf="modeControl==PelabModeControl.manual" fxLayout="row" fxLayoutAlign="space-around start"
+               style="align-items: center;width: 100%; margin-top: 10px;">
+            <div fxLayout="column" style="width: 200px; ">
+              <mat-label style="font-weight: bold; margin-bottom: 10px;font-size: 15px;">Power</mat-label>
+              <mat-slide-toggle [(ngModel)]="manualControl.Power">(OFF/ON)</mat-slide-toggle>
+            </div>
+            <div fxLayout="column" style="width: 300px; ">
+              <mat-label style="font-weight: bold; margin-bottom: 10px;font-size: 15px;">Dimming %</mat-label>
+              <div fxLayout="row" fxLayoutAlign="start center">
+                <mat-slider [(ngModel)]="manualControl.Dimming" max=100 min=0 step="1">
+                  <input matSliderThumb>
+                </mat-slider>
+                <mat-label>{{manualControl.Dimming}}</mat-label>
+              </div>
+            </div>
+            <div fxLayout="column" style="width: 200px; ">
+              <mat-label style="font-weight: bold; margin-bottom: 10px;font-size: 15px;">Lighting Sensor</mat-label>
+              <mat-slide-toggle [(ngModel)]="manualControl.IsUsingSensor">(NO/YES)</mat-slide-toggle>
+            </div>
+          </div>
+          <div *ngIf="modeControl==PelabModeControl.auto" fxLayout="row" fxLayoutAlign="space-around start"
+               style="align-items: center;width: 100%; margin-top: 10px;">
+
+            <div fxLayout="column" style="width: 200px; ">
+              <mat-label style="font-weight: bold; margin-bottom: 10px;font-size: 15px;">Power</mat-label>
+              <mat-slide-toggle>(OFF/ON)</mat-slide-toggle>
+            </div>
+            <div fxLayout="column" style="width: 300px; ">
+              <mat-label style="font-weight: bold; margin-bottom: 10px;font-size: 15px;">Dimming %</mat-label>
+              <div fxLayout="row" fxLayoutAlign="start center">
+                <mat-slider [(ngModel)]="manualDimming" max=100 min=0 step="1">
+                  <input matSliderThumb>
+                </mat-slider>
+                <mat-label>{{manualDimming}}</mat-label>
+              </div>
+            </div>
+            <div fxLayout="column" style="width: 200px; ">
+              <mat-label style="font-weight: bold; margin-bottom: 10px;font-size: 15px;">Lighting Sensor</mat-label>
+              <mat-slide-toggle>(NO/YES)</mat-slide-toggle>
+            </div>
+          </div>
+        </mat-card>
+        <div fxLayout="row" fxLayoutAlign="end center" style="width: 100%; margin-top: 10px">
+          <tb-button-with-processing (onClick)="update()" [disable]="loading" name="Cập nhật">
+          </tb-button-with-processing>
+        </div>
+      </mat-card>
+    </div>
+  </div>
+
+</ng-container>
+
+<div *ngIf="!controller">
+  <h5>Không tìm thấy node</h5>
+</div>
