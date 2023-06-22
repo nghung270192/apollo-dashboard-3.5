@@ -1,0 +1,401 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "appKeys": [
+    {
+      "boundNetKey": 0,
+      "index": 0,
+      "key": "27BDE647F281F6E25131EB5B1128B7A2",
+      "name": "App Key 1"
+    }
+  ],
+  "groups": [
+    { "address": "C000", "name": "New Group", "parentAddress": "0000" },
+    { "address": "C001", "name": " Group 1", "parentAddress": "0000" }
+  ],
+  "id": "http://www.bluetooth.com/specifications/assigned-numbers/mesh-profile/cdb-schema.json#",
+  "meshName": "nRF Mesh Network",
+  "meshUUID": "72821A36-6D77-4F91-B9F2-49D1E11313A0",
+  "netKeys": [
+    {
+      "index": 0,
+      "key": "BB74BEAE4BE5C7999115462A1E3C48B1",
+      "minSecurity": "secure",
+      "name": "Primary Network Key",
+      "phase": 0,
+      "timestamp": "2023-06-12T04:06:32Z"
+    }
+  ],
+  "networkExclusions": [
+    { "addresses": ["0003", "0008", "0009", "000A", "000B"], "ivIndex": 0 }
+  ],
+  "nodes": [
+    {
+      "appKeys": [{ "index": 0, "updated": false }],
+      "cid": "004C",
+      "configComplete": true,
+      "crpl": "7FFF",
+      "deviceKey": "57B657AD2EE9446C3E1B9582FA1134D5",
+      "elements": [
+        {
+          "index": 0,
+          "location": "0001",
+          "models": [
+            { "bind": [], "modelId": "0000", "subscribe": [] },
+            { "bind": [], "modelId": "0001", "subscribe": [] },
+            { "bind": [], "modelId": "0002", "subscribe": [] },
+            { "bind": [], "modelId": "0003", "subscribe": [] },
+            { "bind": [], "modelId": "1205", "subscribe": [] },
+            { "bind": [], "modelId": "1203", "subscribe": [] },
+            { "bind": [], "modelId": "1204", "subscribe": [] },
+            { "bind": [], "modelId": "1102", "subscribe": [] },
+            { "bind": [], "modelId": "1008", "subscribe": [] },
+            { "bind": [], "modelId": "1004", "subscribe": [] },
+            { "bind": [], "modelId": "1005", "subscribe": [] },
+            { "bind": [], "modelId": "1000", "subscribe": [] },
+            { "bind": [], "modelId": "1002", "subscribe": [] },
+            { "bind": [], "modelId": "1001", "subscribe": [] },
+            { "bind": [], "modelId": "1003", "subscribe": [] },
+            { "bind": [], "modelId": "00590001", "subscribe": [] }
+          ],
+          "name": "Primary Element"
+        },
+        {
+          "index": 1,
+          "location": "0002",
+          "models": [
+            { "bind": [], "modelId": "1000", "subscribe": [] },
+            { "bind": [], "modelId": "1002", "subscribe": [] },
+            { "bind": [], "modelId": "1001", "subscribe": [] },
+            { "bind": [], "modelId": "1003", "subscribe": [] }
+          ],
+          "name": "Secondary Element"
+        }
+      ],
+      "excluded": false,
+      "features": { "friend": 2, "lowPower": 2, "proxy": 2, "relay": 2 },
+      "name": "iPhone",
+      "netKeys": [{ "index": 0, "updated": false }],
+      "security": "secure",
+      "unicastAddress": "0001",
+      "UUID": "59079BE7-3E88-4082-B084-7650D1C345DE"
+    },
+    {
+      "appKeys": [{ "index": 0, "updated": false }],
+      "cid": "8001",
+      "configComplete": false,
+      "crpl": "0064",
+      "defaultTTL": 15,
+      "deviceKey": "262576A2DC6CEFF486C7A0BFB2EEA993",
+      "elements": [
+        {
+          "index": 0,
+          "location": "0000",
+          "models": [
+            { "bind": [], "modelId": "0000", "subscribe": [] },
+            { "bind": [], "modelId": "0002", "subscribe": [] },
+            {
+              "bind": [0],
+              "modelId": "1000",
+              "publish": {
+                "address": "C000",
+                "credentials": 0,
+                "index": 0,
+                "period": { "numberOfSteps": 0, "resolution": 100 },
+                "retransmit": { "count": 0, "interval": 50 },
+                "ttl": 255
+              },
+              "subscribe": ["C000"]
+            },
+            { "bind": [], "modelId": "1203", "subscribe": [] },
+            { "bind": [], "modelId": "1204", "subscribe": [] },
+            {
+              "bind": [0],
+              "modelId": "1300",
+              "publish": {
+                "address": "C000",
+                "credentials": 0,
+                "index": 0,
+                "period": { "numberOfSteps": 0, "resolution": 100 },
+                "retransmit": { "count": 0, "interval": 50 },
+                "ttl": 255
+              },
+              "subscribe": ["C001"]
+            },
+            { "bind": [], "modelId": "1301", "subscribe": [] },
+            {
+              "bind": [0],
+              "modelId": "80010001",
+              "publish": {
+                "address": "C000",
+                "credentials": 0,
+                "index": 0,
+                "period": { "numberOfSteps": 0, "resolution": 100 },
+                "retransmit": { "count": 0, "interval": 50 },
+                "ttl": 255
+              },
+              "subscribe": ["C001"]
+            }
+          ]
+        }
+      ],
+      "excluded": false,
+      "features": { "friend": 2, "lowPower": 2, "proxy": 0, "relay": 2 },
+      "name": "TUBE V1.4",
+      "netKeys": [{ "index": 0, "updated": false }],
+      "pid": "1098",
+      "security": "secure",
+      "unicastAddress": "0004",
+      "UUID": "01807190-2600-008C-AEB1-514719030000",
+      "vid": "0001"
+    },
+    {
+      "appKeys": [{ "index": 0, "updated": false }],
+      "cid": "0059",
+      "configComplete": false,
+      "crpl": "0028",
+      "defaultTTL": 4,
+      "deviceKey": "75A533AFFA872BB9944DE840C6A23A17",
+      "elements": [
+        {
+          "index": 0,
+          "location": "0000",
+          "models": [
+            { "bind": [], "modelId": "0000", "subscribe": [] },
+            { "bind": [], "modelId": "0002", "subscribe": [] },
+            { "bind": [], "modelId": "1000", "subscribe": [] },
+            {
+              "bind": [0],
+              "modelId": "80010001",
+              "publish": {
+                "address": "C000",
+                "credentials": 0,
+                "index": 0,
+                "period": { "numberOfSteps": 0, "resolution": 100 },
+                "retransmit": { "count": 0, "interval": 50 },
+                "ttl": 255
+              },
+              "subscribe": []
+            }
+          ]
+        }
+      ],
+      "excluded": false,
+      "features": { "friend": 0, "lowPower": 2, "proxy": 0, "relay": 0 },
+      "name": "RFID reader",
+      "netKeys": [{ "index": 0, "updated": false }],
+      "pid": "2003",
+      "security": "secure",
+      "unicastAddress": "0005",
+      "UUID": "73835D94-6C09-4707-9EC0-4E6F4D50B197",
+      "vid": "0000"
+    },
+    {
+      "appKeys": [{ "index": 0, "updated": false }],
+      "cid": "0211",
+      "configComplete": false,
+      "crpl": "0064",
+      "defaultTTL": 10,
+      "deviceKey": "E1F07B6ABC630772F0215BB7E1CCDDCB",
+      "elements": [
+        {
+          "index": 0,
+          "location": "0000",
+          "models": [
+            { "bind": [], "modelId": "0000", "subscribe": [] },
+            { "bind": [], "modelId": "0002", "subscribe": [] },
+            { "bind": [], "modelId": "0003", "subscribe": [] },
+            { "bind": [], "modelId": "1000", "subscribe": [] },
+            { "bind": [], "modelId": "1002", "subscribe": [] },
+            { "bind": [], "modelId": "1004", "subscribe": [] },
+            { "bind": [], "modelId": "1006", "subscribe": [] },
+            { "bind": [], "modelId": "1007", "subscribe": [] },
+            { "bind": [], "modelId": "1300", "subscribe": [] },
+            { "bind": [], "modelId": "1301", "subscribe": [] },
+            {
+              "bind": [0],
+              "modelId": "1100",
+              "publish": {
+                "address": "C000",
+                "credentials": 0,
+                "index": 0,
+                "period": { "numberOfSteps": 0, "resolution": 100 },
+                "retransmit": { "count": 0, "interval": 50 },
+                "ttl": 255
+              },
+              "subscribe": []
+            },
+            { "bind": [], "modelId": "1101", "subscribe": [] },
+            {
+              "bind": [0],
+              "modelId": "02110000",
+              "publish": {
+                "address": "C000",
+                "credentials": 0,
+                "index": 0,
+                "period": { "numberOfSteps": 0, "resolution": 100 },
+                "retransmit": { "count": 0, "interval": 50 },
+                "ttl": 255
+              },
+              "subscribe": []
+            }
+          ]
+        }
+      ],
+      "excluded": false,
+      "features": { "friend": 0, "lowPower": 2, "proxy": 0, "relay": 0 },
+      "name": "ENGERY TL",
+      "netKeys": [{ "index": 0, "updated": false }],
+      "pid": "10A9",
+      "security": "secure",
+      "unicastAddress": "0006",
+      "UUID": "11027191-2600-00C3-06A6-38C1A4020000",
+      "vid": "0001"
+    },
+    {
+      "appKeys": [{ "index": 0, "updated": false }],
+      "cid": "0059",
+      "configComplete": false,
+      "crpl": "0028",
+      "defaultTTL": 15,
+      "deviceKey": "4096EE24839F63A8A0EAA586719DC951",
+      "elements": [
+        {
+          "index": 0,
+          "location": "0000",
+          "models": [
+            { "bind": [], "modelId": "0000", "subscribe": [] },
+            { "bind": [], "modelId": "0002", "subscribe": [] },
+            {
+              "bind": [0],
+              "modelId": "800A0000",
+              "publish": {
+                "address": "C000",
+                "credentials": 0,
+                "index": 0,
+                "period": { "numberOfSteps": 0, "resolution": 100 },
+                "retransmit": { "count": 0, "interval": 50 },
+                "ttl": 255
+              },
+              "subscribe": []
+            }
+          ]
+        }
+      ],
+      "excluded": false,
+      "features": { "friend": 2, "lowPower": 2, "proxy": 0, "relay": 2 },
+      "name": "DQ SUSEN01SM 2021",
+      "netKeys": [{ "index": 0, "updated": false }],
+      "pid": "3000",
+      "security": "secure",
+      "unicastAddress": "0007",
+      "UUID": "8BFBEB71-D06E-444F-A785-0ABBDE888840",
+      "vid": "0001"
+    },
+    {
+      "appKeys": [{ "index": 0, "updated": false }],
+      "cid": "0211",
+      "configComplete": false,
+      "crpl": "0064",
+      "defaultTTL": 10,
+      "deviceKey": "094570EE1FC66C60083E46A82EC2A5DF",
+      "elements": [
+        {
+          "index": 0,
+          "location": "0000",
+          "models": [
+            { "bind": [], "modelId": "0000", "subscribe": [] },
+            { "bind": [], "modelId": "0002", "subscribe": [] },
+            { "bind": [], "modelId": "0003", "subscribe": [] },
+            {
+              "bind": [0],
+              "modelId": "80020002",
+              "publish": {
+                "address": "C001",
+                "credentials": 0,
+                "index": 0,
+                "period": { "numberOfSteps": 0, "resolution": 100 },
+                "retransmit": { "count": 0, "interval": 50 },
+                "ttl": 255
+              },
+              "subscribe": []
+            }
+          ]
+        }
+      ],
+      "excluded": false,
+      "features": { "friend": 0, "lowPower": 2, "proxy": 0, "relay": 0 },
+      "name": "Motion TL",
+      "netKeys": [{ "index": 0, "updated": false }],
+      "pid": "1002",
+      "security": "secure",
+      "unicastAddress": "000C",
+      "UUID": "11027191-2600-0002-0000-F8A7636E4649",
+      "vid": "0001"
+    },
+    {
+      "appKeys": [{ "index": 0, "updated": false }],
+      "cid": "0211",
+      "configComplete": false,
+      "crpl": "0064",
+      "defaultTTL": 10,
+      "deviceKey": "3A61144D1DF5592B4ACD8FC0D13D870C",
+      "elements": [
+        {
+          "index": 0,
+          "location": "0000",
+          "models": [
+            { "bind": [], "modelId": "0000", "subscribe": [] },
+            { "bind": [], "modelId": "0002", "subscribe": [] },
+            { "bind": [], "modelId": "0003", "subscribe": [] },
+            { "bind": [], "modelId": "1000", "subscribe": [] },
+            { "bind": [], "modelId": "1002", "subscribe": [] },
+            { "bind": [], "modelId": "1004", "subscribe": [] },
+            { "bind": [], "modelId": "1006", "subscribe": [] },
+            { "bind": [], "modelId": "1007", "subscribe": [] },
+            { "bind": [], "modelId": "1300", "subscribe": [] },
+            { "bind": [], "modelId": "1301", "subscribe": [] },
+            {
+              "bind": [0],
+              "modelId": "1100",
+              "publish": {
+                "address": "C000",
+                "credentials": 0,
+                "index": 0,
+                "period": { "numberOfSteps": 0, "resolution": 100 },
+                "retransmit": { "count": 0, "interval": 50 },
+                "ttl": 255
+              },
+              "subscribe": []
+            },
+            { "bind": [], "modelId": "1101", "subscribe": [] },
+            { "bind": [], "modelId": "02110000", "subscribe": [] }
+          ]
+        }
+      ],
+      "excluded": false,
+      "features": { "friend": 0, "lowPower": 2, "proxy": 0, "relay": 0 },
+      "name": "ENGERY TL",
+      "netKeys": [{ "index": 0, "updated": false }],
+      "pid": "10A9",
+      "security": "secure",
+      "unicastAddress": "000D",
+      "UUID": "11027191-2600-0059-2F19-38C1A4020000",
+      "vid": "0001"
+    }
+  ],
+  "partial": false,
+  "provisioners": [
+    {
+      "allocatedGroupRange": [{ "highAddress": "CC9A", "lowAddress": "C000" }],
+      "allocatedSceneRange": [{ "firstScene": "0001", "lastScene": "3333" }],
+      "allocatedUnicastRange": [
+        { "highAddress": "199A", "lowAddress": "0001" }
+      ],
+      "provisionerName": "iPhone",
+      "UUID": "59079BE7-3E88-4082-B084-7650D1C345DE"
+    }
+  ],
+  "scenes": [],
+  "timestamp": "2023-06-17T02:18:21Z",
+  "version": "1.0.0"
+}
