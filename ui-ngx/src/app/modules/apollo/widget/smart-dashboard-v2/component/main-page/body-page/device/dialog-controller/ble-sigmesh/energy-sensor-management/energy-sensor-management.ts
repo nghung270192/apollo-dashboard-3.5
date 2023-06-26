@@ -17,7 +17,7 @@ export class EnergySensorManagement {
     this.energySensorDailies = this.energySensorDailies
       .sort((a, b) => b.date - a.date);
 
-    const reduce = this.energySensorDailies.reduce((newArray, currentValue) => {
+    /*const reduce = this.energySensorDailies.reduce((newArray, currentValue) => {
       const {date} = currentValue;
       // Check if the current date already exists in the accumulator
       const existingData = newArray.find(item => new Date(item.date).getDate() === new Date(date).getDate());
@@ -38,7 +38,7 @@ export class EnergySensorManagement {
       return newArray.sort((a, b) => b.date - a.date);
     }, []);
 
-    console.log(reduce);
+    console.log(reduce);*/
   }
 
 

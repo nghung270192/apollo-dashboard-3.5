@@ -1,7 +1,7 @@
 import {NodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {
   DeviceControllerCallbackFunction,
-  DeviceState
+  EntityState
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
 import {
   ApolloWidgetContext
@@ -41,7 +41,7 @@ export class LumiSensorMotionAq2Model extends BaseZigbeeDeviceController {
   }
 
 
-  renderState(): DeviceState {
+  renderState(): EntityState {
 
     const stateStr = '';
     let color = 'black';
@@ -49,7 +49,7 @@ export class LumiSensorMotionAq2Model extends BaseZigbeeDeviceController {
       color = this.endPoint.get(LumiSensorMotionAq2Name.status)?.rawState?.color;
     }
 
-    const dvState: DeviceState = {
+    const dvState: EntityState = {
       renderState: 'Ill: ' + this.endPoint.get(LumiSensorMotionAq2Name.Illuminance)?.rawState?.value,
       rawState: {
         color,

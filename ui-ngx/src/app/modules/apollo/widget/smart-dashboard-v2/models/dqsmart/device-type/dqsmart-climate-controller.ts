@@ -13,7 +13,7 @@ import {
 } from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/home-assistant.model';
 import {
   DeviceControllerCallbackFunction,
-  DeviceState, EDevCallbackEvent
+  EntityState, EDevCallbackEvent
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
 import {HassEntity, StateChangedEvent} from 'home-assistant-js-websocket';
 import {
@@ -47,7 +47,7 @@ export class DqsmartClimateController extends BaseDqsmartController {
 
 
   //@override
-  renderState(): DeviceState {
+  renderState(): EntityState {
     return {
       rawState: {
         color: this.climateHass.state !== 'off' ? StatusColor.on : StatusColor.off,

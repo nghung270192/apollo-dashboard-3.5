@@ -12,6 +12,11 @@
 
       </widget-map-view>
     </ng-container>
+    <ng-container *ngSwitchCase="PageView.ENERGY">
+      <tb-energy-layout [callbackEvent]="callbackEvent" [apollo]="apollo" [rootNodeTree]="rootNodeTree">
+
+      </tb-energy-layout>
+    </ng-container>
     <ng-container *ngSwitchCase="PageView.AUTOMATION">
       <tb-automation-layout [callbackEvent]="callbackEvent" [apollo]="apollo" [rootNodeTree]="rootNodeTree">
 

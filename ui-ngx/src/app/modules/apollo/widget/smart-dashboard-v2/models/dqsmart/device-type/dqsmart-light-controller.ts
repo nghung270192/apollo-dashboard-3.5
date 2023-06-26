@@ -6,7 +6,7 @@ import {BaseDqsmartController} from '@modules/apollo/widget/smart-dashboard-v2/m
 import {Observable} from 'rxjs';
 import {
   DeviceControllerCallbackFunction,
-  DeviceState
+  EntityState
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
  import {HassEntity} from 'home-assistant-js-websocket';
 
@@ -28,7 +28,7 @@ export class DqsmartLightController extends BaseDqsmartController {
     return true;
   }
 
-  renderState(): DeviceState {
+  renderState(): EntityState {
     return super.renderState();
   }
   updateNewState(hassEntity: HassEntity | null): void {

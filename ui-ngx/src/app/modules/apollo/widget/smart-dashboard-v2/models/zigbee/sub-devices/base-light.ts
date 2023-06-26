@@ -15,7 +15,7 @@
 
 import {NodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {
-  DeviceControllerCallbackFunction, DeviceState, ElementToUnicast,
+  DeviceControllerCallbackFunction, EntityState, ElementToUnicast,
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
 import {
   ApolloWidgetContext,

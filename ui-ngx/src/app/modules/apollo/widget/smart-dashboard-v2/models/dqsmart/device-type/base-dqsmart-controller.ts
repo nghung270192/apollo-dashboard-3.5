@@ -1,7 +1,7 @@
 import {NodeTree, NodeTreeImpl} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {
   DeviceControllerCallbackFunction,
-  DeviceState,
+  EntityState,
   EDevCallbackEvent
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
 import {Observable, SubscriptionLike} from 'rxjs';
@@ -103,7 +103,7 @@ export abstract class BaseDqsmartController extends DeviceControllerAbstract {
       {entity_id: this.iotDevice.entityId});
   }
 
-  renderState(): DeviceState {
+  renderState(): EntityState {
     return {
       renderState: this.iotDevice.state,
       rawState: {

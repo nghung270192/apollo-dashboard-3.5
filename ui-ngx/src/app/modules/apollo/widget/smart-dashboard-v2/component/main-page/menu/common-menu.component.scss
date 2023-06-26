@@ -1,3 +1,22 @@
-.editor-tool{
-  display: inline-block;margin-left: 5px;
+@import "../theme";
+
+:host {
+  width: 100%;
+
+  .icon-spacer {
+    flex: 1 1 auto;
+  }
+
+  mat-icon {
+    color: white;
+  }
+
+  .menu-header {
+    background-color: $tb-primary-color;
+  }
+
+  .editor-tool {
+    display: inline-block;
+    margin-left: 5px;
+  }
 }

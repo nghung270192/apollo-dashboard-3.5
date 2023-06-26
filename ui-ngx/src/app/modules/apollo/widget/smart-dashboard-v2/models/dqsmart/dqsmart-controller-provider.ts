@@ -1,7 +1,7 @@
 import {NodeTree, NodeTreeImpl} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {
   DeviceControllerCallbackFunction,
-  DeviceState,
+  EntityState,
   EDevCallbackEvent
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
 import {Observable, SubscriptionLike} from 'rxjs';

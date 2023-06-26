@@ -13,13 +13,11 @@ import {
 } from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/home-assistant.model';
 import {
   DeviceControllerCallbackFunction,
-  DeviceState, EDevCallbackEvent
+  EntityState, EDevCallbackEvent
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
-import {HassEntity, StateChangedEvent} from 'home-assistant-js-websocket';
-import {GatewayModel} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-entity-type.model';
-import {
-  DqsmartGatewayNodeTreeImpl,
-  DqsmartNodeTreeImpl
+import {HassEntity} from 'home-assistant-js-websocket';
+ import {
+  DqsmartGatewayNodeTreeImpl
 } from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/dqsmart.model';
 import {
   CoverDialogControllerComponent
@@ -127,7 +125,7 @@ export class DqsmartCoverController extends BaseDqsmartController {
       });
   }
 
-  renderState(): DeviceState {
+  renderState(): EntityState {
     return {
       rawState: {
         color: this.coverHass?.state === 'open' ? 'red' : this.coverHass?.state === 'closed' ? '#1a237e' : 'black',

@@ -2,7 +2,7 @@ import {DeviceControllerAbstract} from '@modules/apollo/widget/smart-dashboard-v
 import {HubNodeTreeImpl, NodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {
   DeviceControllerCallbackFunction,
-  DeviceState,
+  EntityState,
   EDevCallbackEvent,
   ElementToUnicast,
   renderBleLightState
@@ -151,7 +151,7 @@ export class BaseBleSigmeshController extends DeviceControllerAbstract {
       }
     }*/
 
-  renderState(): DeviceState {
+  renderState(): EntityState {
     return null;
   }
 
@@ -295,7 +295,6 @@ export class BaseBleSigmeshController extends DeviceControllerAbstract {
           unicastAddress,
           data: JSON.parse(dt.data[0][1])
         };
-        console.log(ds);
         this.subject.next(ds);
       }
     }

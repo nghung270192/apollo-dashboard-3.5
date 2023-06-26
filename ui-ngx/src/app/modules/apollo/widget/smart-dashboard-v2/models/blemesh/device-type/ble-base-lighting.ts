@@ -10,7 +10,7 @@ import {ChangeDetectorRef} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {
   DeviceControllerCallbackFunction,
-  DeviceState,
+  EntityState,
   EDevCallbackEvent,
   ElementToUnicast,
   renderBleLightState
@@ -88,7 +88,7 @@ export class BleBaseLighting extends BaseBleSigmeshController {
       ElementToUnicast(this.bleNodeViewer?.unicastAddress, params?.index));*/
   }
 
-  renderState(): DeviceState {
+  renderState(): EntityState {
     return renderBleLightState(this.onOff, this.lightness);
   }
 

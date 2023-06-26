@@ -73,6 +73,9 @@ import {
 import {
   ToolbarSharedModule
 } from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/device/dialog-controller/toolbar-shared/toolbar-shared.module';
+import {
+    EnergyLayoutModule
+} from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/energy-layout/energy-layout.module';
 
 
 @NgModule({
@@ -122,19 +125,20 @@ import {
     BleGroupSettingComponent,
     SettingGroupFromApolloComponent
   ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    ApolloShareModule,
-    SmartDashboarShareModule,
-    MainModule,
-    InputModule,
-    AnalyzeLayoutModule,
-    MenuModule,
-    DeviceLayoutModule,
-    ToolbarSharedModule
+    imports: [
+        CommonModule,
+        SharedModule,
+        ApolloShareModule,
+        SmartDashboarShareModule,
+        MainModule,
+        InputModule,
+        AnalyzeLayoutModule,
+        MenuModule,
+        DeviceLayoutModule,
+        ToolbarSharedModule,
+        EnergyLayoutModule
 
-  ],
+    ],
   exports: [
     MainPageComponent,
   ]

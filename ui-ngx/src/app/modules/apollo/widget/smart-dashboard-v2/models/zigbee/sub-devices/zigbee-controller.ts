@@ -24,7 +24,7 @@ import {NodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-
 import {Observable, SubscriptionLike} from 'rxjs';
 import {
   DeviceControllerCallbackFunction,
-  DeviceState,
+  EntityState,
   EDevCallbackEvent
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
 import {
@@ -67,7 +67,7 @@ export class ZbStateParamsImpl implements ZbStateParams {
 export class BaseZigbeeDeviceController extends DeviceControllerAbstract {
 
   maxEndpoint = 1;
-  endPoint: Map<string, DeviceState> = new Map<string, DeviceState>([]);
+  endPoint: Map<string, EntityState> = new Map<string, EntityState>([]);
   addr: number;
   model: ZigbeeModel;
   name: string;
@@ -148,7 +148,7 @@ export class BaseZigbeeDeviceController extends DeviceControllerAbstract {
   entityClick(): any {
   }
 
-  renderState(): DeviceState {
+  renderState(): EntityState {
     return undefined;
   }
 

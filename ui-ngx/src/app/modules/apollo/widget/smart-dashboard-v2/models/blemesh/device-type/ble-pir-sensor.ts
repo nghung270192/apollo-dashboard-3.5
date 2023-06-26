@@ -6,7 +6,7 @@ import {ApolloWidgetContext} from '@modules/apollo/widget/smart-dashboard-v2/mod
 import {ChangeDetectorRef} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {
-  DeviceControllerCallbackFunction, DeviceState
+  DeviceControllerCallbackFunction, EntityState
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
 
 import {
@@ -41,7 +41,7 @@ export class BlePirSensor extends BaseBleSigmeshController {
     this.dialog.open(MotionSensorComponent, dialogConfig).afterClosed().subscribe();
   }
 
-  renderState(): DeviceState {
+  renderState(): EntityState {
     return super.renderState();
   }
 

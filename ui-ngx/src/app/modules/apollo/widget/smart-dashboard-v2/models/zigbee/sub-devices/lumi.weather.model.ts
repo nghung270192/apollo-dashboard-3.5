@@ -1,7 +1,7 @@
 import {NodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {
   DeviceControllerCallbackFunction,
-  DeviceState
+  EntityState
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
 import {
   ApolloWidgetContext,
@@ -35,7 +35,7 @@ export class LumiWeatherModel extends BaseZigbeeDeviceController {
         }*/
   }
 
-  renderState(): DeviceState {
+  renderState(): EntityState {
 
     let color = 'black';
     if (this.endPoint.get('Temperature')) {

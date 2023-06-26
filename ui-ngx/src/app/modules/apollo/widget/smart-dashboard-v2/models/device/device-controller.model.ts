@@ -20,7 +20,7 @@ import {
 } from '@modules/apollo/widget/smart-dashboard-v2/models/blemesh/ble-sigmesh-controller-provider';
 import {
   DqsmartControllerProvider
-} from "@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/dqsmart-controller-provider";
+} from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/dqsmart-controller-provider';
 
 // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function ElementToUnicast(baseUnicast: string, element: number): string {
@@ -33,18 +33,58 @@ export enum EDevCallbackEvent {
 
 export type DeviceControllerCallbackFunction = (event: EDevCallbackEvent | string) => void;
 
-export interface DeviceState {
-  rawState: {
+export interface EntityState {
+  rawState?: {
     color?: string;
     onOffState?: boolean;
     lightness?: any;
+    rgb?: any;
+    energy?: any;
     [key: string]: any;
   };
   renderState?: string;
 }
 
+export class EntityStateImpl implements EntityState {
+  color?: string;
+  onOffState?: boolean;
+  lightness?: any;
+  rgb?: any;
+  energy?: any;
+  renderState: string;
+
+
+  constructor(color?: string,
+              onOffState?: boolean,
+              lightness?: any,
+              rgb?: any,
+              energy?: any,
+              renderState?: string) {
+    this.color = color;
+    this.onOffState = onOffState;
+    this.lightness = lightness;
+    this.rgb = rgb;
+    this.energy = energy;
+    this.renderState = renderState;
+  }
+
+  toData(): EntityState {
+    return {
+      renderState: this.renderState,
+      rawState: {
+        color: this.color,
+        onOffState: this.onOffState,
+        lightness: this.lightness,
+        rgb: this.rgb,
+        energy: this.energy
+      }
+    };
+  }
+
+}
+
 // eslint-disable-next-line prefer-arrow/prefer-arrow-functions
-export function renderBleLightState(onOff: number, lightness: number): DeviceState {
+export function renderBleLightState(onOff: number, lightness: number): EntityState {
   let strState = 'unknown';
 
   if (onOff !== undefined) {
@@ -69,7 +109,7 @@ export function renderBleLightState(onOff: number, lightness: number): DeviceSta
 
   return {
     rawState: {
-      color: (onOff===null && lightness===null) ? StatusColor.unknown : ((onOff) || (lightness)) ? StatusColor.on : StatusColor.off,
+      color: (onOff === null && lightness === null) ? StatusColor.unknown : ((onOff) || (lightness)) ? StatusColor.on : StatusColor.off,
       onOffState: !!((onOff) || (lightness)),
     },
     renderState: strState
@@ -350,7 +390,7 @@ export class PelabDeviceNodeTreeController extends DeviceControllerAbstract {
       false, [this.pelabDevice.deviceAdressStr]);
   }
 
-  renderState(): DeviceState {
+  renderState(): EntityState {
     return {
       rawState: {
         color: this.state ? StatusColor.on : !this.state ? StatusColor.off : StatusColor.unknown,

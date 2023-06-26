@@ -9,7 +9,7 @@ import {
 import {ChangeDetectorRef} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {
-  DeviceControllerCallbackFunction
+  DeviceControllerCallbackFunction, EntityState, EntityStateImpl
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
 import {
   EnergySensorManagementComponent
@@ -19,6 +19,7 @@ import {
   EnergySensorDaily
 } from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/device/dialog-controller/ble-sigmesh/energy-sensor-management/energy-sensor-management.model';
 import {filter, map} from 'rxjs/operators';
+import {StatusColor} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-entity.model';
 
 export class BleEnergySensor extends BaseBleSigmeshController {
   lastData: EnergySensorDaily;
@@ -32,8 +33,7 @@ export class BleEnergySensor extends BaseBleSigmeshController {
     callback: DeviceControllerCallbackFunction
   ) {
     super(nodeTree, apollo, cd, dialog, callback);
-
-
+    this.updateNewData(callback);
   }
 
   updateNewData(callback) {
@@ -56,6 +56,7 @@ export class BleEnergySensor extends BaseBleSigmeshController {
                 this.lastData.data.power = value1?.params?.power;
               }
             }
+
             if (callback) {
               callback(this.lastData);
             }
@@ -67,6 +68,17 @@ export class BleEnergySensor extends BaseBleSigmeshController {
     ;
   }
 
+  renderState(): EntityState {
+    const entityState = new EntityStateImpl(
+      this.lastData ? StatusColor.on : StatusColor.off,
+      null,
+      null,
+      null,
+      null,
+      this.lastData?.data?.energy + ' (Kwh)'
+    );
+    return entityState.toData();
+  }
 
   entityClick(): any {
     const dialogConfig: MatDialogConfig = {
@@ -126,5 +138,12 @@ export class BleEnergySensor extends BaseBleSigmeshController {
       }))
       ;*/
 
+  }
+
+  unSubscribe() {
+    if (this.energySubscription) {
+      this.energySubscription?.unsubscribe();
+    }
+    super.unSubscribe();
   }
 }

@@ -1,7 +1,7 @@
 import {NodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {
   DeviceControllerCallbackFunction,
-  DeviceState,
+  EntityState,
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
 import {ApolloWidgetContext,} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-widget-context.model';
 import {MatDialog} from '@angular/material/dialog';
@@ -37,7 +37,7 @@ export class LumiRemoteB286acn01Model extends BaseZigbeeDeviceController {
     }*/
   }
 
-  renderState(): DeviceState {
+  renderState(): EntityState {
     let stateStr = '';
     let color = 'black';
     const state = this.endPoint.get(LumiRemoteB286acn01Name.status);

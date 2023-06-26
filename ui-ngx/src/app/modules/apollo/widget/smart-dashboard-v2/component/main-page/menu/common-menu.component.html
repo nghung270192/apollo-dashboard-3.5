@@ -1,4 +1,100 @@
-<div style="width: 100%;height: 40px; ">
+<mat-toolbar color="primary" class="menu-header" style="width: 100%;">
+  <button (click)="backEvent.emit()"
+          aria-label="Clear"
+          class="large"
+          matTooltip="Quay lại"
+          mat-icon-button
+          matSuffix>
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <button (click)="home()"
+          aria-label="Clear"
+          class="large"
+          mat-icon-button
+          matSuffix
+          matTooltip="Trang chủ">
+    <mat-icon>home</mat-icon>
+  </button>
+  <mat-divider style="height: 70%; margin: 0 5px; background-color: white"
+               vertical="true"></mat-divider>
+  <button *ngIf="!this.apollo.ctx.isMobile"
+          (click)=" mapViewEvent.emit(mapView)"
+          class="large"
+          mat-icon-button
+          matTooltip="Bản đồ"
+          matSuffix>
+    <mat-icon svgIcon="map-view"></mat-icon>
+  </button>
+  <button *ngIf="!this.apollo.ctx.isMobile && apollo.isAdmin" (click)="schedulerToggle.emit()"
+          aria-label="Đặt lịch"
+          mat-icon-button
+          matSuffix
+          matTooltip="Đặt lịch">
+    <mat-icon>schedule</mat-icon>
+  </button>
+  <button *ngIf="!this.apollo.ctx.isMobile && apollo.isAdmin" (click)="automationViewEvent.emit()"
+          aria-label="Tự động"
+          mat-icon-button
+          matSuffix
+          matTooltip="Tự động">
+    <mat-icon svgIcon="automation"></mat-icon>
+  </button>
+  <button *ngIf="!this.apollo.ctx.isMobile"
+          (click)="energyViewEvent()"
+          aria-label="Năng lượng"
+          mat-icon-button
+          matSuffix
+          matTooltip="Quảng lý năng lượng">
+    <mat-icon svgIcon="power"></mat-icon>
+  </button>
+  <!--  <mat-slider color="accent" max="200" min="50" step="5" style="  margin-left: 5px;">
+      <input matSliderThumb value="100" [(ngModel)]="sizeIcon" (change)="sizeIconChange.emit(sizeIcon)">
+    </mat-slider>-->
+  <span class="icon-spacer"></span>
+  <span>{{nameLayout}}</span>
+  <button *ngIf="!apollo.ctx.isMobile && apollo?.isAdmin"
+          (click)="setting()"
+          aria-label="Add"
+          mat-icon-button
+          matSuffix
+          matTooltip="Chọn layout">
+    <mat-icon>settings</mat-icon>
+  </button>
+  <button *ngIf="this.apollo.ctx.isMobile"
+          [matMenuTriggerFor]="menu"
+          aria-label="Example icon-button with a menu"
+          mat-icon-button>
+    <mat-icon>menu</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button (click)=" mapViewEvent.emit(mapView)" mat-menu-item>
+      <mat-icon svgIcon="map-view"></mat-icon>
+      <span>Bản đồ</span>
+    </button>
+    <button *ngIf=" apollo.isAdmin" (click)="schedulerToggle.emit()" mat-menu-item>
+      <mat-icon>schedule</mat-icon>
+      <span>Hẹn giờ</span>
+    </button>
+    <button *ngIf=" apollo.isAdmin" (click)="automationViewEvent.emit()" mat-menu-item>
+      <mat-icon svgIcon="automation"></mat-icon>
+      <span>Tự động</span>
+    </button>
+    <button *ngIf="false" (click)="analyzeViewEvent()" mat-menu-item>
+      <mat-icon>pie_chart</mat-icon>
+      <span>Phân tích</span>
+    </button>
+    <button (click)="energyViewEvent()" mat-menu-item>
+      <mat-icon svgIcon="power"></mat-icon>
+      <span>Năng lượng</span>
+    </button>
+    <button *ngIf=" apollo.isAdmin" (click)="setting()" mat-menu-item>
+      <mat-icon>settings</mat-icon>
+      <span>Chọn layout</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>
+
+<!--<div class="menu-header" style="width: 100%; margin-top: 10px;">
   <div fxLayout="row" fxLayoutAlign="space-between center">
     <div fxLayout="row" fxLayoutAlign="start stretch" style="width: 60%">
       <div matTooltip="Quay lại" style="display: inline-block;margin-left: 10px;">
@@ -14,7 +110,6 @@
           <mat-icon>home</mat-icon>
         </button>
       </div>
-
       <div *ngIf="!this.apollo.ctx.isMobile" matTooltip="Xem ở chế độ bản đồ"
            style="display: inline-block;margin-left: 10px;margin-bottom: 10px;">
         <button (click)=" mapViewEvent.emit(mapView)" class="large" mat-icon-button matSuffix>
@@ -22,7 +117,6 @@
           <mat-icon svgIcon="map-view"></mat-icon>
         </button>
       </div>
-
       <div *ngIf="!this.apollo.ctx.isMobile && apollo.isAdmin">
         <button (click)="schedulerToggle.emit()"
                 aria-label="Đặt lịch" mat-icon-button matSuffix
@@ -39,19 +133,26 @@
         </button>
       </div>
 
-      <div *ngIf="!this.apollo.ctx.isMobile">
-        <button (click)="analyzeViewEvent()"
-                aria-label="Thống kê" mat-icon-button matSuffix
-                matTooltip="Thống kê">
-          <mat-icon>pie_chart</mat-icon>
-        </button>
-      </div>
+      &lt;!&ndash;      <div *ngIf="!this.apollo.ctx.isMobile">
+              <button (click)="analyzeViewEvent()"
+                      aria-label="Thống kê" mat-icon-button matSuffix
+                      matTooltip="Thống kê">
+                <mat-icon>pie_chart</mat-icon>
+              </button>
+            </div>&ndash;&gt;
+      &lt;!&ndash;      <div *ngIf="!this.apollo.ctx.isMobile">
+              <button (click)="analyzeViewEvent()"
+                      aria-label="Thống kê" mat-icon-button matSuffix
+                      matTooltip="Thống kê">
+                <mat-icon>pie_chart</mat-icon>
+              </button>
+            </div>&ndash;&gt;
 
-      <div *ngIf="!this.apollo.ctx.isMobile && false">
-        <button (click)="analyzeViewEvent()"
-                aria-label="Phân tích" mat-icon-button matSuffix
-                matTooltip="Phân tích">
-          <mat-icon>pie_chart</mat-icon>
+      <div>
+        <button *ngIf="!this.apollo.ctx.isMobile" (click)="energyViewEvent()"
+                aria-label="Năng lượng" mat-icon-button matSuffix
+                matTooltip="Quảng lý năng lượng">
+          <mat-icon svgIcon="power"></mat-icon>
         </button>
       </div>
 
@@ -69,12 +170,12 @@
         </button>
         <ng-container *ngIf="isEdited">
 
-          <!--          <div class="editor-tool">
+          &lt;!&ndash;          <div class="editor-tool">
                       <button (click)="createApolloTree()" [disabled]="!isEdited" aria-label="Add" mat-icon-button matSuffix
                                                                                   matTooltip="Tạo giao diện mới">
                         <mat-icon>open_in_new</mat-icon>
                       </button>
-                    </div>-->
+                    </div>&ndash;&gt;
 
           <div class="editor-tool" matTooltip="Thêm thực thể mới">
             <button (click)="createEntity.emit()" [disabled]="!isEdited" aria-label="Add" mat-icon-button matSuffix>
@@ -100,7 +201,6 @@
         </button>
       </div>
     </div>
-
     <div *ngIf="this.apollo.ctx.isMobile" fxLayout="row" fxLayoutAlign="end center" style="width: 10%">
 
       <button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu" mat-icon-button>
@@ -123,13 +223,16 @@
           <mat-icon>pie_chart</mat-icon>
           <span>Phân tích</span>
         </button>
+        <button (click)="energyViewEvent()" mat-menu-item>
+          <mat-icon svgIcon="power"></mat-icon>
+          <span>Năng lượng</span>
+        </button>
         <button *ngIf=" apollo.isAdmin" (click)="setting()" mat-menu-item>
           <mat-icon>settings</mat-icon>
           <span>Chọn layout</span>
         </button>
       </mat-menu>
     </div>
-
   </div>
 
-</div>
+</div>-->

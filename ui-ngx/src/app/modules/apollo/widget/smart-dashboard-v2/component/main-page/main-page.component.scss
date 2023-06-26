@@ -1,52 +1,62 @@
 $header-height: 40px;
-
-.main-page {
+:host {
   width: 100%;
   height: 100%;
-  cursor: auto;
 
-  .header {
-    width: 95%;
-    height: $header-height;
-  }
-
-  .body-container {
-    border: 1px black solid;
+  .main-page-container {
     width: 100%;
-    height: calc(100% - $header-height - 10px);
-    //overflow: auto;
+    height: 100%;
+    cursor: auto;
+    display: flex;
+    flex-direction: column;
 
-    .body-content {
+    .main-header {
       width: 100%;
-      overflow: auto;
-      height: calc(100% - 25px);
+    }
 
-      .mat-toolbar-tools {
-        padding: 0 20px !important;
-        margin-top: 3px;
+    .main-body {
+      border: 1px black solid;
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      .body-toolbar {
+        width: 100%;
+        background-color: yellow;
       }
 
-      .body-sidenav-content {
-        display: inline;
-        height: calc(100% - 15px);
+      .body-content {
         width: 100%;
-        //align-items: center;
-        //justify-content: center;
+        flex: 1;
+        overflow: auto;
+        border: red dotted 2px;
 
-        .mat-form-field {
-          font-size: 12px; // example
+        .mat-toolbar-tools {
+          padding: 0 20px !important;
+          margin-top: 3px;
         }
 
-        .add-entity-button {
-          width: 200px;
-          height: 150px;
-          font-size: 20px;
-          border: black dashed 1px;
+        .body-sidenav-content {
+          display: inline;
+          height: calc(100% - 15px);
+          width: 100%;
+          //align-items: center;
+          //justify-content: center;
+
+          .mat-form-field {
+            font-size: 12px; // example
+          }
+
+          .add-entity-button {
+            width: 200px;
+            height: 150px;
+            font-size: 20px;
+            border: black dashed 1px;
+          }
         }
       }
     }
+
   }
-
 }
-
-

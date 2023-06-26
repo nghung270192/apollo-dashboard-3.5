@@ -55,7 +55,7 @@ export class MainPageComponent extends PageComponent implements OnInit, AfterVie
   rootNodeTree: NodeTree;
   childrenNodetree: Array<NodeTree> = [];
   childrenNodetreeFilter: Array<NodeTree> = [];
-  removedEntityCollecttion: Array<String> = [];
+  removedEntityCollecttion: Array<string> = [];
   pageView: PageView = PageView.NORMAL;
   PageView = PageView;
   setTimeOutId = null;
@@ -120,6 +120,9 @@ export class MainPageComponent extends PageComponent implements OnInit, AfterVie
           break;
         case EventTask.ANALYZE_VIEWER:
           this.analyzeBtnEventClick();
+          break;
+        case EventTask.ENERGY_VIEWER:
+          this.energyBtnEventClick();
           break;
       }
     });
@@ -345,6 +348,10 @@ export class MainPageComponent extends PageComponent implements OnInit, AfterVie
     this.pageView = PageView.ANALYZE;
   }
 
+  energyBtnEventClick() {
+    this.pageView = PageView.ENERGY;
+  }
+
   mapBtnEventClick() {
     this.pageView = PageView.MAP;
   }
@@ -475,18 +482,10 @@ export class MainPageComponent extends PageComponent implements OnInit, AfterVie
   }
 
   updateData(allNodes: boolean) {
-    console.log("filter mode")
     if (allNodes && this.pageLink.textSearch) {
       this.apollo.apolloNodeTreeService.getByApolloTree(null, this.pageLink, '', '').subscribe(
         value => {
           this.childrenNodetreeFilter = value.data;
-          /*          .filter(res =>
-                      res.type?.toLowerCase()?.indexOf(this.pageLink.textSearch?.trim()?.toLowerCase()) > -1 ||
-                      NodeTreeTypeLabelMapping[res.type]?.toLowerCase()?.indexOf(this.pageLink.textSearch?.trim()?.toLowerCase()) > -1 ||
-                      res.name?.toLowerCase()?.indexOf(this.pageLink.textSearch?.trim()?.toLowerCase()) > -1 ||
-                      res.model?.toLowerCase()?.indexOf(this.pageLink.textSearch?.trim()?.toLowerCase()) > -1 ||
-                      res.label?.toLowerCase()?.indexOf(this.pageLink.textSearch?.trim()?.toLowerCase()) > -1);*/
-
           this.loading = false;
           this.cd.detectChanges();
         }

@@ -15,7 +15,7 @@
 
 import {NodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {
-  DeviceControllerCallbackFunction, DeviceState,
+  DeviceControllerCallbackFunction, EntityState,
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
 import {
   ApolloWidgetContext,
@@ -41,7 +41,7 @@ export class DqhomeRe extends BaseLight {
     super(nodeTree, apollo, cd, dialog, callback);
   }
 
-  renderState(): DeviceState {
+  renderState(): EntityState {
     let stateStr = '';
     let color = 'black';
     const state = this.endPoint.get(DqhomeReName.status);

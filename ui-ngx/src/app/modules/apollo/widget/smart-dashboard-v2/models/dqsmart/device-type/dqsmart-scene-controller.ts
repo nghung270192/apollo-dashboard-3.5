@@ -5,7 +5,7 @@ import {BaseDqsmartController} from '@modules/apollo/widget/smart-dashboard-v2/m
 import {Observable} from 'rxjs';
 import {
   DeviceControllerCallbackFunction,
-  DeviceState,
+  EntityState,
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
  import {HassEntity} from 'home-assistant-js-websocket';
 import {ChangeDetectorRef} from '@angular/core';
@@ -29,7 +29,7 @@ export class DqsmartSceneController extends BaseDqsmartController {
     return true;
   }
 
-  renderState(): DeviceState {
+  renderState(): EntityState {
     return super.renderState();
   }
 

@@ -1,7 +1,7 @@
 import {ApolloDeviceModel} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-hub/apollo-hub';
 import {NodeTree, NodeTreeImpl} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {
-  DeviceState,
+  EntityState,
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
 import {Observable} from 'rxjs';
 
@@ -22,7 +22,7 @@ export abstract class DeviceControllerAbstract extends NodeTreeImpl {
 
   abstract renderDeviceTypeIcon(): string;
 
-  abstract renderState(): DeviceState;
+  abstract renderState(): EntityState;
 
   abstract renderIcon(): string;
 

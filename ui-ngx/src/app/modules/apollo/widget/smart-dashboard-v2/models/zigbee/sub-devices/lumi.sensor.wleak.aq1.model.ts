@@ -1,7 +1,7 @@
 import {NodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {
   DeviceControllerCallbackFunction,
-  DeviceState
+  EntityState
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
 import {
   ApolloWidgetContext,
@@ -37,7 +37,7 @@ export class LumiSensorWleakAq1Model extends BaseZigbeeDeviceController {
         }*/
   }
 
-  renderState(): DeviceState {
+  renderState(): EntityState {
 
     const stateStr = '';
     let color = 'black';
@@ -45,7 +45,7 @@ export class LumiSensorWleakAq1Model extends BaseZigbeeDeviceController {
       color = this.endPoint.get('Temperature')?.rawState?.color;
     }
 
-    const dvState: DeviceState = {
+    const dvState: EntityState = {
       renderState: 'T: ' + this.endPoint.get('Temperature')?.rawState?.value + '°C'
         + 'H: ' + this.endPoint.get('Relative Humidity')?.rawState?.value + '%',
       rawState: {

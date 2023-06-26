@@ -73,6 +73,9 @@ export class CommonMenuComponent implements OnInit, AfterViewInit {
   analyzeViewEvent() {
     this.apollo.apolloService.eventTaskSubject.next(EventTask.ANALYZE_VIEWER);
   }
+  energyViewEvent() {
+    this.apollo.apolloService.eventTaskSubject.next(EventTask.ENERGY_VIEWER);
+  }
 
   ngAfterViewInit(): void {
     this.cd.detectChanges();

@@ -6,6 +6,9 @@ import {
 import {
   DeviceLayoutModule
 } from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/device/device-layout.module';
+import {
+  EnergyLayoutModule
+} from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/energy-layout/energy-layout.module';
 
 
 @NgModule({
@@ -14,7 +17,8 @@ import {
   imports: [
     CommonModule,
     DeviceDialogModule,
-    DeviceLayoutModule
+    DeviceLayoutModule,
+    EnergyLayoutModule
   ]
 })
 export class BodyPageModule {

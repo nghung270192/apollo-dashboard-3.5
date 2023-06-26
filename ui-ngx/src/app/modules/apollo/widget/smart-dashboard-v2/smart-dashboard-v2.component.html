@@ -1,5 +1,7 @@
-<div *ngIf="!!ctx && enable === true" class="main-page">
-  <tb-main-page style="width: 100%" [apollo]="apollo"></tb-main-page>
+<div *ngIf="!!ctx && enable === true" class="smart-db-page-v2">
+  <tb-main-page [apollo]="apollo">
+
+  </tb-main-page>
 </div>
 
 <div *ngIf="!!ctx && enable === false" style="width: 100%; height: 100%; text-align: center">

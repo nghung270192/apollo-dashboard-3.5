@@ -58,6 +58,7 @@ export class IconEntityComponent implements OnInit, OnChanges, OnDestroy, AfterV
   subscription: Subscription;
 
   constructor(private dialog: MatDialog, private cd: ChangeDetectorRef, private elementRef: ElementRef) {
+    this.callback = this.callback.bind(this);
   }
 
   ngOnInit(): void {
@@ -68,9 +69,6 @@ export class IconEntityComponent implements OnInit, OnChanges, OnDestroy, AfterV
       if (classDevice) {
         this.deviceController = new classDevice(this.nodeTree, this.apollo, this.cd, this.dialog, this.callback);
       }
-      // this.deviceController = classDevice.create(this.nodeTree, this.apollo, this.dialog-controller, this.callback);
-      // if(this.deviceController){
-      //   }
     }
 
   }
@@ -79,7 +77,7 @@ export class IconEntityComponent implements OnInit, OnChanges, OnDestroy, AfterV
 
   }
 
-  callback(event: EDevCallbackEvent) {
+  callback(data) {
     this.cd.detectChanges();
   }
 
