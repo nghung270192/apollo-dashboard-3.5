@@ -1,1 +1,66 @@
-<p>energy-layout works!</p>
+<div class="el-container" fxLayout="column" fxLayoutAlign="center start">
+
+  <div class="el-title">
+    <p>GIÁM SÁT NĂNG LƯỢNG ĐIỆN TIÊU THỤ</p>
+  </div>
+
+  <div class="el-content">
+    <div>
+      <mat-form-field>
+        <mat-label>Enter a date range</mat-label>
+        <mat-date-range-input [formGroup]="rangeDateFormGroup" [rangePicker]="picker">
+          <input matStartDate formControlName="start" placeholder="Start date">
+          <input matEndDate formControlName="end" placeholder="End date">
+        </mat-date-range-input>
+        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matIconSuffix [for]="picker">
+        </mat-datepicker-toggle>
+        <mat-date-range-picker #picker></mat-date-range-picker>
+
+        <mat-error *ngIf="rangeDateFormGroup.controls.start.hasError('matStartDateInvalid')">Invalid start date
+        </mat-error>
+        <mat-error *ngIf="rangeDateFormGroup.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+      </mat-form-field>
+    </div>
+    <div>
+      <button (click)="updateDate()">Load Data</button>
+    </div>
+    <div>
+      <p>Energy Total: {{totalEnergy}} (Kwh)</p>
+      <p>Energy Total: {{totalMoney}} (VND)</p>
+    </div>
+    <table mat-table [dataSource]="bleEnergy" class="mat-elevation-z8">
+
+      <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="no">
+        <th mat-header-cell *matHeaderCellDef> No.</th>
+        <td mat-cell *matCellDef="let element; let idx  = index"> {{idx + 1}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name</th>
+        <td mat-cell *matCellDef="let element"> {{element?.name}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="lastEnergy">
+        <th mat-header-cell *matHeaderCellDef> Energy</th>
+        <td mat-cell *matCellDef="let element"> {{element?.lastEnergy}} </td>
+      </ng-container>
+
+      <!-- total Column -->
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef> Total</th>
+        <td mat-cell *matCellDef="let element"> {{element?.total}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+
+</div>

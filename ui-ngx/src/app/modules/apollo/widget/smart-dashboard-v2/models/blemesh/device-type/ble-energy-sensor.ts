@@ -96,23 +96,35 @@ export class BleEnergySensor extends BaseBleSigmeshController {
   }
 
   getEnergySensorDataTimeSeries(fromDate: Date, toDate: Date): Observable<Array<EnergySensorDaily>> {
+    console.log(fromDate, toDate);
     return super.getTimeseriesDataWithMethod(`data_bleSigmesh_${this.bleNodeViewer.unicastAddress}`,
       'sensor_status', fromDate, toDate)
       .pipe(
         map(value => {
             if (value && Array.isArray(value)) {
-              return value.map(value1 => ({
-                date: value1?.ts,
-                data: {
-                  energy: value1?.params?.energy,
-                  current: value1?.params?.current,
-                  voltage: value1?.params?.voltage,
-                  power: value1?.params?.power,
+              return value.filter(value1 => {
+                if (!!value1?.ts && !!value1?.params) {
+                  return value1;
                 }
-              }));
+              });
             }
+            return null;
           }
-        )
+        ),
+        map(value => {
+          if (value && Array.isArray(value)) {
+            return value.map(value1 => ({
+              date: value1?.ts,
+              data: {
+                energy: value1?.params?.energy,
+                current: value1?.params?.current,
+                voltage: value1?.params?.voltage,
+                power: value1?.params?.power,
+              }
+            }));
+          }
+          return null;
+        })
       );
 
     // return undefined;

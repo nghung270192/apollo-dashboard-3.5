@@ -73,7 +73,10 @@ export class CommonMenuComponent implements OnInit, AfterViewInit {
   analyzeViewEvent() {
     this.apollo.apolloService.eventTaskSubject.next(EventTask.ANALYZE_VIEWER);
   }
+
   energyViewEvent() {
+    // window.open('https://www.google.com','_blank');
+    // console.log(new Date().getTime());
     this.apollo.apolloService.eventTaskSubject.next(EventTask.ENERGY_VIEWER);
   }
 

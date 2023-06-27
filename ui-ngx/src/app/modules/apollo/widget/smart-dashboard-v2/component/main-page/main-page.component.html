@@ -1,5 +1,5 @@
 <div class="main-page-container">
-  <div class="main-header">
+  <div class="mp-header">
     <tb-common-menu (automationViewEvent)="autoBtnEventClick()"
                     (backEvent)="backEvent()"
                     (mapViewEvent)="mapBtnEventClick()"
@@ -10,15 +10,13 @@
                     [apollo]="apollo"
                     [nameLayout]="nameLayout"
                     [parentNodeTree]="parentNodeTree" [rootNodeTree]="rootNodeTree">
-
     </tb-common-menu>
   </div>
 
-  <div class="main-body" fxLayout="column" fxLayoutAlign="space-between start">
-
-    <div class="body-toolbar">
-      <div style="height: 1px;width: 100%">
-        <mat-progress-bar *ngIf="loading" aria-label="Loading" color="warn" mode="indeterminate"></mat-progress-bar>
+  <div class="mp-body">
+    <div class="mpb-toolbar">
+      <div *ngIf="loading" style="height: 1px;width: 100%">
+        <mat-progress-bar aria-label="Loading" color="warn" mode="indeterminate"></mat-progress-bar>
       </div>
       <h6 *ngIf="layoutLoading">Đang tải giao diện...</h6>
       <ng-container *ngIf="this.pageView === PageView.NORMAL && parentNodeTree?.type!== NodeTreeType.GATEWAY
@@ -115,10 +113,19 @@
         </mat-toolbar>
       </ng-container>
     </div>
-
-    <div class="body-content">
+    <div class="body-content-v2">
       <ng-container *ngIf=" !layoutLoading && hasLayout===true">
-        <div *ngIf="isEnableMiddleAddEntity===false" class="body-sidenav-content" fxLayout="row"
+        <tb-body-page (clickEvent)="clickEvent($event)"
+                      (reloadEvent)="reloadEvent()" *ngIf="parentNodeTree"
+                      [apollo]="apollo"
+                      [childrenNodetree]="childrenNodetreeFilter"
+                      [isEdited]="isEdited"
+                      [pageView]="pageView"
+                      [parentNodeTree]="parentNodeTree"
+                      [rootNodeTree]="rootNodeTree" [sizeIcon]="sizeIcon"
+                      [callbackEvent]="callbackEvent">
+        </tb-body-page>
+        <!--<div *ngIf="isEnableMiddleAddEntity===false" class="body-sidenav-content" fxLayout="row"
              fxLayoutAlign="space-around center">
           <button *ngIf="apollo.isAdmin && isEdited" [matMenuTriggerFor]="menu1"
                   aria-label="Example icon-button with a menu"
@@ -165,7 +172,7 @@
                         [rootNodeTree]="rootNodeTree" [sizeIcon]="sizeIcon"
                         [callbackEvent]="callbackEvent">
           </tb-body-page>
-        </div>
+        </div>-->
       </ng-container>
       <ng-container *ngIf=" !layoutLoading && hasLayout===false">
         <p>Không tìm thấy giao diện. Vui lòng vào cài đặt để chọn giao diện hoặc tạo mới</p>

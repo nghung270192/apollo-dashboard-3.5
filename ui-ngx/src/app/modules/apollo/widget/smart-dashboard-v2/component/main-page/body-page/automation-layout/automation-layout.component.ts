@@ -192,8 +192,7 @@ export class AutomationLayoutComponent extends CommonLayout implements CommonLay
     this.pageLink.sortOrder.property = this.sort.active;
     this.pageLink.sortOrder.direction = Direction[this.sort.direction.toUpperCase()];
     if (this.rootNodeTree) {
-      this;
-      this.apollo.apolloNodeTreeService.getByApolloTree(this.rootNodeTree.apolloTreeId.id, this.pageLink,
+       this.apollo.apolloNodeTreeService.getByApolloTree(this.rootNodeTree.apolloTreeId.id, this.pageLink,
         NodeTreeType.AUTOMATION, '').subscribe(res => {
         this.datasource = res.data;
         this.totalElements = res.totalElements;

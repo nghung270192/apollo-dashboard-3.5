@@ -14,8 +14,10 @@ function getLastDayOfMonth(year, month) {
 
 export class EnergySensorManagement {
   constructor(private energySensorDailies: Array<EnergySensorDaily>) {
-    this.energySensorDailies = this.energySensorDailies
-      .sort((a, b) => b.date - a.date);
+    if (energySensorDailies) {
+      this.energySensorDailies = this.energySensorDailies
+        .sort((a, b) => b.date - a.date);
+    }
 
     /*const reduce = this.energySensorDailies.reduce((newArray, currentValue) => {
       const {date} = currentValue;
@@ -154,9 +156,11 @@ export class EnergySensorManagement {
 
   getTotalEnergy(): number {
     let energyTotal = 0;
-    if (this.energySensorDailies.length > 1) {
-      energyTotal = (this.energySensorDailies[0].data.energy
-        - this.energySensorDailies[this.energySensorDailies.length - 1].data.energy);
+    if (this.energySensorDailies && Array.isArray(this.energySensorDailies) && this.energySensorDailies.length > 1) {
+      const res = this.energySensorDailies
+        .sort((a, b) => b.date - a.date);
+      energyTotal = (res[0].data.energy
+        - res[this.energySensorDailies.length - 1].data.energy);
       energyTotal = Math.round(energyTotal * 1000) / 1000;
     }
     return energyTotal;
@@ -164,17 +168,19 @@ export class EnergySensorManagement {
 
   getFirstData(): EnergySensorDaily {
     if (this.energySensorDailies && Array.isArray(this.energySensorDailies) && this.energySensorDailies.length > 0) {
-      return this.energySensorDailies[this.energySensorDailies.length - 1];
+      const res = this.energySensorDailies
+        .sort((a, b) => a.date - b.date);
+      return res[0];
     }
     return null;
   }
 
   getLastData(): EnergySensorDaily {
     if (this.energySensorDailies && Array.isArray(this.energySensorDailies) && this.energySensorDailies.length > 0) {
-      {
-        return this.energySensorDailies[0];
-      }
-      return null;
+      const res = this.energySensorDailies
+        .sort((a, b) => b.date - a.date);
+      return res[0];
     }
+    return null;
   }
 }
