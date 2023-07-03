@@ -4,7 +4,7 @@ import {
 import {NodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {
   ApolloWidgetContext,
-  ResponseMethod
+  ResponseMethod, TelemetryIncoming
 } from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-widget-context.model';
 import {ChangeDetectorRef} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
@@ -21,9 +21,12 @@ import {
 import {filter, map} from 'rxjs/operators';
 import {StatusColor} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-entity.model';
 
+export type EnergyUpdateNewstData = (unicastAddress: string, data: EnergySensorDaily) => void;
+
 export class BleEnergySensor extends BaseBleSigmeshController {
   lastData: EnergySensorDaily;
   private energySubscription: SubscriptionLike;
+  latestEnergyCallback: EnergyUpdateNewstData;
 
   constructor(
     nodeTree: NodeTree,
@@ -34,10 +37,47 @@ export class BleEnergySensor extends BaseBleSigmeshController {
   ) {
     super(nodeTree, apollo, cd, dialog, callback);
     this.updateNewData(callback);
+    this.lastDataEventCallback = this.lastDataEventCallback.bind(this);
+    this.lastDataEvent = this.lastDataEventCallback;
   }
 
-  updateNewData(callback) {
-    this.energySubscription = this.observable.subscribe(value => {
+  lastDataEventCallback(data: TelemetryIncoming) {
+     if (data && data.data && Array.isArray(data.data)) {
+      data.data.forEach(value1 => {
+        if (value1.method === ResponseMethod.sensorStatus) {
+          this.lastData = {date: data.time, data: {energy: 0, power: 0, voltage: 0, current: 0}};
+          if (value1 && value1.params) {
+            if (value1?.params?.energy) {
+              this.lastData.data.energy = value1?.params?.energy;
+            }
+            if (value1?.params?.current) {
+              this.lastData.data.current = value1?.params?.current;
+            }
+            if (value1?.params?.voltage) {
+              this.lastData.data.voltage = value1?.params?.voltage;
+            }
+            if (value1?.params?.power) {
+              this.lastData.data.power = value1?.params?.power;
+            }
+          }
+          if (this.callback) {
+            this.callback(this.lastData);
+          }
+
+          if (this.latestEnergyCallback) {
+            this.latestEnergyCallback(this.bleNodeViewer.unicastAddress, this.lastData);
+          }
+
+        }
+      });
+    }
+  }
+
+  updateNewData(callback: EnergyUpdateNewstData) {
+
+    this.latestEnergyCallback = callback;
+
+    /*this.energySubscription = this.observable.subscribe(value => {
       if (value && value.data && Array.isArray(value.data)) {
         value.data.forEach(value1 => {
           if (value1.method === ResponseMethod.sensorStatus) {
@@ -57,6 +97,7 @@ export class BleEnergySensor extends BaseBleSigmeshController {
               }
             }
 
+            console.log(this.lastData);
             if (callback) {
               callback(this.lastData);
             }
@@ -65,7 +106,7 @@ export class BleEnergySensor extends BaseBleSigmeshController {
         });
       }
     })
-    ;
+    ;*/
   }
 
   renderState(): EntityState {
@@ -96,8 +137,7 @@ export class BleEnergySensor extends BaseBleSigmeshController {
   }
 
   getEnergySensorDataTimeSeries(fromDate: Date, toDate: Date): Observable<Array<EnergySensorDaily>> {
-    console.log(fromDate, toDate);
-    return super.getTimeseriesDataWithMethod(`data_bleSigmesh_${this.bleNodeViewer.unicastAddress}`,
+     return super.getTimeseriesDataWithMethod(`data_bleSigmesh_${this.bleNodeViewer.unicastAddress}`,
       'sensor_status', fromDate, toDate)
       .pipe(
         map(value => {
@@ -150,6 +190,10 @@ export class BleEnergySensor extends BaseBleSigmeshController {
       }))
       ;*/
 
+  }
+
+  clearHistoryEnergySensorData(fromDate?: Date, toDate?: Date) {
+    return this.deleteTimeseries(`data_bleSigmesh_${this.bleNodeViewer.unicastAddress}`);
   }
 
   unSubscribe() {

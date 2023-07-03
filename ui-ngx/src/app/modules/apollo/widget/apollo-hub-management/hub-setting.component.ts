@@ -10,7 +10,7 @@ import {AttributeScope} from '@shared/models/telemetry/telemetry.models';
 import {WidgetContext} from '@home/models/widget-component.models';
 import {HubControllerWithTbDeviceId} from '@modules/apollo/widget/smart-dashboard-v1/models/apollo-hub/apollo-hub';
 import {ThemePalette} from '@angular/material/core';
- import {JsonPipe} from '@angular/common';
+import {JsonPipe} from '@angular/common';
 import {GroupModel} from '@modules/apollo/widget/share/models/ble-sigmesh/network-model/group.model';
 import {NodeModel} from '@modules/apollo/widget/share/models/ble-sigmesh/network-model/node.model';
 import {SceneModel} from '@modules/apollo/widget/share/models/ble-sigmesh/network-model/scene.model';
@@ -147,7 +147,7 @@ export class HubSettingComponent implements OnInit {
     if (input.files.length > 0) {
       const reader = new FileReader();
 
-      reader.onload = function() {
+      reader.onload = function () {
         const text = reader.result;
         this.importNetworkConfig(text);
       }.bind(this);
@@ -327,6 +327,7 @@ export class HubSettingComponent implements OnInit {
 
   copyJsonData() {
     const copyNetwork: NetworkConfigModel = this.bleNetwork.network;
+    console.log(this.nodes);
     copyNetwork.nodes = this.bleNetwork.nodes.getNodeArrayFromUnicastAddresses(this.nodes);
     copyNetwork.groups = this.bleNetwork.groups.getDetailGroups(this.groups);
     copyNetwork.scenes = this.bleNetwork.scenes.getSceneDetails(this.scenes);

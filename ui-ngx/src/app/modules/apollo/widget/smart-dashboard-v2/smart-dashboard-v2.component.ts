@@ -91,6 +91,8 @@ export class SmartDashboardV2Component implements OnInit, AfterViewInit {
       'iot-smoke-binary-input',
       'iot-common-sensor',
       'iot-light-switch',
+      'display-matrix',
+      'excel',
       'rfid'
     ];
 
@@ -103,6 +105,9 @@ export class SmartDashboardV2Component implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+
+    console.log(new Date().toDateString());
+
     if (this.ctx && this.ctx.currentUser.authority !== Authority.SYS_ADMIN) {
       this.apollo = new ApolloWidgetContext(this.ctx, this.store);
       console.log(this.apollo);

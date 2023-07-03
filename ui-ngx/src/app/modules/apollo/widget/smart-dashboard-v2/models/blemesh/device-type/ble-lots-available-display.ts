@@ -4,7 +4,7 @@ import {
 import {NodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {
   ApolloWidgetContext,
-  ResponseMethod, TelemetryIncoming
+  ResponseMethod
 } from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-widget-context.model';
 import {ChangeDetectorRef} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
@@ -20,7 +20,7 @@ import {
 } from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/device/dialog-controller/ble-sigmesh/base-light-controller/base-light-controller.component';
 import {Observable, of} from 'rxjs';
 
-export class BleBaseLighting extends BaseBleSigmeshController {
+export class BleLotsAvailableDisplay extends BaseBleSigmeshController {
 
 
   private _onOff: any = null;
@@ -33,19 +33,18 @@ export class BleBaseLighting extends BaseBleSigmeshController {
               callback: DeviceControllerCallbackFunction) {
 
     super(nodeTree, apollo, cd, dialog, callback);
-    this.lastDataEventCallback = this.lastDataEventCallback.bind(this);
-    this.lastDataEvent = this.lastDataEventCallback;
-  }
 
-  lastDataEventCallback(data: TelemetryIncoming) {
-    data.data.forEach(value1 => {
-      if (value1.method === ResponseMethod.onOffStatus) {
-        this._onOff = value1.params?.value;
-      } else if (value1.method === ResponseMethod.lightnessStatus) {
-        this._lightness = value1.params?.value;
+    this.observable.subscribe(value => {
+        value.data.forEach(value1 => {
+          if (value1.method === ResponseMethod.onOffStatus) {
+            this._onOff = value1.params?.value;
+          } else if (value1.method === ResponseMethod.lightnessStatus) {
+            this._lightness = value1.params?.value;
+          }
+        });
+        this.updateNewState();
       }
-    });
-    this.updateNewState();
+    );
   }
 
   entityClick(): any {
@@ -61,7 +60,7 @@ export class BleBaseLighting extends BaseBleSigmeshController {
   }
 
 
-  get onOff(): number {
+  /*get onOff(): number {
     return this._onOff;
   }
 
@@ -75,30 +74,31 @@ export class BleBaseLighting extends BaseBleSigmeshController {
 
   set lightness(value: number) {
     this._lightness = value;
-  }
+  }*/
 
-  setLightness(params: any): Observable<any> {
+/*  setLightness(params: any): Observable<any> {
 
     return this.apollo.hubService.bleHubService.setLightness(this.hubNodeTree?.tbDeviceId,
       ElementToUnicast(this.bleNodeViewer?.unicastAddress, params?.index), params?.lightness);
-  }
+  }*/
 
-  getLightness(params: any): Observable<any> {
+ /* getLightness(params: any): Observable<any> {
     return of(this._lightness);
-    /*return this.apollo.hubService.bleHubService.getLightness(this.hubNodeTree?.tbDeviceId,
-      ElementToUnicast(this.bleNodeViewer?.unicastAddress, params?.index));*/
-  }
+    /!*return this.apollo.hubService.bleHubService.getLightness(this.hubNodeTree?.tbDeviceId,
+      ElementToUnicast(this.bleNodeViewer?.unicastAddress, params?.index));*!/
+  }*/
 
-  renderState(): EntityState {
+/*  renderState(): EntityState {
     return renderBleLightState(this.onOff, this.lightness);
-  }
+  }*/
 
+/*
   toggle(params: any = {index: 0}): Observable<any> {
-    /*if (this.lightness) {
+    /!*if (this.lightness) {
       return this.apollo.hubService.bleHubService.setLightness(this.nodeInfo?.tbDeviceId.id, this.bleNodeViewer?.unicastAddress, 0);
     } else {
       return this.apollo.hubService.bleHubService.setLightness(this.nodeInfo?.tbDeviceId.id, this.bleNodeViewer?.unicastAddress, 100);
-    }*/
+    }*!/
 
     if (this.onOff) {
       return this.apollo.hubService.bleHubService.setOnOff(this.hubNodeTree?.tbDeviceId,
@@ -108,12 +108,13 @@ export class BleBaseLighting extends BaseBleSigmeshController {
         ElementToUnicast(this.bleNodeViewer?.unicastAddress, params?.index), 1);
     }
   }
+*/
 
 
-  setHsl(params: any) {
+/*  setHsl(params: any) {
     return this.apollo.hubService.bleHubService.setHsl(this.hubNodeTree?.tbDeviceId,
       ElementToUnicast(this.bleNodeViewer?.unicastAddress, params?.index), params?.hsl?.h, params?.hsl?.s, params?.hsl?.l);
-  }
+  }*/
 
 
   private updateNewState() {

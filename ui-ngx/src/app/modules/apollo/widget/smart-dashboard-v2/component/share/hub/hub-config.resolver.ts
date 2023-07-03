@@ -22,14 +22,13 @@ import {AppState} from '@core/core.state';
 import {NodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {NodeTreeType} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-entity-type.model';
 import {HubParamsSource} from '@modules/apollo/widget/smart-dashboard-v2/models/hub/hub.model';
-import {ApolloEntityConfig} from '@modules/apollo/widget/smart-dashboard-v2/component/share/apollo-node-tree/apollo-entity-config';
+import {
+  ApolloEntityConfig
+} from '@modules/apollo/widget/smart-dashboard-v2/component/share/apollo-node-tree/apollo-entity-config';
 import {ApolloNodeTreeService} from '@modules/apollo/widget/smart-dashboard-v2/services/apollo-node-tree.service';
-import {MainModule} from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/main.module';
 import {HubComponent} from '@modules/apollo/widget/smart-dashboard-v2/component/share/hub/hub.component';
 
-@Injectable({
-  providedIn: MainModule
-})
+@Injectable({providedIn: 'root'})
 
 export class HubConfigResolver {
 

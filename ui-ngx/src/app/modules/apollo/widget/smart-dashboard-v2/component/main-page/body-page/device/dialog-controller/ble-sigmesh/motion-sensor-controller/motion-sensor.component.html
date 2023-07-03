@@ -44,12 +44,12 @@
           </button>
         </td>
         <td>
-          <button
+    <!--      <button
             (click)="hlkTimeGet()"
             color="primary"
             mat-raised-button
             style="margin-top:10px;width:50px;">Get
-          </button>
+          </button>-->
         </td>
       </tr>
 
@@ -71,12 +71,12 @@
           </button>
         </td>
         <td>
-          <button
-            (click)="hlkTimeGet()"
-            color="primary"
-            mat-raised-button
-            style="margin-top:10px;width:50px;">Get
-          </button>
+          <!--          <button
+                      (click)="levelGet()"
+                      color="primary"
+                      mat-raised-button
+                      style="margin-top:10px;width:50px;">Get
+                    </button>-->
         </td>
       </tr>
 
@@ -98,12 +98,12 @@
           </button>
         </td>
         <td>
-          <button
-            (click)="hlkTimeGet()"
-            color="primary"
-            mat-raised-button
-            style="margin-top:10px;width:50px;">Get
-          </button>
+          <!--          <button
+                      (click)="hlkTimeGet()"
+                      color="primary"
+                      mat-raised-button
+                      style="margin-top:10px;width:50px;">Get
+                    </button>-->
         </td>
       </tr>
 
@@ -125,12 +125,12 @@
           </button>
         </td>
         <td>
-          <button
-            (click)="hlkTimeGet()"
-            color="primary"
-            mat-raised-button
-            style="margin-top:10px;width:50px;">Get
-          </button>
+          <!--          <button
+                      (click)="hlkTimeGet()"
+                      color="primary"
+                      mat-raised-button
+                      style="margin-top:10px;width:50px;">Get
+                    </button>-->
         </td>
       </tr>
 
@@ -153,12 +153,12 @@
         </td>
 
         <td>
-          <button
-            (click)="hlkDistanceGet()"
-            color="primary"
-            mat-raised-button
-            style="margin-top:10px;width:50px;">Get
-          </button>
+          <!--          <button
+                      (click)="hlkDistanceGet()"
+                      color="primary"
+                      mat-raised-button
+                      style="margin-top:10px;width:50px;">Get
+                    </button>-->
         </td>
 
       </tr>
@@ -182,12 +182,12 @@
         </td>
 
         <td>
-          <button
-            (click)="hlkTimeGet()"
-            color="primary"
-            mat-raised-button
-            style="margin-top:10px;width:50px;">Get
-          </button>
+          <!--          <button
+                      (click)="hlkTimeGet()"
+                      color="primary"
+                      mat-raised-button
+                      style="margin-top:10px;width:50px;">Get
+                    </button>-->
         </td>
 
       </tr>
@@ -195,12 +195,14 @@
     </table>
 
     <div fxLayout="row" fxLayoutAlign="center center" style="width: 100%">
-      <button
-        (click)="sensorGet()"
-        color="primary"
-        mat-raised-button
-        style="margin-top:10px;width:50px;">Get
-      </button>
+      <div>
+        <button
+          (click)="sensorGet()"
+          color="primary"
+          mat-raised-button
+          style="margin-top:10px;width:100px;">Get
+        </button>
+      </div>
       <div>
         <apollo-processing [show]="isProcessing" size="20">
 
@@ -208,7 +210,6 @@
       </div>
       <div>
         <mat-icon *ngIf="isError" style="height: 30px;width: 30px;color: red;"> warning</mat-icon>
-
       </div>
     </div>
 

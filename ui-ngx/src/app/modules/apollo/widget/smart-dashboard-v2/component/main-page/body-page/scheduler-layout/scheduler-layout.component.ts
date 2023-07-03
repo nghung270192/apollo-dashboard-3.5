@@ -26,10 +26,6 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@core/core.state';
 import {EventTask} from '@modules/apollo/widget/smart-dashboard-v2/models/common-type.model';
 
-
-export interface DataViewDialog {
-}
-
 @Component({
   selector: 'tb-scheduler-layout',
   templateUrl: './scheduler-layout.component.html',

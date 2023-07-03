@@ -12,11 +12,12 @@ import {
 import {
   MotionSensorComponent
 } from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/device/dialog-controller/ble-sigmesh/motion-sensor-controller/motion-sensor.component';
-import { Observable } from 'rxjs';
+import {Observable} from 'rxjs';
+import {MotionSensorParams} from '@modules/apollo/widget/share/services/ble-hub.service';
 
 export class BlePirSensor extends BaseBleSigmeshController {
   toggle(params?: any): Observable<any> {
-      throw new Error('Method not implemented.');
+    throw new Error('Method not implemented.');
   }
 
 
@@ -44,5 +45,27 @@ export class BlePirSensor extends BaseBleSigmeshController {
   renderState(): EntityState {
     return super.renderState();
   }
+
+  /*  getSensorDelay(): Observable<any> {
+      return this.apollo.hubService.bleHubService.getDistanceSensorMotion(this.hubNodeTree.tbDeviceId,
+        this.bleNodeViewer.unicastAddress, 5000);
+    }*/
+
+  getAllParamsSensorMotion(): Observable<MotionSensorParams> {
+    return this.apollo.hubService.bleHubService.getAllMotionSensorData(this.hubNodeTree.tbDeviceId,
+      this.bleNodeViewer.unicastAddress, 10000);
+  }
+
+  setDelay(delay: number) {
+    return this.apollo.hubService.bleHubService.setDelaySensorMotion(this.hubNodeTree.tbDeviceId,
+      this.bleNodeViewer.unicastAddress, delay, 10000);
+  }
+
+
+/*  setLevel(delay: number) {
+    return this.apollo.hubService.bleHubService.setLevelSensorMotion(this.hubNodeTree.tbDeviceId,
+      this.bleNodeViewer.unicastAddress, delay, 10000);
+  }*/
+
 
 }

@@ -61,7 +61,7 @@ export class CreateBleDeviceFromApolloComponent extends CreateDeviceCommon imple
   hubNodeTreeSelected: NodeTree;
 
   bleGroupSource: Array<GroupModel> = [];
-  bleGroup: Array<string>;
+  bleGroups: Array<string>;
 
   bleNodeSource: Array<NodeModel> = [];
   bleNodes: Array<string>;
@@ -121,9 +121,18 @@ export class CreateBleDeviceFromApolloComponent extends CreateDeviceCommon imple
     }
   }
 
+
   renderNodeFromGroupSelected() {
-    this.bleNodeSource = this.bleNetwork.groups.getNodesDetailFromGroups(this.bleGroup, this.bleNetwork.nodes.nodeArray);
-    this.bleNodes = this.bleNetwork.groups.getNodesFromGroups(this.bleGroup, this.bleNetwork.nodes.nodeArray);
+    console.log(this.formGroup.get('deviceSource').value);
+    if (this.formGroup.get('deviceSource').value === ApolloDeviceSource.DEVICE) {
+      this.bleNodeSource = this.bleNetwork.nodes.nodeArray;
+    } else {
+      if (this.bleGroups && Array.isArray(this.bleGroups)) {
+        this.bleNodeSource = this.bleNetwork.groups.getNodesDetailFromGroups(this.bleGroups, this.bleNetwork.nodes.nodeArray);
+        this.bleNodes = this.bleNetwork.groups.getNodesFromGroups(this.bleGroups, this.bleNetwork.nodes.nodeArray);
+      }
+    }
+
   }
 
   createNodeEntity() {

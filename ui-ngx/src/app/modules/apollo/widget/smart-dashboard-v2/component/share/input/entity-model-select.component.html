@@ -1,7 +1,7 @@
 <mat-form-field class="mat-block">
   <mat-label>{{name}}</mat-label>
   <mat-select [disabled]="disable" [(ngModel)]="nodeTreeType" (blur)="onTouched(nodeTreeType)"
-              (closed)="onChange(nodeTreeType)">
+              (closed)="onChange(nodeTreeType); this.closeEvent.emit();">
     <mat-option
       *ngFor="let key of NodeTreeTypes "
       [value]="key">{{NodeTreeTypeLabelMapping[key]}}</mat-option>

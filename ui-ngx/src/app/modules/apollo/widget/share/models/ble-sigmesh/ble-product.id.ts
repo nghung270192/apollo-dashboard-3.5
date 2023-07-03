@@ -1024,22 +1024,22 @@ const PRODUCT_ID: ProductI[] = [
     icon: EntityIcon.rfId
   },
   {
-    pid: (0x3000),
+    pid: (0x3001),
     model: ProductModel.display,
     pid2Enum: CommonProductName.lotsAvailableDisplay,
     code: 'PRODUCT_ID_LOTS_AVAILABLE_DISPLAY',
     name: 'Lots Available Display',
     type: DeviceType.lotsAvailableDisplay,
-    icon: EntityIcon.deviceUnknown
+    icon: EntityIcon.displayMatrix
   },
   {
-    pid: (0x3001),
+    pid: (0x3000),
     model: ProductModel.sensor,
     pid2Enum: CommonProductName.lotsAvailableDistanceSensor,
     code: 'PRODUCT_ID_LOTS_AVAILABLE_DISTANCE_SENSOR',
     name: 'Lots Available Distance Sensor',
     type: DeviceType.lotsAvailableDistanceSensor,
-    icon: EntityIcon.deviceUnknown
+    icon: EntityIcon.iotCommonSensor
   },
   {
     pid: (0x3002),
@@ -1077,15 +1077,15 @@ const PRODUCT_ID: ProductI[] = [
     type: DeviceType.tubeLightRadar2in1,
     icon: EntityIcon.tubeLightRadar2in1
   },
-    {
-      pid: (0x10A9),
-      model: ProductModel.sensor,
-      pid2Enum: CommonProductName.energySensor,
-      code: 'PRODUCT_ID_MEASURE_ENEGRY',
-      name: 'Giám sát năng lượng',
-      type: DeviceType.energySensor,
-      icon: EntityIcon.energySensor
-    },
+  {
+    pid: (0x10A9),
+    model: ProductModel.sensor,
+    pid2Enum: CommonProductName.energySensor,
+    code: 'PRODUCT_ID_MEASURE_ENEGRY',
+    name: 'Giám sát năng lượng',
+    type: DeviceType.energySensor,
+    icon: EntityIcon.energySensor
+  },
 ];
 
 

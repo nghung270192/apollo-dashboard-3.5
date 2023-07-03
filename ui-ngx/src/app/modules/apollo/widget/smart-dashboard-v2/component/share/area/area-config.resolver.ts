@@ -16,21 +16,19 @@
 
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
-import {mergeMap, tap} from 'rxjs/operators';
 import {AppState} from '@core/core.state';
 
 import {NodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {AreaParamsSource} from '@modules/apollo/widget/smart-dashboard-v2/models/area/area.model';
 import {NodeTreeType} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-entity-type.model';
-import {ApolloEntityConfig} from '@modules/apollo/widget/smart-dashboard-v2/component/share/apollo-node-tree/apollo-entity-config';
+import {
+  ApolloEntityConfig
+} from '@modules/apollo/widget/smart-dashboard-v2/component/share/apollo-node-tree/apollo-entity-config';
 import {AreaComponent} from '@modules/apollo/widget/smart-dashboard-v2/component/share/area/area.component';
-import {MainModule} from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/main.module';
 import {ApolloNodeTreeService} from '@modules/apollo/widget/smart-dashboard-v2/services/apollo-node-tree.service';
 
 
-@Injectable({
-  providedIn: MainModule
-})
+@Injectable({providedIn: 'root'})
 
 export class AreaConfigResolver {
 

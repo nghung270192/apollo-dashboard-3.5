@@ -4,7 +4,21 @@ import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {RpcCmdService} from '@modules/apollo/widget/share/services/rpc-cmd.service';
 import {HubCmd} from '@modules/apollo/widget/share/services/base-hub.service';
-import {ByteBuffer} from "@modules/apollo/widget/share/utilities/byte-buffer";
+import {ByteBuffer} from '@modules/apollo/widget/share/utilities/byte-buffer';
+
+export interface MotionSensorParams {
+  'status': boolean;
+  'delay': number;
+  'detect': number;
+  'unDetect': number;
+  'ambient_brightness': number;
+  'brightness': number;
+}
+
+export interface MotionSensorLevelSet {
+  'detect': number;
+  'unDetect': number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -188,24 +202,26 @@ export class BleHubService extends RpcCmdService {
     return this.send(deviceId, requestBody);
   }
 
-  setVendor(deviceId: string, address: string, companyId: string, opcode: string, message: string): Observable<any> {
+  setVendor(deviceId: string,
+            address: string,
+            opcode: string,
+            message: any,
+            timeout: number = this.timeOut): Observable<any> {
     const requestBody: HubCmd = {
       method: 'set_vendor',
       params: {
         type: 'ble_sigmesh',
         unicast: address,
-        company_id: companyId,
         opcode,
         message
       },
-      timeout: this.timeOut
+      timeout
     };
     return this.send(deviceId, requestBody);
   }
 
   setAllMotionSensorData(deviceId: string,
                          address: string,
-                         companyId: string,
                          lowLevel: number,
                          highLevel: number,
                          delayTime: number,
@@ -213,25 +229,77 @@ export class BleHubService extends RpcCmdService {
                          hlkSensitive: number,
                          hlkDelayTime: number): Observable<any> {
 
-    const message: ByteBuffer = new ByteBuffer();
-    message.clear();
-    message.putShort(lowLevel);
-    message.putShort(highLevel);
-    message.putShort(delayTime);
-    message.putShort(brightness);
-    message.putByte(hlkSensitive);
-    message.putShort(hlkDelayTime);
-    return this.setVendor(deviceId, address, companyId, '0D', message.buffer);
+    /*    const message: ByteBuffer = new ByteBuffer();
+        message.clear();
+        message.putShort(lowLevel);
+        message.putShort(highLevel);
+        message.putShort(delayTime);
+        message.putShort(brightness);
+        message.putByte(hlkSensitive);
+        message.putShort(hlkDelayTime);*/
+    return this.setVendor(deviceId, address, '0D', '');
   }
 
   getAllMotionSensorData(deviceId: string,
                          address: string,
-                         companyId: string): Observable<any> {
+                         timeout: number = 5000): Observable<MotionSensorParams> {
+    return this.setVendor(deviceId, address, 'all_info_status', '', timeout);
+  }
 
-    const message: ByteBuffer = new ByteBuffer();
-    message.clear();
-    message.putByte(0x01);
-    return this.setVendor(deviceId, address, companyId, '0D', message.buffer);
+  getDistanceSensorMotion(deviceId: string,
+                          address: string,
+                          timeout: number = 5000) {
+    return this.setVendor(deviceId, address, 'sensor_distance_get', '', timeout);
+  }
+
+  setDelaySensorMotion(deviceId: string,
+                       address: string,
+                       value: number,
+                       timeout: number = 5000) {
+    return this.setVendor(deviceId, address, 'delay_set', value, timeout);
+  }
+
+
+  setLevelSensorMotion(deviceId: string,
+                       address: string,
+                       value: MotionSensorLevelSet,
+                       timeout: number = 5000) {
+    return this.setVendor(deviceId, address, 'level_set', '', timeout);
+  }
+
+  setBrightnessSensorMotion(deviceId: string,
+                            address: string,
+                            value: number,
+                            timeout: number = 5000) {
+    return this.setVendor(deviceId, address, 'brightness_set', value, timeout);
+  }
+
+  /**
+   *
+   * @param deviceId : hub id
+   * @param address : ble node unicast
+   * @param value: blink times
+   * @param timeout
+   */
+  setBlinkSensorMotion(deviceId: string,
+                       address: string,
+                       value: number,
+                       timeout: number = 5000) {
+    return this.setVendor(deviceId, address, 'blinking_set', value, timeout);
+  }
+
+  /**
+   *
+   * @param deviceId : hub id
+   * @param address : ble node unicast
+   * @param value: 0-15
+   * @param timeout
+   */
+  setHLKDistanceSensingSensorMotion(deviceId: string,
+                                    address: string,
+                                    value: number,
+                                    timeout: number = 5000) {
+    return this.setVendor(deviceId, address, 'hlk_distance_sensing_set', value, timeout);
   }
 
 

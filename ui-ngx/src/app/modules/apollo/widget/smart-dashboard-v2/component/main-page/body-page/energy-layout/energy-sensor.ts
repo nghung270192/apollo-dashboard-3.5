@@ -20,12 +20,10 @@ function getLastDayOfMonth(year, month) {
 export class EnergySensor {
   constructor(public energySensor: BleEnergySensor) {
     this.energySensor = energySensor;
-    /* this.energySensorDailies = this.energySensorDailies
-       .sort((a, b) => b.date - a.date);*/
   }
 
   getLastEnergy(fromDate: Date, toDate: Date = new Date()): Observable<EnergySensorDaily> {
-     return new Observable<EnergySensorDaily>(subscriber => {
+    return new Observable<EnergySensorDaily>(subscriber => {
       if (fromDate == null || toDate == null) {
         subscriber.error('Không tìm thấy start date && end date');
       } else {
@@ -40,22 +38,75 @@ export class EnergySensor {
     });
   }
 
+  /*  getTotalEnergy(fromDate: Date, toDate: Date = new Date()): Observable<number> {
+      return new Observable<number>(subscriber => {
+        if (fromDate == null || toDate == null) {
+          subscriber.error('Không tìm thấy start date && end date');
+        } else {
+          this.energySensor.getEnergySensorDataTimeSeries(fromDate, toDate).subscribe(
+            values => {
+              const energy = new EnergySensorManagement(values);
+              subscriber.next(energy.getTotalEnergy());
+              subscriber.complete();
+            }
+          );
+        }
+      });
+    }*/
 
-  getTotalEnergy(fromDate: Date, toDate: Date = new Date()): Observable<number> {
-    return new Observable<number>(subscriber => {
+  getTotalEnergy(fromDate: Date, toDate: Date = new Date()): Observable<any> {
+    return new Observable<any>(subscriber => {
       if (fromDate == null || toDate == null) {
         subscriber.error('Không tìm thấy start date && end date');
       } else {
         this.energySensor.getEnergySensorDataTimeSeries(fromDate, toDate).subscribe(
           values => {
             const energy = new EnergySensorManagement(values);
-            subscriber.next(energy.getTotalEnergy());
+            subscriber.next({
+              unicastAddress: this.energySensor.bleNodeViewer.unicastAddress,
+              total: energy.getTotalEnergy()
+            });
             subscriber.complete();
           }
         );
       }
     });
   }
+
+  getEnergyDaily(fromDate: Date, toDate: Date = new Date()): Observable<Array<EnergySensorDailyChart>> {
+
+    return new Observable<any>(subscriber => {
+      if (fromDate == null || toDate == null) {
+        subscriber.error('Không tìm thấy start date && end date');
+      } else {
+        console.log(fromDate);
+        this.energySensor.getEnergySensorDataTimeSeries(fromDate, toDate).subscribe(
+          values => {
+            const energy = new EnergySensorManagement(values);
+            subscriber.next(energy.convertDailyData());
+            subscriber.complete();
+          }
+        );
+      }
+    });
+  }
+
+
+  /*  getEnergyData(fromDate: Date, toDate: Date = new Date()): Observable<number> {
+      return new Observable<number>(subscriber => {
+        if (fromDate == null || toDate == null) {
+          subscriber.error('Không tìm thấy start date && end date');
+        } else {
+          this.energySensor.getEnergySensorDataTimeSeries(fromDate, toDate).subscribe(
+            values => {
+              const energy = new EnergySensorManagement(values);
+              subscriber.next(energy.getTotalEnergy());
+              subscriber.complete();
+            }
+          );
+        }
+      });
+    }*/
 
   //
   //

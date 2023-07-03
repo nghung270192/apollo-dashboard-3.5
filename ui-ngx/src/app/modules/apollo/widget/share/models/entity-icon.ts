@@ -51,6 +51,7 @@ export enum EntityIcon {
   iotSmokeBinaryInput = 'iot-smoke-binary-input',
   iotCommonSensor = 'iot-common-sensor',
   iotLightSwitch = 'iot-light-switch',
+  displayMatrix = 'display-matrix',
   rfId = 'rfid'
 }
 

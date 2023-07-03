@@ -7,7 +7,6 @@ import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {ModelIcon, StatusColor} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-entity.model';
 import {PelabEntityImpl} from '@modules/apollo/widget/share/models/pelab/pelab.model';
 import {PelabGatewayNodeTreeImpl} from '@modules/apollo/widget/smart-dashboard-v2/models/pelab/pelab.model';
-import {EventTask} from '@modules/apollo/widget/smart-dashboard-v2/models/common-type.model';
 import {DeviceControllerAbstract} from '@modules/apollo/widget/smart-dashboard-v2/models/device/device.model';
 import {GatewayModel} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-entity-type.model';
 import {ApolloDeviceModel} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-hub/apollo-hub';
@@ -31,7 +30,7 @@ export enum EDevCallbackEvent {
   UPDATE_NEW_STATE = 'UPDATE_NEW_STATE',
 }
 
-export type DeviceControllerCallbackFunction = (event: EDevCallbackEvent | string) => void;
+export type DeviceControllerCallbackFunction = (event: EDevCallbackEvent | any) => void;
 
 export interface EntityState {
   rawState?: {

@@ -18,21 +18,26 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {mergeMap, tap} from 'rxjs/operators';
 import {AppState} from '@core/core.state';
-import {ApolloEntityConfig} from '@modules/apollo/widget/smart-dashboard-v2/component/share/apollo-node-tree/apollo-entity-config';
-import {MainModule} from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/main.module';
+import {
+  ApolloEntityConfig
+} from '@modules/apollo/widget/smart-dashboard-v2/component/share/apollo-node-tree/apollo-entity-config';
 import {ApolloTreeService} from '@modules/apollo/widget/smart-dashboard-v2/services/apollo-tree.service';
 import {ApolloTree} from '@modules/apollo/widget/share/models/apollo-tree.model';
 import {ApolloTreeParamsToCreateNew} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-tree.model';
-import {ApolloTreeComponent} from '@modules/apollo/widget/smart-dashboard-v2/component/share/ApolloTree/apollo-tree.component';
+import {
+  ApolloTreeComponent
+} from '@modules/apollo/widget/smart-dashboard-v2/component/share/ApolloTree/apollo-tree.component';
+import {MainModule} from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/main.module';
 
 
 @Injectable({
-  providedIn: MainModule
+  providedIn: 'root'
 })
 
 export class ApolloTreeConfigResolver {
 
-  config: ApolloEntityConfig<ApolloTree, ApolloTreeParamsToCreateNew, null> = new ApolloEntityConfig<ApolloTree, ApolloTreeParamsToCreateNew, null>();
+  config: ApolloEntityConfig<ApolloTree, ApolloTreeParamsToCreateNew, null>
+    = new ApolloEntityConfig<ApolloTree, ApolloTreeParamsToCreateNew, null>();
 
   constructor(private store: Store<AppState>,
               private apolloTreeService: ApolloTreeService) {

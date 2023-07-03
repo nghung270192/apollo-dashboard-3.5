@@ -1,65 +1,32 @@
 <div [formGroup]="formGroup">
-  <tb-entity-model-select [entityTypeModel]="ApolloEntityTypeModel.ApolloDeviceSource" formControlName="deviceSource">
-
-  </tb-entity-model-select>
-  <tb-node-tree-selection (closeEvent)="renderDeviceFromHub()"
-                          [(selection)]="hubNodeTreeSelected"
-                          [datasource]="hubNodeTrees"
-                          name="Chọn Hub">
+  <tb-node-tree-selection
+    (closeEvent)="renderDeviceFromHub()"
+    [(selection)]="hubNodeTreeSelected"
+    [datasource]="hubNodeTrees"
+    name="Chọn Hub">
   </tb-node-tree-selection>
-  <ble-group-selection-input (closedEvent)="renderNodeFromGroupSelected();" [(groups)]="bleGroup"
-                             [datasource]="bleGroupSource"
-                             multiple='true'
-                             name="Chọn Group">
+
+  <tb-entity-model-select
+    [entityTypeModel]="ApolloEntityTypeModel.ApolloDeviceSource"
+    formControlName="deviceSource"
+    (closeEvent)="renderNodeFromGroupSelected()"
+  >
+  </tb-entity-model-select>
+
+  <ble-group-selection-input
+    *ngIf="formGroup.get('deviceSource').value===ApolloDeviceSource.GROUP"
+    (closedEvent)="renderNodeFromGroupSelected();"
+    [(groups)]="bleGroups"
+    [datasource]="bleGroupSource"
+    multiple='true'
+    name="Chọn Group">
   </ble-group-selection-input>
 
-
-  <tb-ble-node-selection-input *ngIf="formGroup.get('deviceSource').value==ApolloDeviceSource.DEVICE" [(nodes)]="bleNodes"
-                               [datasource]="bleNodeSource" multiple="true"
-                               name="Chọn Node">
+  <tb-ble-node-selection-input
+    *ngIf="formGroup.get('deviceSource').value===ApolloDeviceSource.DEVICE"
+    [(nodes)]="bleNodes"
+    [datasource]="bleNodeSource" multiple="true"
+    name="Chọn Node">
   </tb-ble-node-selection-input>
-   <!--  <div fxLayout="column" fxLayoutAlign="start start" style="width: 100%">
-  &lt;!&ndash;    <div style=" width: 100%;">
-        <mat-radio-group [(ngModel)]='deviceSource' aria-label="Select an option">
-          <table>
-            <tr>
-              <td style="width: 200px;">
-                <label>Nguồn thiết bị: </label>
-              </td>
-              <td *ngFor="let source of DeviceSourceArray" style="width: 150px;">
-                <mat-radio-button [value]="source">
-                  {{source}}
-                </mat-radio-button>
-              </td>
-            </tr>
-          </table>
-        </mat-radio-group>
-      </div>&ndash;&gt;
-      <div>
-        <tb-node-tree-selection (closeEvent)="renderDeviceFromHub()"
-                                [(selection)]="hubNodeTreeSelected"
-                                [datasource]="hubNodeTrees"
-                                name="Chọn Hub">
-        </tb-node-tree-selection>
-        &lt;!&ndash;    <button (click)="renderDeviceFromHub()"> Load Data</button>&ndash;&gt;
-      </div>
-      <div>
-        <ble-group-selection-input (closedEvent)="renderNodeFromGroupSelected();" [(groups)]="bleGroup"
-                                   [datasource]="bleGroupSource"
-                                   multiple='true'
-                                   name="Chọn Group">
-        </ble-group-selection-input>
-
-
-        <tb-ble-node-selection-input *ngIf="deviceSource==ApolloDeviceSource.DEVICE" [(nodes)]="bleNodes"
-                                     [datasource]="bleNodeSource" multiple="true"
-                                     name="Chọn Node">
-        </tb-ble-node-selection-input>
-
-      </div>
-    </div>-->
-<!--  <tb-button-with-processing (onClick)="createNodeEntity()" [disable]="loading" name="Tạo">
-
-  </tb-button-with-processing>-->
 
 </div>

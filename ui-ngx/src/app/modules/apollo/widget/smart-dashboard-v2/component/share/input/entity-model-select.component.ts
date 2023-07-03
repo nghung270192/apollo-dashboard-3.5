@@ -1,4 +1,4 @@
-import {Component, forwardRef, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from '@angular/core';
 import {
   ApolloEntityTypeModel, GatewayModel, GatewayModelLabelMapping,
   NodeTreeType,
@@ -12,7 +12,7 @@ import {
   HubSourceLabelMapping
 } from '@modules/apollo/widget/share/models/apollo-hub/hub.model';
 
-import {ControlValueAccessor,NG_VALUE_ACCESSOR} from '@angular/forms';
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {
   ApolloDeviceModel,
   ApolloDeviceModelLabelMapping, ApolloDeviceSource, ApolloDeviceSourceLabelMapping, ApolloSceneSource,
@@ -38,6 +38,9 @@ export class EntityModelSelectComponent implements ControlValueAccessor, OnInit 
   @Input() entityTypeModel: ApolloEntityTypeModel;
 
   @Input() disable = false;
+
+  @Output() closeEvent: EventEmitter<any> = new EventEmitter<any>();
+
 
   onChange: any = (v: any) => {
   };

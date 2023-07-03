@@ -40,6 +40,8 @@ export interface BleNewestStateFilter {
 }
 
 export class BaseBleSigmeshController extends DeviceControllerAbstract {
+  lastDataEvent: (data: TelemetryIncoming) => void;
+
   toggle?(params?: any): Observable<any> {
     throw new Error('Method not implemented.');
   }
@@ -50,10 +52,10 @@ export class BaseBleSigmeshController extends DeviceControllerAbstract {
   event: EventEmitter<EDevCallbackEvent>;
   /*  private _onOff: any = null;
     private _lightness: number = null;*/
-  private subscription: SubscriptionLike;
+  private subscription: Observable<IWidgetSubscription>;
 
-  subject: Subject<TelemetryIncoming> = new Subject<TelemetryIncoming>();
-  observable = this.subject.asObservable();
+  /*  subject: Subject<TelemetryIncoming> = new Subject<TelemetryIncoming>();
+    observable = this.subject.asObservable();*/
 
   constructor(nodeTree: NodeTree,
               public apollo: ApolloWidgetContext,
@@ -77,79 +79,33 @@ export class BaseBleSigmeshController extends DeviceControllerAbstract {
     }
   }
 
+  /**
+   *
+   */
   subscribe(): void {
-    this.subscribeForValue(new DeviceId(this.hubNodeTree.tbDeviceId));
+    this.subscription = this.subscribeForValue(new DeviceId(this.hubNodeTree.tbDeviceId));
     /*  this.subscription = this.apollo.apolloService.eventTaskSubject.subscribe((event) => {
-          if (event === EventTask.REQUEST_UPDATE_NEW_STATE) {
-            this.updateNewState();
-          }
-        }); */
+         if (event === EventTask.REQUEST_UPDATE_NEW_STATE) {
+           this.updateNewState();
+         }
+       }); */
   }
 
   unSubscribe(): void {
-    if (this.subscription) {
-      this.subscription?.unsubscribe();
-    }
+    /*
+        if (this.subscription) {
+          this.subscription?.unsubscribe();
+        }
+    */
+    this.subscription.subscribe(value => this.apollo.ctx.subscriptionApi.removeSubscription(value.id));
+
+
   }
 
   renderDeviceTypeIcon(): string {
     return ModelIcon.blemesh;
   }
 
-  /*get onOff(): number {
-    return this._onOff;
-  }
-
-  set onOff(value: number) {
-    this._onOff = value;
-  }
-
-  get lightness(): number {
-    return this._lightness;
-  }
-
-  set lightness(value: number) {
-    this._lightness = value;
-  }*/
-
-  /*sceneCall(params: any): boolean {
-    return false;
-  }
-
-  setLightness(params: any): Observable<any> {
-
-    return this.apollo.hubService.bleHubService.setLightness(this.hubNodeTree?.tbDeviceId,
-      ElementToUnicast(this.bleNodeViewer?.unicastAddress, params?.index), params?.lightness);
-  }
-
-  getLightness(params: any): Observable<any> {
-    return of(this._lightness);
-  }
-
-  setHsl(params: any) {
-    return this.apollo.hubService.bleHubService.setHsl(this.hubNodeTree?.tbDeviceId,
-      ElementToUnicast(this.bleNodeViewer?.unicastAddress, params?.index), params?.hsl?.h, params?.hsl?.s, params?.hsl?.l);
-  }
-
-  renderState(): DeviceState {
-    return renderBleLightState(this.onOff, this.lightness);
-  }*/
-
-  /*  toggle(params: any = {index: 0}): Observable<any> {
-      /!*if (this.lightness) {
-        return this.apollo.hubService.bleHubService.setLightness(this.nodeInfo?.tbDeviceId.id, this.bleNodeViewer?.unicastAddress, 0);
-      } else {
-        return this.apollo.hubService.bleHubService.setLightness(this.nodeInfo?.tbDeviceId.id, this.bleNodeViewer?.unicastAddress, 100);
-      }*!/
-
-      if (this.onOff) {
-        return this.apollo.hubService.bleHubService.setOnOff(this.hubNodeTree?.tbDeviceId,
-          ElementToUnicast(this.bleNodeViewer?.unicastAddress, params?.index), 0);
-      } else {
-        return this.apollo.hubService.bleHubService.setOnOff(this.hubNodeTree?.tbDeviceId,
-          ElementToUnicast(this.bleNodeViewer?.unicastAddress, params?.index), 1);
-      }
-    }*/
 
   renderState(): EntityState {
     return null;
@@ -248,6 +204,13 @@ export class BaseBleSigmeshController extends DeviceControllerAbstract {
         }));
   }
 
+  deleteTimeseries(key: string, fromDate?: Date, toDate?: Date) {
+    return this.apollo.ctx.attributeService
+      .deleteEntityTimeseries(new DeviceId(this.hubNodeTree.tbDeviceId),
+        [{key, value: {}}], true, fromDate?.getTime(), toDate?.getTime());
+
+  }
+
   private subscribeForValue(deviceId: DeviceId): Observable<IWidgetSubscription> {
 
     const valueSubscriptionInfo: SubscriptionInfo[] = [];
@@ -295,7 +258,10 @@ export class BaseBleSigmeshController extends DeviceControllerAbstract {
           unicastAddress,
           data: JSON.parse(dt.data[0][1])
         };
-        this.subject.next(ds);
+        /*        this.subject.next(ds);*/
+        if (this.lastDataEvent) {
+          this.lastDataEvent(ds);
+        }
       }
     }
 

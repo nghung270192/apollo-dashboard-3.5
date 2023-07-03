@@ -3,38 +3,64 @@
   <div class="el-title">
     <p>GIÁM SÁT NĂNG LƯỢNG ĐIỆN TIÊU THỤ</p>
   </div>
-
   <div class="el-content">
+    <tb-device-layout
+      *ngIf="energyNodetrees.length>0"
+      [apollo]="apollo"
+      [nodeTrees]="energyNodetrees">
+    </tb-device-layout>
+    <mat-divider></mat-divider>
     <div>
-      <mat-form-field>
-        <mat-label>Enter a date range</mat-label>
-        <mat-date-range-input [formGroup]="rangeDateFormGroup" [rangePicker]="picker">
-          <input matStartDate formControlName="start" placeholder="Start date">
-          <input matEndDate formControlName="end" placeholder="End date">
-        </mat-date-range-input>
-        <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="picker">
-        </mat-datepicker-toggle>
-        <mat-date-range-picker #picker></mat-date-range-picker>
+      <form [formGroup]="rangeDateFormGroup">
+        <div>
+          <mat-form-field class="tb-block">
+            <mat-label>Báo cáo theo:</mat-label>
+            <mat-select formControlName="reportType">
+              <mat-option *ngFor="let reportType of ReportTypes" [value]="reportType">
+                {{reportType}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-        <mat-error *ngIf="rangeDateFormGroup.controls.start.hasError('matStartDateInvalid')">Invalid start date
-        </mat-error>
-        <mat-error *ngIf="rangeDateFormGroup.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
-      </mat-form-field>
-    </div>
-    <div>
+        <div
+          *ngIf="rangeDateFormGroup.get('reportType').value===ReportTypeEnum.Device || rangeDateFormGroup.get('reportType').value===ReportTypeEnum.Date">
+          <mat-form-field class="tb-block">
+            <mat-label>Enter a date range</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate formControlName="start" placeholder="Start date">
+              <input matEndDate formControlName="end" placeholder="End date">
+            </mat-date-range-input>
+            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker">
+            </mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+
+            <mat-error *ngIf="rangeDateFormGroup.controls.start.hasError('matStartDateInvalid')">Invalid start date
+            </mat-error>
+            <mat-error *ngIf="rangeDateFormGroup.controls.end.hasError('matEndDateInvalid')">Invalid end date
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+<!--        <div>
+          <datepicker-views-selection>
+
+          </datepicker-views-selection>
+        </div>-->
+      </form>
+
       <button (click)="updateDate()">Load Data</button>
+      <button (click)="downloadReportTotal()">Tải báo cáo</button>
     </div>
     <div>
-      <p>Energy Total: {{totalEnergy}} (Kwh)</p>
-      <p>Energy Total: {{totalMoney}} (VND)</p>
     </div>
-    <table mat-table [dataSource]="bleEnergy" class="mat-elevation-z8">
+    <div>
+      <p>Tổng năng lượng tiêu thụ: {{totalEnergy}} (Kwh)</p>
+      <p>Tổng số tiền: {{totalMoney}} (VND)</p>
+    </div>
 
-      <!--- Note that these columns can be defined in any order.
-            The actual rendered columns are set as a property on the row definition" -->
-
-      <!-- Position Column -->
+    <table *ngIf="bleEnergyDatasource.length>0" mat-table [dataSource]="bleEnergyDatasource" class="mat-elevation-z8">
       <ng-container matColumnDef="no">
         <th mat-header-cell *matHeaderCellDef> No.</th>
         <td mat-cell *matCellDef="let element; let idx  = index"> {{idx + 1}} </td>
@@ -46,21 +72,75 @@
         <td mat-cell *matCellDef="let element"> {{element?.name}} </td>
       </ng-container>
 
-      <!-- Weight Column -->
-      <ng-container matColumnDef="lastEnergy">
-        <th mat-header-cell *matHeaderCellDef> Energy</th>
-        <td mat-cell *matCellDef="let element"> {{element?.lastEnergy}} </td>
-      </ng-container>
 
       <!-- total Column -->
       <ng-container matColumnDef="total">
-        <th mat-header-cell *matHeaderCellDef> Total</th>
+        <th mat-header-cell *matHeaderCellDef> Năng lượng tiêu thụ (Kwh)</th>
         <td mat-cell *matCellDef="let element"> {{element?.total}} </td>
       </ng-container>
 
+      <!-- Weight Column -->
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef> Giá (VND)</th>
+        <td mat-cell *matCellDef="let element"> {{element?.price}} </td>
+      </ng-container>
+
+      <!-- tool Column -->
+      <ng-container matColumnDef="tool">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <mat-icon>download</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="downloadReport()">
+              <mat-icon svgIcon="excel"></mat-icon>
+              <span>Theo ngày</span>
+            </button>
+            <button mat-menu-item (click)="downloadReport()">
+              <mat-icon svgIcon="excel"></mat-icon>
+              <span>Theo tháng</span>
+            </button>
+            <button mat-menu-item (click)="downloadReport()">
+              <mat-icon svgIcon="excel"></mat-icon>
+              <span>Theo năm</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+
+    <!--
+        <table mat-table [dataSource]="bleEnergyLatest" class="mat-elevation-z8">
+
+          <ng-container matColumnDef="no">
+            <th mat-header-cell *matHeaderCellDef> No.</th>
+            <td mat-cell *matCellDef="let element; let idx  = index"> {{idx + 1}} </td>
+          </ng-container>
+
+          &lt;!&ndash; Name Column &ndash;&gt;
+          <ng-container matColumnDef="time">
+            <th mat-header-cell *matHeaderCellDef> Name</th>
+            <td mat-cell *matCellDef="let element"> {{element?.name}} </td>
+          </ng-container>
+
+          &lt;!&ndash; Name Column &ndash;&gt;
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Name</th>
+            <td mat-cell *matCellDef="let element"> {{element?.name}} </td>
+          </ng-container>
+
+          &lt;!&ndash; Weight Column &ndash;&gt;
+          <ng-container matColumnDef="lastEnergy">
+            <th mat-header-cell *matHeaderCellDef> Energy</th>
+            <td mat-cell *matCellDef="let element"> {{element?.lastEnergy}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedLatestColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedLatestColumns;"></tr>
+        </table>-->
   </div>
 
 </div>

@@ -23,7 +23,7 @@ export interface DataViewDialog {
 })
 export class MotionSensorComponent implements OnInit, OnChanges, AfterViewInit {
 
-  status = 0;
+  status = false;
   ambientBrightness = 0;
   brightness = 0;
   delay = 0;
@@ -61,6 +61,7 @@ export class MotionSensorComponent implements OnInit, OnChanges, AfterViewInit {
   ngOnInit(): void {
   }
 
+
   init() {
     this.isProcessing = false;
     this.isError = false;
@@ -78,89 +79,44 @@ export class MotionSensorComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   delaySet() {
-    /*    this.isProcessing = true;
-        this.isError = false;
-        this.nodeControl.radarSetDelay(this.hubId,this.delay).subscribe(
-          res => {this.sensorGet();
-          }, error => {
-            this.isProcessing = false;
-            this.isError = true;
-
-          }
-        )*/
+    this.onStart();
+    this.data.nodeTreeController.setDelay(this.delay).subscribe(value => {
+        this.status = value?.status;
+        this.ambientBrightness = value?.ambient_brightness;
+        this.brightness = value?.brightness;
+        this.delay = value?.delay;
+        this.levelHigh = value?.detect;
+        this.levelLow = value?.unDetect;
+      },
+      error => this.onError());
   }
 
   levelSet() {
-    /* this.isProcessing = true;
-     this.isError = false;
-     this.nodeControl.radarSetLevel(this.hubId,this.levelLow,this.levelHigh).subscribe(
-       res => {this.sensorGet();
-       }, error => {
-         this.isProcessing = false;
-         this.isError = true;
-
-       }
-     )*/
   }
 
   brightnessSet() {
-    /*    this.isProcessing = true;
-        this.isError = false;
-        this.nodeControl.radarSetBrightness(this.hubId,this.brightness).subscribe(
-          res => {this.sensorGet();
-          }, error => {
-            this.isProcessing = false;
-            this.isError = true;
-
-          }
-        )*/
   }
 
   hlkDistanceSet() {
-    /*    this.isProcessing = true;
-        this.isError = false;
-        this.nodeControl.radarHlkParams(this.hubId,this.hlkDistance,this.hlkTime,0,0).subscribe(
-          res => {this.sensorGet();
-          }, error => {
-            this.isProcessing = false;
-            this.isError = true;
-
-          }
-        )*/
-  }
-
-  hlkDistanceGet() {
   }
 
   hlkTimeSet() {
-    /*    this.isProcessing = true;
-        this.isError = false;
-        this.nodeControl.radarHlkParams(this.hubId,this.hlkDistance,this.hlkTime,0,0).subscribe(
-          res => {
-          }, error => {
-            this.isProcessing = false;
-            this.isError = true;
 
-          }
-        )*/
-  }
-
-  hlkTimeGet() {
   }
 
   sensorGet() {
-    /*
-        this.isProcessing = true;
-        this.isError = false;
-        this.nodeControl.radarRequest(this.hubId).subscribe(
-          res => {
-            console.log(res);
-          }, error => {
-            this.isProcessing = false;
-            this.isError = true;
+    this.onStart();
+    this.data.nodeTreeController.getAllParamsSensorMotion().subscribe(value => {
+        console.log(value);
+        this.status = value?.status;
+        this.ambientBrightness = value?.ambient_brightness;
+        this.brightness = value?.brightness;
+        this.delay = value?.delay;
+        this.levelHigh = value?.detect;
+        this.levelLow = value?.unDetect;
+      },
+      error => this.onError());
 
-          }
-        )*/
   }
 
 
@@ -177,6 +133,22 @@ export class MotionSensorComponent implements OnInit, OnChanges, AfterViewInit {
           this.init();
         })*/
   }
+
+  onStart() {
+    this.isProcessing = true;
+    this.isError = false;
+  }
+
+  onEnd() {
+    this.isProcessing = false;
+    this.isError = false;
+  }
+
+  onError() {
+    this.isProcessing = false;
+    this.isError = true;
+  }
+
 
   cancel() {
     this.dialogRef.close();

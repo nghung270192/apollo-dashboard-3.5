@@ -21,8 +21,8 @@ export interface EnergySensorYearly {
 }
 
 export interface EnergySensorDailyChart {
+  date: number | Date | string;
   energy: number;
-  date: number;
 }
 
 export interface EnergySensorMonthlyChart {

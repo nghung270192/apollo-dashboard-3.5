@@ -14,7 +14,10 @@ import {
 } from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/device/slide-button.component';
 import {SharedModule} from '@shared/shared.module';
 import {ApolloShareModule} from '@modules/apollo/widget/share/apollo-share.module';
-import {SmartDashboarShareModule} from '@modules/apollo/widget/smart-dashboard-v2/component/share/smart-dashboard-shared.module';
+import {ComponentShared} from '@modules/apollo/widget/smart-dashboard-v2/component/share/smart-dashboard-shared.module';
+import {
+  DeviceDialogModule
+} from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/device/dialog-controller/device-dialog.module';
 
 
 @NgModule({
@@ -28,13 +31,15 @@ import {SmartDashboarShareModule} from '@modules/apollo/widget/smart-dashboard-v
     CommonModule,
     SharedModule,
     ApolloShareModule,
-    SmartDashboarShareModule
+    ComponentShared,
+    DeviceDialogModule,
   ],
   exports: [
     DeviceLayoutComponent,
     DeviceSettingComponent,
     IconEntityComponent,
-    SlideButtonComponent
+    SlideButtonComponent,
+    DeviceDialogModule,
   ]
 })
 export class DeviceLayoutModule {

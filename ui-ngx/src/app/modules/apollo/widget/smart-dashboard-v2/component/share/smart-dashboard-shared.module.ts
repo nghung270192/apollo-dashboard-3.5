@@ -13,7 +13,8 @@ import {SceneModule} from '@modules/apollo/widget/smart-dashboard-v2/component/s
 import {LoadZbDevFromHubComponent} from './load-zb-dev-from-hub.component';
 import {SharedModule} from '@shared/shared.module';
 import {GroupModule} from '@modules/apollo/widget/smart-dashboard-v2/component/share/group/group.module';
-import {AutomationModule} from "@modules/apollo/widget/smart-dashboard-v2/component/share/automation/automation.module";
+import {AutomationModule} from '@modules/apollo/widget/smart-dashboard-v2/component/share/automation/automation.module';
+import {InputModule} from '@modules/apollo/widget/smart-dashboard-v2/component/share/input/input.module';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import {AutomationModule} from "@modules/apollo/widget/smart-dashboard-v2/compon
     ApolloTreeModule,
     SceneModule,
     GroupModule,
-    AutomationModule
+    AutomationModule,
+    InputModule
   ],
   exports: [
     HubModule,
@@ -43,8 +45,8 @@ import {AutomationModule} from "@modules/apollo/widget/smart-dashboard-v2/compon
     ApolloTreeModule,
     EditEntityComponent,
     LoadZbDevFromHubComponent,
-    GroupModule
+    GroupModule, InputModule
   ]
 })
-export class SmartDashboarShareModule {
+export class ComponentShared {
 }

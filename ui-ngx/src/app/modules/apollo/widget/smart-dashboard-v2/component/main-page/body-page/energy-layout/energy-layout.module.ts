@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import {NgModule, ViewEncapsulation} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {EnergyLayoutComponent} from './energy-layout.component';
 import {SharedModule} from '@shared/shared.module';
@@ -9,11 +9,13 @@ import {
 import {
   ToolbarSharedModule
 } from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/device/dialog-controller/toolbar-shared/toolbar-shared.module';
-
+import {
+  DeviceLayoutModule
+} from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/device/device-layout.module';
 
 @NgModule({
   declarations: [
-    EnergyLayoutComponent
+    EnergyLayoutComponent,
   ],
   imports: [
     CommonModule,
@@ -21,10 +23,11 @@ import {
     ApolloShareModule,
     BleSigmeshModule,
     ToolbarSharedModule,
+    DeviceLayoutModule
   ],
   exports: [
     EnergyLayoutComponent
-  ]
+  ],
 })
 export class EnergyLayoutModule {
 }

@@ -56,7 +56,6 @@ export class BleLight2in1 extends BleBaseLighting {
   }): Observable<any> {
     return this.apollo.hubService.bleHubService.setAllMotionSensorData(this.hubNodeTree?.tbDeviceId,
       ElementToUnicast(this.bleNodeViewer?.unicastAddress, params?.index),
-      this.bleNodeViewer?.cid,
       params?.sensorData?.lowLevel,
       params?.sensorData?.highLevel,
       params?.sensorData?.delayTime,
@@ -68,7 +67,6 @@ export class BleLight2in1 extends BleBaseLighting {
 
   getAllDataSensor(params: { index: number }): Observable<any> {
     return this.apollo.hubService.bleHubService.getAllMotionSensorData(this.hubNodeTree?.tbDeviceId,
-      this.bleNodeViewer?.cid,
       ElementToUnicast(this.bleNodeViewer?.unicastAddress, params?.index));
   }
 

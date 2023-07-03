@@ -88,7 +88,7 @@ export class EnergySensorManagementComponent
     this.data.nodeTreeController.updateNewData(this.updateNewestData);
   }
 
-  updateNewestData(data: EnergySensorDaily) {
+  updateNewestData(unicastAddress: string, data: EnergySensorDaily) {
     this.convertData(data);
 
     if (this.firstDataOfToday && data.date > this.firstDataOfToday.date) {
@@ -228,4 +228,13 @@ export class EnergySensorManagementComponent
           this.chart.update();
         }*/
   }
+
+  clearHistoryDate() {
+    this.data.nodeTreeController.clearHistoryEnergySensorData().subscribe(
+      value => {
+        this.updateYearDate(new Date().getFullYear());
+      }
+    );
+  }
+
 }

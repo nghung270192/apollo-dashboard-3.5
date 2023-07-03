@@ -18,7 +18,7 @@ export class BleSigmeshControllerProvider {
     bikeSmartkey: BaseBleSigmeshController,
     'door-sensor': BaseBleSigmeshController,
     'energy-sensor': BleEnergySensor,
-    'light-4-channel': BaseBleSigmeshController,
+    'light-4-channel': BleBaseLighting,
     'light-d': BleBaseLighting,
     'light-radar-2in1': BleLight2in1,
     'light-rgb': BleBaseLighting,

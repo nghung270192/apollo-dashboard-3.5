@@ -7,7 +7,7 @@ import {SharedModule} from '@shared/shared.module';
 import {
   ToolbarSharedModule
 } from '../../toolbar-shared/toolbar-shared.module';
-import {ApolloShareModule} from "@modules/apollo/widget/share/apollo-share.module";
+import {ApolloShareModule} from '@modules/apollo/widget/share/apollo-share.module';
 
 
 @NgModule({

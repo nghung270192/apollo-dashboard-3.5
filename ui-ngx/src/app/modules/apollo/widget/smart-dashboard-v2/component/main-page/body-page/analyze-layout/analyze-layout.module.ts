@@ -15,7 +15,7 @@ import {DeviceHistoryAnalyzeComponent} from './device-history-analyze.component'
     SharedModule
   ],
   exports: [
-    AnalyzeLayoutComponent
+    AnalyzeLayoutComponent, TreeAnalyzeComponent, DeviceHistoryAnalyzeComponent
   ]
 })
 export class AnalyzeLayoutModule {
