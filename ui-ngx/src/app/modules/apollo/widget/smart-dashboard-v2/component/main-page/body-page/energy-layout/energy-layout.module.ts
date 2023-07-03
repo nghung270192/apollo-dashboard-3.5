@@ -12,10 +12,14 @@ import {
 import {
   DeviceLayoutModule
 } from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/device/device-layout.module';
+import {
+  MonthSelectorComponent
+} from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/energy-layout/month-selector.component';
 
 @NgModule({
   declarations: [
     EnergyLayoutComponent,
+    MonthSelectorComponent
   ],
   imports: [
     CommonModule,
