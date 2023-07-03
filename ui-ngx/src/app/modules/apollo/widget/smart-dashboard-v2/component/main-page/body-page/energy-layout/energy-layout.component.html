@@ -43,8 +43,8 @@
           </mat-form-field>
         </div>
 
-        <div>
-          <datepicker-views-selection>
+        <div *ngIf="rangeDateFormGroup.get('reportType').value===ReportTypeEnum.Month">
+          <datepicker-views-selection (rangeMonthSelected)="rangeMonthSelected($event)">
 
           </datepicker-views-selection>
         </div>

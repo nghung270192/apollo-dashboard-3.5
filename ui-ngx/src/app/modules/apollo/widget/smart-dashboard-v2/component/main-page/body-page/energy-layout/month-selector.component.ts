@@ -30,6 +30,11 @@ export const MY_FORMATS = {
   },
 };
 
+export interface RangeMonthSelected {
+  startMonth: Date;
+  endMonth: Date;
+}
+
 /** @title Datepicker emulating a Year and month picker */
 @Component({
   selector: 'datepicker-views-selection',
@@ -44,38 +49,54 @@ export const MY_FORMATS = {
       useClass: MomentDateAdapter,
       deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
     },
+    { provide: MAT_DATE_LOCALE, useValue: 'vi-VN' },
     {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
   ],
   encapsulation: ViewEncapsulation.None
 })
 export class MonthSelectorComponent {
-  date = new FormControl(moment());
+  dateStart = new FormControl(moment());
+  dateEnd = new FormControl(moment());
 
-  @Output() rangeMonthSelected: EventEmitter<any> = new EventEmitter<any>();
+  @Output() rangeMonthSelected: EventEmitter<RangeMonthSelected> = new EventEmitter<RangeMonthSelected>();
 
   setStartMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
-    const ctrlValue = this.date.value!;
-    ctrlValue.month(normalizedMonthAndYear.month());
-    ctrlValue.year(normalizedMonthAndYear.year());
-    this.date.setValue(ctrlValue);
+    const ctrlValue = this.dateStart?.value;
+    if (ctrlValue) {
+      ctrlValue.month(normalizedMonthAndYear.month());
+      ctrlValue.year(normalizedMonthAndYear.year());
+      this.dateStart.setValue(ctrlValue);
+      console.log(this.dateStart.value.date());
+    }
     datepicker.close();
-
-    console.log(this.date.value.month(),
-      this.date.value.year()
-    )
-    ;
+    this.output();
   }
 
   setEndMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
-    const ctrlValue = this.date.value!;
-    ctrlValue.month(normalizedMonthAndYear.month());
-    ctrlValue.year(normalizedMonthAndYear.year());
-    this.date.setValue(ctrlValue);
-    datepicker.close();
+    const ctrlValue = this.dateEnd?.value;
+    if (ctrlValue) {
+      ctrlValue.month(normalizedMonthAndYear.month());
+      ctrlValue.year(normalizedMonthAndYear.year());
+      this.dateEnd.setValue(ctrlValue);
+      datepicker.close();
+      this.output();
+    }
+  }
 
-    console.log(this.date.value.month(),
-      this.date.value.year()
-    )
-    ;
+  output() {
+    let fromDate: Date;
+    let toDate: Date;
+
+    if (this.dateStart?.value) {
+      fromDate = new Date(this.dateStart?.value?.year(), this.dateStart?.value.month(), this.dateStart?.value.date());
+    }
+    if (this.dateEnd?.value) {
+      toDate = new Date(this.dateEnd?.value?.year(), this.dateEnd?.value.month(), this.dateEnd?.value.date());
+    }
+
+    if (fromDate && toDate && fromDate < toDate) {
+      this.rangeMonthSelected.emit({startMonth: fromDate, endMonth: toDate});
+    }
+
   }
 }

@@ -43,16 +43,17 @@ export class EnergySensorManagement {
     console.log(reduce);*/
   }
 
-  convertDailyData(): Array<EnergySensorDailyChart> {
+  lastDataOfDateRaw() {
     const TimeOneDate = 1000 * 60 * 60 * 24;
+    const dataDailyRaw: Array<EnergySensorDailyChart> = [];
     if (this.energySensorDailies && Array.isArray(this.energySensorDailies) && this.energySensorDailies.length > 0) {
       const res = this.energySensorDailies
         .sort((a, b) => a.date - b.date);
 
-      const dataDailyRaw: Array<EnergySensorDailyChart> = [];
 
       const fromDate = this.energySensorDailies[0].date;
-      const toDate = this.energySensorDailies[this.energySensorDailies.length - 1].date;// Date(this.energySensorDailies[this.energySensorDailies.length - 1].date);
+      const toDate = this.energySensorDailies[this.energySensorDailies.length - 1].date;
+      // Date(this.energySensorDailies[this.energySensorDailies.length - 1].date);
 
       for (let date = fromDate; date <= toDate; date) {
         const dataOfDate = this.energySensorDailies
@@ -75,39 +76,76 @@ export class EnergySensorManagement {
 
       }
 
-      const dataDaily: Array<EnergySensorDailyChart> = [];
+      return dataDailyRaw;
+    }
+  }
 
-      if (dataDailyRaw.length >= 2) {
-        for (let index = 0; index < dataDailyRaw.length - 1; index++) {
-          const energy = dataDailyRaw[index + 1].energy - dataDailyRaw[index].energy;
-          dataDaily.push({
-            energy: energy > 0 ? energy : 0,
-            date: dataDailyRaw[index + 1].date
-          })
-          ;
-        }
+  convertDailyData(): Array<EnergySensorDailyChart> {
+    const dataDailyRaw = this.lastDataOfDateRaw();
+
+    const dataDaily: Array<EnergySensorDailyChart> = [];
+
+    if (dataDailyRaw.length >= 2) {
+      for (let index = 0; index < dataDailyRaw.length - 1; index++) {
+        const energy = dataDailyRaw[index + 1].energy - dataDailyRaw[index].energy;
+        dataDaily.push({
+          energy: energy > 0 ? energy : 0,
+          date: dataDailyRaw[index + 1].date
+        })
+        ;
       }
-
-      /*      for (let date = fromDate.getDate(); date <= toDate.getDate(); date++) {
-              const dataOfDate = this.energySensorDailies
-                .filter(value => new Date(value.date).getDate() === date).sort(
-                  (a, b) => a.date - b.date
-                );
-
-              if (dataOfDate && Array.isArray(dataOfDate) && dataOfDate.length > 0) {
-                dataDailyRaw.push(
-                  {
-                    date: dataOfDate[dataOfDate.length - 1].date,
-                    energy: dataOfDate[dataOfDate.length - 1].data.energy
-                  }
-                );
-              }
-            }*/
-
-      return dataDaily;
     }
 
+    /*      for (let date = fromDate.getDate(); date <= toDate.getDate(); date++) {
+            const dataOfDate = this.energySensorDailies
+              .filter(value => new Date(value.date).getDate() === date).sort(
+                (a, b) => a.date - b.date
+              );
+
+            if (dataOfDate && Array.isArray(dataOfDate) && dataOfDate.length > 0) {
+              dataDailyRaw.push(
+                {
+                  date: dataOfDate[dataOfDate.length - 1].date,
+                  energy: dataOfDate[dataOfDate.length - 1].data.energy
+                }
+              );
+            }
+          }*/
+
+    return dataDaily;
+
     return null;
+  }
+
+  convertMonthlyData(): Array<EnergySensorDailyChart> {
+    const dataDailyRaw = this.lastDataOfDateRaw();
+    const dataDaily: Array<EnergySensorDailyChart> = [];
+
+    if (dataDailyRaw.length >= 2) {
+      const startDate = new Date(dataDailyRaw[0].date);
+      const endDate = new Date(dataDailyRaw[dataDailyRaw.length - 1].date);
+
+      const startMonth = startDate.getMonth();
+      const endMonth = endDate.getMonth();
+
+      const startYear = startDate.getFullYear();
+      const endYear = endDate.getFullYear();
+
+      for (let year = startYear; year <= endYear; year++) {
+        const monthStart = (year === startYear) ? startMonth : 0;
+        const monthEnd = (year === endYear) ? endMonth : 11;
+
+        for (let month = monthStart; month <= monthEnd; month++) {
+          // Do something for each month and year
+          console.log('Month:', month + 1, 'Year:', year);
+
+
+        }
+      }
+    }
+
+    return dataDaily;
+
   }
 
   /**

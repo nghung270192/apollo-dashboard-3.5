@@ -21,6 +21,11 @@ import {
 import {DatePipe} from '@angular/common';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import {
+  RangeMonthSelected
+} from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/energy-layout/month-selector.component';
+import {DateAdapter, MAT_DATE_LOCALE} from '@angular/material/core';
+import {MomentDateAdapter} from '@angular/material-moment-adapter';
 
 export interface TableData {
   name?: string;
@@ -50,7 +55,7 @@ export enum ReportTypeEnum {
 @Component({
   selector: 'tb-energy-layout',
   templateUrl: './energy-layout.component.html',
-  styleUrls: ['./energy-layout.component.scss']
+  styleUrls: ['./energy-layout.component.scss'],
 })
 export class EnergyLayoutComponent implements OnInit, OnDestroy {
 
@@ -76,6 +81,8 @@ export class EnergyLayoutComponent implements OnInit, OnDestroy {
   ReportTypes = Object.values(ReportTypeEnum);
   ReportTypeEnum = ReportTypeEnum;
 
+  startMonth: Date = new Date();
+  endMonth: Date = new Date();
 
   @Input() apollo: ApolloWidgetContext;
   @Input() rootNodeTree: NodeTree;
@@ -278,6 +285,15 @@ export class EnergyLayoutComponent implements OnInit, OnDestroy {
     return forkJoin(requests);
   }
 
+  getDataMonthly(startDate: Date, endDate: Date): Observable<Array<Array<EnergySensorDailyChart>>> {
+    const requests = [];
+    this.bleEnergySensors
+      .map(value => new EnergySensor(value))
+      // .map(value1 => value1.getEnergyDaily(fromDate, endDate))
+      .forEach(value => requests.push(value.getEnergyMonthly(startDate, endDate)));
+    return forkJoin(requests);
+  }
+
 
   guiUpdate() {
     this.bleEnergyDatasource = [...this.nodeEnergySensorMap.values()];
@@ -298,21 +314,10 @@ export class EnergyLayoutComponent implements OnInit, OnDestroy {
     return of(1000);
   }
 
-  mergeDailyDate(): Observable<Array<EnergySensorDailyChart>> {
+  mergeDailyDate(fromDate: Date, toDate: Date): Observable<Array<EnergySensorDailyChart>> {
     return new Observable<Array<EnergySensorDailyChart>>(subscriber => {
-      const startDate = new Date(this.rangeDateFormGroup.get('start').value as Date);
-      const endDate = new Date(this.rangeDateFormGroup.get('end').value as Date);
-
-
-      /*
-      .pipe(
-        map(value => value.map(
-          value1 => value1.map(
-            value2 => ({...value2, date: this.datePipe.transform(value2.date, 'dd/MM/yyyy')}))
-        ))
-      )
-      * */
-
+      const startDate = new Date(fromDate);
+      const endDate = new Date(toDate);
       this.getDataDaily(startDate, endDate).subscribe(energyDevicesSensorDaily => {
 
         const mergeDataDaily: Array<EnergySensorDailyChart> = [];
@@ -344,21 +349,55 @@ export class EnergyLayoutComponent implements OnInit, OnDestroy {
 
   }
 
+  mergeDailyMonth(fromDate: Date, toDate: Date): Observable<Array<EnergySensorDailyChart>> {
+    return new Observable<Array<EnergySensorDailyChart>>(subscriber => {
+      const startDate = new Date(fromDate);
+      const endDate = new Date(toDate);
+      this.getDataMonthly(startDate, endDate).subscribe(energyDevicesSensorDaily => {
+
+        const mergeDataDaily: Array<EnergySensorDailyChart> = [];
+/*        for (let currentDate = new Date(startDate); currentDate <= endDate; currentDate) {
+          const arrayDataOfCurrentDate: Array<EnergySensorDailyChart> = [];
+          energyDevicesSensorDaily.forEach(
+            energyDeviceSensorDaily => {
+              const dataOfCurrentDate = energyDeviceSensorDaily.find(value => {
+                if (new Date(value.date).toDateString() === currentDate.toDateString()) {
+                  return value;
+                }
+              });
+              if (dataOfCurrentDate) {
+                arrayDataOfCurrentDate.push(dataOfCurrentDate);
+              }
+            }
+          );
+
+          const energyTotalOfDate = arrayDataOfCurrentDate.reduce(
+            (previousValue, currentValue) => previousValue = previousValue + currentValue.energy, 0);
+          mergeDataDaily.push({energy: energyTotalOfDate, date: this.datePipe.transform(currentDate, 'dd/MM/yyyy')});
+          currentDate.setDate(currentDate.getDate() + 1);
+        }*/
+        subscriber.next(mergeDataDaily);
+        subscriber.complete();
+      }, error => subscriber.error(error));
+
+    });
+
+  }
+
   ngOnDestroy(): void {
     if (this.bleEnergySensors && Array.isArray(this.bleEnergySensors)) {
       this.bleEnergySensors.forEach(value => value.unSubscribe());
     }
   }
 
-  data: { energy: number, date: Date }[] = [
+  data: { energy: number; date: Date }[] = [
     {energy: 10, date: new Date()},
     {energy: 20, date: new Date()},
     {energy: 30, date: new Date()}
   ];
 
-
-  downloadReportTotal() {
-    this.mergeDailyDate().subscribe(
+  downloadReportByDateAndDevice(fromDate: Date, toDate: Date) {
+    this.mergeDailyDate(fromDate, toDate).subscribe(
       value => {
         const dataWithPrice = value.map(entry => ({
           ...entry,
@@ -419,6 +458,34 @@ export class EnergyLayoutComponent implements OnInit, OnDestroy {
     );
   }
 
+  downloadReportByMonths(fromDate: Date, toDate: Date) {
+    const startDate = new Date(fromDate.getFullYear(), fromDate.getMonth(), 1, 0, 0, 0, 0);
+    const endDate = new Date(toDate.getFullYear(), toDate.getMonth() + 1, 0, 23, 59, 59, 999);
+    console.log(startDate, endDate);
+    this.mergeDailyMonth(startDate, endDate).subscribe(
+      value => console.log(value)
+    );
+  }
+
+  downloadReportByYear() {
+
+  }
+
+  downloadReportTotal() {
+    if (this.rangeDateFormGroup.get('reportType').value === ReportTypeEnum.Date
+      || this.rangeDateFormGroup.get('reportType').value === ReportTypeEnum.Device) {
+      const startDate = new Date(this.rangeDateFormGroup.get('start').value as Date);
+      const endDate = new Date(this.rangeDateFormGroup.get('end').value as Date);
+      this.downloadReportByDateAndDevice(startDate, endDate);
+    } else if (this.rangeDateFormGroup.get('reportType').value === ReportTypeEnum.Month) {
+      /*      const startDate = new Date(this.rangeDateFormGroup.get('start').value as Date);
+            const endDate = new Date(this.rangeDateFormGroup.get('end').value as Date);*/
+      this.downloadReportByMonths(this.startMonth, this.endMonth);
+    } else if (this.rangeDateFormGroup.get('reportType').value === ReportTypeEnum.Year) {
+      this.downloadReportByYear();
+    }
+  }
+
 
   downloadReport() {
     // Create worksheet
@@ -435,5 +502,12 @@ export class EnergyLayoutComponent implements OnInit, OnDestroy {
     });
 
     FileSaver.saveAs(excelBlob, 'favorites.xlsx');
+  }
+
+  rangeMonthSelected($event: RangeMonthSelected) {
+    if ($event && $event?.startMonth && $event?.endMonth) {
+      this.startMonth = $event.startMonth;
+      this.endMonth = $event.endMonth;
+    }
   }
 }

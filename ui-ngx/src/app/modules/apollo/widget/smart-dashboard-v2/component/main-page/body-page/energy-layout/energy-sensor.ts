@@ -91,6 +91,24 @@ export class EnergySensor {
     });
   }
 
+  getEnergyMonthly(fromDate: Date, toDate: Date = new Date()): Observable<Array<EnergySensorDailyChart>> {
+
+    return new Observable<any>(subscriber => {
+      if (fromDate == null || toDate == null) {
+        subscriber.error('Không tìm thấy start date && end date');
+      } else {
+        console.log(fromDate);
+        this.energySensor.getEnergySensorDataTimeSeries(fromDate, toDate).subscribe(
+          values => {
+            const energy = new EnergySensorManagement(values);
+            subscriber.next(energy.convertMonthlyData());
+            subscriber.complete();
+          }
+        );
+      }
+    });
+  }
+
 
   /*  getEnergyData(fromDate: Date, toDate: Date = new Date()): Observable<number> {
       return new Observable<number>(subscriber => {
