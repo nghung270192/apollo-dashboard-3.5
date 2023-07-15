@@ -20,11 +20,25 @@ import {
 } from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/device/dialog-controller/ble-sigmesh/base-light-controller/base-light-controller.component';
 import {Observable, of} from 'rxjs';
 
+
+export interface HslState {
+  h: number;
+  s: number;
+  l: number;
+}
+
+export interface CtlState {
+  warm: number;
+  white: number;
+}
+
 export class BleBaseLighting extends BaseBleSigmeshController {
 
 
   private _onOff: any = null;
   private _lightness: number = null;
+  private _ctl: CtlState = null;
+  private _hsl: HslState = null;
 
   constructor(nodeTree: NodeTree,
               apollo: ApolloWidgetContext,
@@ -43,6 +57,10 @@ export class BleBaseLighting extends BaseBleSigmeshController {
         this._onOff = value1.params?.value;
       } else if (value1.method === ResponseMethod.lightnessStatus) {
         this._lightness = value1.params?.value;
+      } else if (value1.method === ResponseMethod.hslStatus) {
+        this._hsl = {h: value1.params?.Hue, s: value1.params?.Saturation, l: value1.params?.Lightness};
+      } else if (value1.method === ResponseMethod.ctlStatus) {
+        this._ctl = {warm: value1.params?.Warm, white: value1.params?.White};
       }
     });
     this.updateNewState();
@@ -110,11 +128,15 @@ export class BleBaseLighting extends BaseBleSigmeshController {
   }
 
 
-  setHsl(params: any) {
+  setHsl(params: { index: number; hsl: { h: number; s: number; l: number; } }) {
     return this.apollo.hubService.bleHubService.setHsl(this.hubNodeTree?.tbDeviceId,
       ElementToUnicast(this.bleNodeViewer?.unicastAddress, params?.index), params?.hsl?.h, params?.hsl?.s, params?.hsl?.l);
   }
 
+  setCtl(params: { index: number; ctl: number; lightness: number }) {
+    return this.apollo.hubService.bleHubService.setCtl(this.hubNodeTree?.tbDeviceId,
+      ElementToUnicast(this.bleNodeViewer?.unicastAddress, params?.index), params?.ctl, params?.lightness);
+  }
 
   private updateNewState() {
     /*    const bleState = this.apollo.bleNodeState.get(this.bleNodeViewer.unicastAddress);

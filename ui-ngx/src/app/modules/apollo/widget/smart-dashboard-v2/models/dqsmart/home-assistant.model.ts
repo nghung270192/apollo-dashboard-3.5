@@ -503,7 +503,6 @@ export class HomeAssistantGateway {
   constructor(hassUrl: string, longToken: string) {
     this.hassUrl = hassUrl;
     this.longToken = longToken;
-    console.log(hassUrl, longToken);
   }
 
   connect(): Observable<Connection> {
@@ -517,8 +516,7 @@ export class HomeAssistantGateway {
       createConnection({auth}).then((connect) => {
         this._connection = connect;
         subscribeServices(connect, (res) => {
-          console.log(res);
-        });
+         });
         observable.next(connect);
       }).catch(reason => observable.error(reason));
     });

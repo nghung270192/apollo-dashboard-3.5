@@ -169,6 +169,7 @@ export class BaseBleSigmeshController extends DeviceControllerAbstract {
   }
 
   getTimeseriesDataWithMethod(key: string, method: string, fromDate: Date, toDate: Date): Observable<Array<BleNewestStateFilter>> {
+    console.log(fromDate, toDate);
     return this.getTimeseriesData(key, fromDate, toDate).pipe(
       map(value => {
         if (value && Array.isArray(value)) {

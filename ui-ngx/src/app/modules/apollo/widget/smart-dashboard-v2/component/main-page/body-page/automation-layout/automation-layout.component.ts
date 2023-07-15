@@ -23,6 +23,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '@core/core.state';
 import {SchedulerNodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/scheduler/scheduler.model';
 import {EventTask} from '@modules/apollo/widget/smart-dashboard-v2/models/common-type.model';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 
 @Component({
@@ -58,7 +59,8 @@ export class AutomationLayoutComponent extends CommonLayout implements CommonLay
   @Input() rootNodeTree: NodeTree;
   @Input() callbackEvent: (event: EventTask) => void;
 
-  constructor(private cd: ChangeDetectorRef, public dialog: MatDialog, private ngZone: NgZone, protected store: Store<AppState>) {
+  constructor(private cd: ChangeDetectorRef, public dialog: MatDialog, private ngZone: NgZone, protected store: Store<AppState>,
+              private _snackBar: MatSnackBar) {
     super(store);
     const sortOrder: SortOrder = {property: 'createdTime', direction: Direction.ASC};
     this.direction = EntitySearchDirection.FROM;
@@ -95,7 +97,18 @@ export class AutomationLayoutComponent extends CommonLayout implements CommonLay
       autoNodeTree.remove().subscribe(
         res => console.log(res),
         error => {
-          alert(new JsonPipe().transform(error));
+          if (error?.errCode === 2) {
+            this._snackBar.open('Không xoá trên Hub đươợc. Xoá trên database', 'Xoá', {
+              duration: 2000,
+              panelClass: ['blue-snackbar']
+            }).onAction()
+              .subscribe(value => {
+                this.removeOnDatebaseNodeTree($event, nodeTree);
+              });
+          } else {
+
+            alert(new JsonPipe().transform(error));
+          }
           this.removeProcessing[nodeTree.id.id] = false;
         },
         () => {
@@ -180,7 +193,7 @@ export class AutomationLayoutComponent extends CommonLayout implements CommonLay
 
     dialogConfig.data.type = NodeTreeType.AUTOMATION;
     this.dialog.open(AutomationCreateOrUpdateComponent, dialogConfig).afterClosed().subscribe(res => {
-      if (res && res?.data==='create') {
+      if (res && res?.data === 'create') {
         this.updateData();
       }
     });
@@ -192,7 +205,7 @@ export class AutomationLayoutComponent extends CommonLayout implements CommonLay
     this.pageLink.sortOrder.property = this.sort.active;
     this.pageLink.sortOrder.direction = Direction[this.sort.direction.toUpperCase()];
     if (this.rootNodeTree) {
-       this.apollo.apolloNodeTreeService.getByApolloTree(this.rootNodeTree.apolloTreeId.id, this.pageLink,
+      this.apollo.apolloNodeTreeService.getByApolloTree(this.rootNodeTree.apolloTreeId.id, this.pageLink,
         NodeTreeType.AUTOMATION, '').subscribe(res => {
         this.datasource = res.data;
         this.totalElements = res.totalElements;
@@ -254,5 +267,25 @@ export class AutomationLayoutComponent extends CommonLayout implements CommonLay
     this.pageLink.textSearch = '';
     this.paginator.pageIndex = 0;
     this.updateData();
+  }
+
+  removeOnDatebaseNodeTree($event, nodeTree: NodeTree) {
+    this.removeClickEvent($event);
+    if (confirm('Xóa trên Database ' + nodeTree.name)) {
+      this.removeProcessing[nodeTree.id.id] = true;
+      const autoNodeTree: AutomationNodeTree = new AutomationNodeTree(nodeTree, this.apollo);
+      autoNodeTree.removeOnDatabase().subscribe(
+        res => console.log(res),
+        error => {
+          alert(new JsonPipe().transform(error));
+          this.removeProcessing[nodeTree.id.id] = false;
+        },
+        () => {
+          this.updateData();
+          this.removeProcessing[nodeTree.id.id] = false;
+          this.cd.detectChanges();
+        }
+      );
+    }
   }
 }

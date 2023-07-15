@@ -82,8 +82,7 @@ export class DqsmartClimateController extends BaseDqsmartController {
 
   //@implement
   updateNewState(hassEntity: HassEntity | null): void {
-    console.log('called updateNewState');
-    this.climateHass = new ClimateHass(this.iotDevice.hassEntity);
+     this.climateHass = new ClimateHass(this.iotDevice.hassEntity);
   }
 
 

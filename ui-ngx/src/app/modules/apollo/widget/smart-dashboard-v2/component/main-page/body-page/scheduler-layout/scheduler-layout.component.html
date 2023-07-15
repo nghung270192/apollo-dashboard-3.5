@@ -19,8 +19,8 @@
                 matTooltip="Lưu giao diện"
                 matTooltipPosition="above"
                 type="button">
-          <mat-icon *ngIf="apollo.apolloNodeTreeService.isChanged==false">save</mat-icon>
-          <mat-icon *ngIf="apollo.apolloNodeTreeService.isChanged==true" style="color: red;">save</mat-icon>
+          <mat-icon *ngIf="apollo.apolloNodeTreeService.isChanged===false">save</mat-icon>
+          <mat-icon *ngIf="apollo.apolloNodeTreeService.isChanged===true" style="color: red;">save</mat-icon>
         </button>
       </ng-container>
       <button (click)="isEdited = !isEdited;" *ngIf="apollo.isAdmin"
@@ -29,8 +29,8 @@
               matTooltip="Chỉnh sửa"
               matTooltipPosition="below"
               type="button">
-        <mat-icon *ngIf="isEdited==false">edit</mat-icon>
-        <mat-icon *ngIf="isEdited==true" style="color: red;">edit</mat-icon>
+        <mat-icon *ngIf="isEdited===false">edit</mat-icon>
+        <mat-icon *ngIf="isEdited===true" style="color: red;">edit</mat-icon>
       </button>
 
       <button (click)="enterFilterMode()" mat-icon-button
@@ -108,18 +108,23 @@
           <mat-header-cell *matHeaderCellDef class="table-header" mat-header-cell> Hành động</mat-header-cell>
           <mat-cell *matCellDef="let element; let row = index;" class="table-cell" mat-cell>
 
-            <div *ngIf="element?.additionalInfo?.outputScript?.toDeviceModel" style="margin: 5px;">
-              Model: {{element?.additionalInfo?.outputScript?.toDeviceModel}}.
-            </div>
-            <div *ngIf="element?.additionalInfo?.outputScript?.toControlType" style="margin: 5px;">
-              Type: {{element?.additionalInfo?.outputScript?.toControlType}}
-            </div>
-            <div *ngIf="element?.additionalInfo?.outputScript?.toBleScene" style="margin: 5px;">
-              Scene: {{element?.additionalInfo?.outputScript?.toBleScene}}
-            </div>
-            <div *ngIf="element?.additionalInfo?.outputScript?.toBleGroup" style="margin: 5px;">
-              Group: {{element?.additionalInfo?.outputScript?.toBleGroup}}
-              - Value: {{element?.additionalInfo?.outputScript?.toBleValue}}
+            <div *ngFor="let outputScript of element?.additionalInfo?.outputScript">
+              <div style="margin: 5px;">
+                Model: {{outputScript?.toDeviceModel}}.
+              </div>
+              <div style="margin: 5px;">
+                Type: {{outputScript?.toControlType}}
+              </div>
+              <div style="margin: 5px;">
+                Target: {{outputScript?.toTarget}}
+              </div>
+              <div *ngIf="outputScript?.toOptionTarget" style="margin: 5px;">
+                EP: {{outputScript?.toOptionTarget}}
+              </div>
+              <div style="margin: 5px;">
+                Value: {{outputScript?.toValue}}
+              </div>
+
             </div>
 
           </mat-cell>

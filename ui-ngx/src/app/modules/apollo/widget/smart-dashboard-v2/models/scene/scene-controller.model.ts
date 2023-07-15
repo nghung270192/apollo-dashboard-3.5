@@ -24,20 +24,34 @@ export interface SceneNodeTreeController {
 export class BleSceneController implements SceneNodeTreeController {
   bleScene: SceneController = new SceneController();
   hubController: HubController;
-
+  hubId = '';
   private targetScene = '';
 
   constructor(nodeTree: NodeTree, private apollo: ApolloWidgetContext) {
     const nodeTreeImpl: NodeTreeImpl = new NodeTreeImpl(nodeTree);
-    this.hubController = apollo.hubNodeTrees.get(nodeTreeImpl.additionalInfo.hubNodeTreeId.id);
+
+    // this.hubController = apollo.hubNodeTrees.get(nodeTreeImpl.additionalInfo.hubNodeTreeId.id);
+
+    if (nodeTreeImpl.additionalInfo.hubNodeTreeId.id) {
+      this.apollo.apolloNodeTreeService.getApolloNodeTree(nodeTreeImpl.additionalInfo.hubNodeTreeId.id).subscribe(
+        res => {
+          this.hubId = res?.additionalInfo?.tbDeviceId.id;
+        }
+      );
+    }
+
+
     this.bleScene.update(nodeTreeImpl.additionalInfo.entity);
-    if (nodeTreeImpl.additionalInfo.sceneTarget)
-      {this.targetScene = nodeTreeImpl.additionalInfo.sceneTarget;}
+    if (nodeTreeImpl.additionalInfo.sceneTarget) {
+      this.targetScene = nodeTreeImpl.additionalInfo.sceneTarget;
+    }
+
 
   }
 
   call(): Observable<any> {
-    return this.hubController.bleCallScene(this.targetScene, this.bleScene.number);
+    // return this.hubController.bleCallScene(this.targetScene, this.bleScene.number);
+    return this.apollo.hubService.bleHubService.callScene(this.hubId, this.targetScene, this.bleScene.number);
   }
 
 }

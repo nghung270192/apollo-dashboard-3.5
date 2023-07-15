@@ -37,4 +37,15 @@ export class BaseHubService extends RpcCmdService {
     return this.send(deviceId, requestBody);
   }
 
+
+  updateFirmware(deviceId: string): Observable<any> {
+
+    const requestBody: HubCmd = {
+      method: 'update_firmware',
+      params: {},
+      timeout: this.timeOut
+    };
+    return this.send(deviceId, requestBody);
+  }
+
 }

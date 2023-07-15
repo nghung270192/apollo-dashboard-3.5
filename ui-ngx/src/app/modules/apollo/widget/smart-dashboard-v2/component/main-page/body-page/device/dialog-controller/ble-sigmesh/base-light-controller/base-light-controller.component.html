@@ -16,20 +16,29 @@
       <div fxLayout="column" fxLayoutAlign="space-between center" style="width: 100%;">
         <div fxLayout="column" fxLayoutAlign="space-around center" style="align-items: center;">
           <ng-container *ngIf="data.nodeTreeController.bleNodeViewer.product.model===ProductModel.light">
-            <div fxLayout="row" fxLayoutAlign="center start">
+            <div fxLayout="column" fxLayoutAlign="center start">
               <apollo-group-control
                 (lightnessChange)="lightnessChange($event,elementIndex)"
                 (stateChange)="stateChange($event,elementIndex)"
                 [lightness]="lightness"
-                [size]="!data.nodeTreeController.apollo.ctx.isMobile?220:220">
+                [size]="!data.nodeTreeController.apollo.ctx.isMobile?180:180">
               </apollo-group-control>
             </div>
-            <div fxLayout="row" fxLayoutAlign="center start" style="height: 100%">
+            <div *ngIf="data.nodeTreeController.bleNodeViewer.hasModelOfElement('1303',elementIndex)===true"
+                 fxLayout="column" fxLayoutAlign="center start" style="height: 100%; margin: 15px 0 0 0;">
               <div>
-                <apollo-color-control (hslDefaultChange)="hslChange($event,elementIndex)"
-                                      *ngIf="data.nodeTreeController.bleNodeViewer.hasModelOfElement('1307',elementIndex)===true"
-                                      [size]="!data.nodeTreeController.apollo.ctx.isMobile?180:180">
-                </apollo-color-control>
+                <ctl-controller [size]="!data.nodeTreeController.apollo.ctx.isMobile?180:180"
+                                (ctlChange)="ctlChange($event, elementIndex)">
+                </ctl-controller>
+              </div>
+            </div>
+            <div *ngIf="data.nodeTreeController.bleNodeViewer.hasModelOfElement('1307',elementIndex)===true"
+                 fxLayout="column" fxLayoutAlign="center start" style="height: 100%;  margin: 15px 0 0 0;">
+              <div>
+                <hsl-controller (hslDefaultChange)="hslChange($event,elementIndex)"
+
+                                [size]="!data.nodeTreeController.apollo.ctx.isMobile?180:180">
+                </hsl-controller>
               </div>
             </div>
           </ng-container>

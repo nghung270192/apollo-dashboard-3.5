@@ -1,4 +1,14 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, NgZone, OnInit, Output} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnInit,
+  Output,
+  Type
+} from '@angular/core';
 import {NodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree.model';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {
@@ -9,25 +19,52 @@ import {CommonLayout} from '@modules/apollo/widget/smart-dashboard-v2/component/
 import {EventTask} from '@modules/apollo/widget/smart-dashboard-v2/models/common-type.model';
 import {Store} from '@ngrx/store';
 import {AppState} from '@core/core.state';
+import {GatewayProvider} from '@modules/apollo/widget/smart-dashboard-v2/models/gateway/gateway';
+import {GatewayControllerAbstract} from '@modules/apollo/widget/smart-dashboard-v2/models/gateway/gateway.model';
 
 @Component({
   selector: 'tb-gateway-icon',
   templateUrl: './gateway-icon.component.html',
   styleUrls: ['./gateway-icon.component.scss']
 })
-export class GatewayIconComponent extends CommonLayout implements OnInit {
+export class GatewayIconComponent extends CommonLayout implements OnInit, AfterViewInit {
 
   selection = false;
+  isOnline = false;
 
   @Input() scale = 100;
   @Input() apollo: ApolloWidgetContext;
-  @Input() nodeTrees: NodeTree;
+  @Input() nodeTree: NodeTree;
   @Input() isEdited = false;
   @Output() nodeTreeClick: EventEmitter<NodeTree> = new EventEmitter<NodeTree>();
+
+  gateway: GatewayControllerAbstract;
 
 
   constructor(public dialog: MatDialog, private cd: ChangeDetectorRef, private ngZone: NgZone, protected store: Store<AppState>) {
     super(store);
+
+  }
+
+
+  ngAfterViewInit(): void {
+    const gatewayProvider = GatewayProvider[this.nodeTree?.model];
+    if (gatewayProvider) {
+      this.gateway = new gatewayProvider(this.nodeTree, this.apollo);
+      if (this.gateway) {
+        setTimeout(() => {
+          this.gateway?.isOnline().subscribe(
+            isOnline => {
+              this.isOnline = isOnline;
+              this.cd.detectChanges();
+            }, error => {
+              console.log('disconnect', this.nodeTree.name);
+            }
+          );
+        }, 5000);
+      }
+    }
+
   }
 
   ngOnInit(): void {

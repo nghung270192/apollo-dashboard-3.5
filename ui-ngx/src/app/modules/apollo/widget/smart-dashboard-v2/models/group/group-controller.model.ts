@@ -138,6 +138,23 @@ export class BleGroupController extends GroupController {
     }
   }
 
+
+  setCtl(params: any): Observable<any> {
+    if (this.multiple) {
+      if (this.groups && Array.isArray(this.groups)) {
+        return of(...this.groups).pipe(
+          concatMap(gr => this.apollo.hubService.bleHubService
+            .setCtl(this.hubId, gr, params, 100).pipe(delay(this.DELAY)))
+        );
+      } else {
+        return of(null);
+      }
+    } else {
+      return this.apollo.hubService.bleHubService.setCtl(this.hubId,
+        this.groupModel?.address, params, 100);
+    }
+  }
+
   setLightness(params: any): Observable<any> {
     if (this.multiple) {
       if (this.groups && Array.isArray(this.groups)) {

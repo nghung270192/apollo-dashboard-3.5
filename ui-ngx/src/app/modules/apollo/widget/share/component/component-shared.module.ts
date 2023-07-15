@@ -11,7 +11,7 @@ import {BleNodeSelectionInputComponent} from './input/ble-node-selection-input.c
 import {GroupControlComponent} from './group-control/group-control.component';
 import {RoundSliderComponent} from './group-control/round-slider.component';
 import {FastLightnessControlComponent} from './group-control/fast-lightness-control.component';
-import {ColorControlComponent} from './color-control/color-control.component';
+import {HslControllerComponent} from './color-control/hsl-controller.component';
 import {ZigbeeModelSelectionComponent} from './input/zigbee-model-selection.component';
 import {BleSceneSelectionInputComponent} from './input/ble-scene-selection-input.component';
 import {ZbNodeSelectionInputComponent} from './input/zb-node-selection-input.component';
@@ -29,6 +29,7 @@ import {HubodelSelectionComponent} from './input/hub-model-selection.component';
 import {GoogleChartModule} from './google-chart/google-chart.module';
 import {YearSelectorModule} from './year-selector/year-selector.module';
 import {SharedModule} from '@shared/shared.module';
+import {CtlControllerModule} from "@modules/apollo/widget/share/component/ctl-control/ctl-controller.module";
 
 
 @NgModule({
@@ -43,7 +44,7 @@ import {SharedModule} from '@shared/shared.module';
     GroupControlComponent,
     RoundSliderComponent,
     FastLightnessControlComponent,
-    ColorControlComponent,
+    HslControllerComponent,
     ZigbeeModelSelectionComponent,
     BleSceneSelectionInputComponent,
     ZbNodeSelectionInputComponent,
@@ -61,9 +62,11 @@ import {SharedModule} from '@shared/shared.module';
     CommonModule,
     GoogleChartModule,
     SharedModule,
-    YearSelectorModule
+    YearSelectorModule,
+    CtlControllerModule
   ],
   exports: [
+    CtlControllerModule,
     HubodelSelectionComponent,
     ApolloProcessingComponent,
     TextInputComponent,
@@ -73,7 +76,7 @@ import {SharedModule} from '@shared/shared.module';
     BleGroupSelectionInputComponent,
     BleNodeSelectionInputComponent,
     GroupControlComponent,
-    ColorControlComponent,
+    HslControllerComponent,
     ZigbeeModelSelectionComponent,
     BleSceneSelectionInputComponent,
     ZbNodeSelectionInputComponent,

@@ -23,6 +23,8 @@ export interface NodeTree extends BaseData<ApolloNodeTreeId> {
 }
 
 
+
+
 export class NodeTreeImpl implements NodeTree {
   additionalInfo: NodeTreeInfoBaseImpl;
   apolloTreeId?: ApolloTreeId;

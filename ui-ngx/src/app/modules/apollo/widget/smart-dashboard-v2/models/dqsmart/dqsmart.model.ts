@@ -4,15 +4,25 @@ import {Observable} from 'rxjs';
 import {HassEntity} from 'home-assistant-js-websocket';
 import {Type} from '@angular/core';
 
-import {DqsmartClimateController} from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/device-type/dqsmart-climate-controller';
-import {DqsmartLightController} from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/device-type/dqsmart-light-controller';
 import {
-   DqsmartUnknownEntity
+  DqsmartClimateController
+} from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/device-type/dqsmart-climate-controller';
+import {
+  DqsmartLightController
+} from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/device-type/dqsmart-light-controller';
+import {
+  DqsmartUnknownEntity
 } from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/device-type/base-dqsmart-controller';
-import {DqsmartTemperatureController} from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/device-type/dqsmart-temperature-controller';
- import {DqsmartCoverController} from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/device-type/dqsmart-cover-controller';
+import {
+  DqsmartTemperatureController
+} from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/device-type/dqsmart-temperature-controller';
+import {
+  DqsmartCoverController
+} from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/device-type/dqsmart-cover-controller';
 import {DeviceControllerAbstract} from '@modules/apollo/widget/smart-dashboard-v2/models/device/device.model';
-import {DqsmartSceneController} from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/device-type/dqsmart-scene-controller';
+import {
+  DqsmartSceneController
+} from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/device-type/dqsmart-scene-controller';
 
 export class DqsmartGatewayNodeTreeImpl extends NodeTreeImpl {
 

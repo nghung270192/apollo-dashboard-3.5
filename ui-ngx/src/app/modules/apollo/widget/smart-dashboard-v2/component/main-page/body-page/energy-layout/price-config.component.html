@@ -1,0 +1,57 @@
+<div class="dialog">
+  <mat-toolbar color="primary">
+    <h2>Cấu hình giá tiền điện</h2>
+    <span fxFlex></span>
+    <!--    <div [tb-help]="helpLinkId()"></div>-->
+    <button (click)="cancel()" mat-icon-button type="button">
+      <mat-icon class="material-icons">close</mat-icon>
+    </button>
+  </mat-toolbar>
+  <mat-progress-bar *ngIf="isLoading$ | async" color="warn" mode="indeterminate">
+  </mat-progress-bar>
+  <div *ngIf="(isLoading$ | async)===false" style="height: 4px;"></div>
+
+  <div mat-dialog-content>
+    <table mat-table [dataSource]="priceForCalculating" class="mat-elevation-z8">
+
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="no">
+        <th mat-header-cell *matHeaderCellDef> Ngày</th>
+        <td mat-cell *matCellDef="let element; let idx = index"> {{idx + 1}} </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="energy">
+        <th mat-header-cell *matHeaderCellDef> Năng lượng tiêu thụ (Kwh)</th>
+        <td mat-cell *matCellDef="let element"> {{element?.energy}} </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="price">
+        <th mat-header-cell *matHeaderCellDef> Chi phí (VND)</th>
+        <td mat-cell *matCellDef="let element"> {{element?.price}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedEnergyReportColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedEnergyReportColumns;"></tr>
+    </table>
+  </div>
+
+  <div fxLayoutAlign="end center" mat-dialog-actions>
+    <button (click)="cancel()" [disabled]="(isLoading$ | async)"
+            cdkFocusInitial
+            color="primary"
+            mat-button
+            type="button">
+      {{ 'action.cancel' | translate }}
+    </button>
+    <button (click)="save()" [disabled]="(isLoading$ | async)"
+            color="primary"
+            mat-raised-button
+            type="submit">
+      {{ 'action.add' | translate }}
+    </button>
+  </div>
+
+</div>

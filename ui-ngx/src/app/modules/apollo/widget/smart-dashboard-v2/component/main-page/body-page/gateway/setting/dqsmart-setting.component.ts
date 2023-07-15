@@ -59,14 +59,14 @@ export class DqsmartSettingComponent implements OnInit, GatewaySetting, OnChange
 
   check() {
     this.apollo.dqsmartService.checkApi(this.hassUrl, this.token).subscribe(res => {
-      if (res?.message==='API running.') {
+      if (res?.message === 'API running.') {
         this.status = 'API running.';
       }
     }, error => this.status = 'API not work');
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.addTrigger && changes.addTrigger.isFirstChange()===false && changes.addTrigger?.previousValue != changes.addTrigger?.currentValue) {
+    if (changes.addTrigger && changes.addTrigger.isFirstChange() === false && changes.addTrigger?.previousValue != changes.addTrigger?.currentValue) {
       this.save();
       console.log('create event');
     }

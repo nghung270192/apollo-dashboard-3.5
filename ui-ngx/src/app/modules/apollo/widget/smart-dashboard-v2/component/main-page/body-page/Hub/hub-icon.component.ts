@@ -15,9 +15,13 @@ import {HubNodeTreeImpl, NodeTree} from '@modules/apollo/widget/smart-dashboard-
 import {EventTask} from '@modules/apollo/widget/smart-dashboard-v2/models/common-type.model';
 import {CommonLayout} from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/common-layout';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {HubSettingComponent} from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/Hub/hub-setting.component';
+import {
+  HubSettingComponent
+} from '@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/Hub/hub-setting.component';
 import {Store} from '@ngrx/store';
 import {AppState} from '@core/core.state';
+import {DeviceId} from "@shared/models/id/device-id";
+import {AttributeScope} from "@shared/models/telemetry/telemetry.models";
 
 @Component({
   selector: 'tb-hub-icon',
@@ -46,7 +50,7 @@ export class HubIconComponent extends CommonLayout implements OnInit, OnChanges,
   }
 
   clickNodeTree($event) {
-    if (this.isEdited===false) {
+    if (this.isEdited === false) {
       this.removeClickEvent($event);
       this.nodeTreeClick.emit();
     } else {
@@ -69,14 +73,15 @@ export class HubIconComponent extends CommonLayout implements OnInit, OnChanges,
     sub = this.dialog.open(HubSettingComponent, dialogConfig).afterClosed();
     if (sub) {
       sub.subscribe(res => {
-        if (res)
-          {this.apollo.apolloService.eventTaskSubject.next(EventTask.RELOAD_ENITY);}
+        if (res) {
+          this.apollo.apolloService.eventTaskSubject.next(EventTask.RELOAD_ENITY);
+        }
       });
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.nodeTree && changes.nodeTree.firstChange===false) {
+    if (changes.nodeTree && changes.nodeTree.firstChange === false) {
       this.ngOnInit();
     }
   }
@@ -84,11 +89,20 @@ export class HubIconComponent extends CommonLayout implements OnInit, OnChanges,
   ngAfterViewInit(): void {
     this.node = new HubNodeTreeImpl(this.nodeTree);
     if (this.node && this.node.tbDeviceId) {
-      const hubController = this.apollo.hubNodeTrees.get(this.node.id.id);
-      if (hubController) {
-        this.isOnline = hubController.isOnline;
-        this.cd.detectChanges();
-      }
+      setTimeout(() => {
+        const hubController = this.apollo.hubNodeTrees.get(this.node.id.id);
+        if (hubController) {
+          this.isOnline = true;
+          this.cd.detectChanges();
+        }
+      }, 5000);
+      /*      this.apollo.ctx.attributeService.getEntityAttributes(new DeviceId(this.node.tbDeviceId), AttributeScope.SERVER_SCOPE, ['active'])
+              .subscribe(value => {
+                if (value && value.length > 0) {
+                  this.isOnline = !!value[0]?.value;
+                  this.cd.detectChanges();
+                }
+              });*/
     }
   }
 

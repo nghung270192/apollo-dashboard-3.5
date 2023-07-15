@@ -12,6 +12,7 @@ import {
 import {ApolloWidgetContext} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-widget-context.model';
 import {Observable} from 'rxjs';
 import {NodeTreeType} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-entity-type.model';
+import {ApolloDeviceModel} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-hub/apollo-hub';
 
 export interface AutomationParamsToCreateNew {
   name?: string;
@@ -74,6 +75,7 @@ export class AutomationImpl implements AutomationI {
   }
 }
 
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function renderInputFromZigbeeDeviceState(method: string, addr: number, ep: number, val: number, name: string): any {
   return {
     method,
@@ -85,6 +87,7 @@ export function renderInputFromZigbeeDeviceState(method: string, addr: number, e
   };
 }
 
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function renderInputFromLumiRemoteB1acn01(method: string, addr: number, ep: number, val: number, name: string): any {
   return {
     method,
@@ -96,6 +99,7 @@ export function renderInputFromLumiRemoteB1acn01(method: string, addr: number, e
   };
 }
 
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function renderInputFromLumiRemoteB286acn01(method: string, addr: number, ep: number, val: number, name: string) {
   return {
     method,
@@ -107,6 +111,35 @@ export function renderInputFromLumiRemoteB286acn01(method: string, addr: number,
   };
 }
 
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function renderOutputZigbeeSetOnOff(address: string, endPoint: number, state: number) {
+  return {
+    method: 'set_onOff',
+    params: {
+      type: 'zigbee',
+      address,
+      DstEndPoint: endPoint,
+      SrcEndPoint: 1,
+      value: state
+    }
+  };
+}
+
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function renderOutputZigbeeSetLightness(address: string, endPoint: number, lightness: number) {
+  return {
+    method: 'set_lightness',
+    params: {
+      type: 'zigbee',
+      address,
+      DstEndPoint: endPoint,
+      SrcEndPoint: 1,
+      value: lightness
+    }
+  };
+}
+
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function renderOutputBleSetOnOff(address: string, state: number) {
   return {
     method: 'set_onOff',
@@ -118,6 +151,7 @@ export function renderOutputBleSetOnOff(address: string, state: number) {
   };
 }
 
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function renderOutputBleSetLightness(address: string, value: number) {
   return {
     method: 'set_lightness',
@@ -129,6 +163,7 @@ export function renderOutputBleSetLightness(address: string, value: number) {
   };
 }
 
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function renderOutputBleCallScene(address: string, value: number) {
   return {
     method: 'scene_recall',
@@ -141,6 +176,7 @@ export function renderOutputBleCallScene(address: string, value: number) {
 }
 
 
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
 export function renderAutoInput(input: InputScript): any {
   const inputScriptImpl: InputScriptImpl = new InputScriptImpl(input);
   return renderInputFromZigbeeDeviceState(
@@ -167,18 +203,40 @@ export function renderAutoInput(input: InputScript): any {
   }*/
 }
 
-export function renderAutoOutput(output: OutputScript): any {
-  const outputScriptImpl: OutputScriptImpl = new OutputScriptImpl(output);
-  switch (outputScriptImpl.toControlType) {
-    case AutoTypeControl.LIGHTNESS:
-      return renderOutputBleSetLightness(outputScriptImpl.toBleGroup, outputScriptImpl.toBleValue);
-    case AutoTypeControl.ONOFF:
-      return renderOutputBleSetOnOff(outputScriptImpl.toBleGroup, outputScriptImpl.toBleValue);
-    case AutoTypeControl.SCENE:
-      if (outputScriptImpl.toBleScene && outputScriptImpl.toBleScene) {
-        return renderOutputBleCallScene(outputScriptImpl.toBleGroup, Number('0x' + outputScriptImpl.toBleScene));
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function renderAutoOutput(output: Array<OutputScript>): any {
+  const data = [];
+  if (output && Array.isArray(output)) {
+    output.forEach(value => {
+      const outputScriptImpl: OutputScriptImpl = new OutputScriptImpl(value);
+      if (outputScriptImpl.toDeviceModel === ApolloDeviceModel.BLE_SIG_MESH) {
+        switch (outputScriptImpl.toControlType) {
+          case AutoTypeControl.LIGHTNESS:
+            data.push(renderOutputBleSetLightness(outputScriptImpl.toTarget, outputScriptImpl.toValue));
+            break;
+          case AutoTypeControl.ONOFF:
+            data.push(renderOutputBleSetOnOff(outputScriptImpl.toTarget, outputScriptImpl.toValue));
+            break;
+          case AutoTypeControl.SCENE:
+            data.push(renderOutputBleCallScene(outputScriptImpl.toTarget, Number('0x' + outputScriptImpl.toValue)));
+            break;
+        }
+      } else if (outputScriptImpl.toDeviceModel === ApolloDeviceModel.ZIGBEE) {
+        switch (outputScriptImpl.toControlType) {
+          case AutoTypeControl.LIGHTNESS:
+            data.push(renderOutputZigbeeSetLightness(outputScriptImpl.toTarget, outputScriptImpl.toOptionTarget, outputScriptImpl.toValue));
+            break;
+          case AutoTypeControl.ONOFF:
+            data.push(renderOutputZigbeeSetOnOff(outputScriptImpl.toTarget, outputScriptImpl.toOptionTarget, outputScriptImpl.toValue));
+            break;
+          case AutoTypeControl.SCENE:
+            break;
+        }
       }
+    });
   }
+  console.log(data);
+  return data;
 }
 
 
@@ -201,13 +259,13 @@ export class AutomationNodeTree extends NodeTreeImpl {
 
   createOrUpdate(): Observable<any> {
     return new Observable<any>(obs => {
-      this.apollo.apolloNodeTreeService.saveApolloNodeTree(this.nodeTree).subscribe(res => {
+      this.apollo.apolloNodeTreeService.saveApolloNodeTree(this.nodeTree).subscribe(nodeTree => {
         obs.next('Create or update to database ok');
-        const nodeController: NodeTreeImpl = new NodeTreeImpl(res);
+        const nodeController: NodeTreeImpl = new NodeTreeImpl(nodeTree);
         this.apollo.apolloNodeTreeService.getApolloNodeTree(nodeController.additionalInfo?.hubNodeTreeId?.id).subscribe(
-          res => {
+          hubNodeTree => {
             obs.next('Found tb hub');
-            const hubNodeTreeImpl: HubNodeTreeImpl = new HubNodeTreeImpl(res);
+            const hubNodeTreeImpl: HubNodeTreeImpl = new HubNodeTreeImpl(hubNodeTree);
             if (this.type === NodeTreeType.AUTOMATION) {
               this.apollo.hubService.automationService.updateOrCreate(
                 hubNodeTreeImpl.tbDeviceId,
@@ -235,18 +293,25 @@ export class AutomationNodeTree extends NodeTreeImpl {
         res => {
           const hubNodeTree: HubNodeTreeImpl = new HubNodeTreeImpl(res);
           this.apollo.hubService.automationService.remove(hubNodeTree.tbDeviceId, [this.id.id]).subscribe(
-            res => {
-              this.apollo.apolloNodeTreeService.deleteApolloNodeTree(this.id.id).subscribe(res => {
+            value => {
+              this.apollo.apolloNodeTreeService.deleteApolloNodeTree(this.id.id).subscribe(value1 => {
                 observable.next('Removed successfully');
                 observable.complete();
-              }, error => observable.error('Can\'t Remove node tree in database'));
+              }, error => observable.error({errCode: 1, message: 'Can\'t Remove node tree in database'}));
 
-            }, error => observable.error('Can\'t Remove node tree in Hub')
+            }, error => observable.error({errCode: 2, message: 'Can\'t Remove node tree in Hub'})
           );
-        }, error => observable.error('Not found hub tb device'));
+        }, error => observable.error({errCode: 3, message: 'Not found hub tb device'}));
+    });
+  }
+
+  removeOnDatabase(): Observable<any> {
+    return new Observable<any>(observable => {
+      this.apollo.apolloNodeTreeService.deleteApolloNodeTree(this.id.id).subscribe(res => {
+        observable.next('Removed successfully');
+        observable.complete();
+      }, error => observable.error({errCode: 1, message: 'Can\'t Remove node tree in database'}));
     });
   }
 
 }
-
-

@@ -795,7 +795,6 @@ const PRODUCT_ID: ProductI[] = [
     type: DeviceType.lightD,
     icon: EntityIcon.lightBulbV2
   },
-
   {
     pid: (0x1093),
     model: ProductModel.light,
@@ -1085,6 +1084,15 @@ const PRODUCT_ID: ProductI[] = [
     name: 'Giám sát năng lượng',
     type: DeviceType.energySensor,
     icon: EntityIcon.energySensor
+  },
+  {
+    pid: (0x10AA),
+    model: ProductModel.light,
+    pid2Enum: CommonProductName.spotLight,
+    code: 'PRODUCT_ID_SPOT_W',
+    name: 'Đèn CCT',
+    type: DeviceType.lightW,
+    icon: EntityIcon.lightBulbV2
   },
 ];
 

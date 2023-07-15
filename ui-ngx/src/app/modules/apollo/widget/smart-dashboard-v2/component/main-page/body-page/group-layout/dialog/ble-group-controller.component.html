@@ -4,11 +4,18 @@
     (lightnessChange)="lightnessChange($event)"
     (stateChange)="stateChange($event)"
     [size]="!controller?.apollo?.ctx?.isMobile?270:270">
+
   </apollo-group-control>
-  <label>HSL</label>
-  <apollo-color-control (hslDefaultChange)="hslChange($event)"
-                        [size]="!controller?.apollo?.ctx?.isMobile?220:220">
-  </apollo-color-control>
+  <label style="margin-top: 15px;">CTL</label>
+  <ctl-controller [size]="!controller.apollo.ctx.isMobile?220:220"
+                  (ctlChange)="ctlChange($event)">
+  </ctl-controller>
+  <label style="margin-top: 15px;">HSL</label>
+  <hsl-controller (hslDefaultChange)="hslChange($event)"
+                  [size]="!controller?.apollo?.ctx?.isMobile?220:220">
+  </hsl-controller>
+
+
 </div>
 
 

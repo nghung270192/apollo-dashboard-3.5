@@ -23,7 +23,6 @@ import {DialogComponent} from '@shared/components/dialog.component';
 import {Store} from '@ngrx/store';
 import {AppState} from '@core/core.state';
 import {Router} from '@angular/router';
-import {DeviceParamsToCreateNew} from '@modules/apollo/widget/smart-dashboard-v2/models/device/device.model';
 
 export interface DataViewDialog {
   apollo: ApolloWidgetContext;

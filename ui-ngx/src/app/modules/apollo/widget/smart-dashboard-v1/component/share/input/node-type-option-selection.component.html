@@ -1,8 +1,0 @@
-<mat-form-field class="mat-block">
-  <mat-label>{{name}}</mat-label>
-  <mat-select [(ngModel)]="selection" [formControl]="formControl" (selectionChange)="selectionChange.emit(selection)">
-    <mat-option
-      *ngFor="let key of nodeTreeType "
-      [value]="key">{{NodeTreeTypeLabelMapping[key]}}</mat-option>
-  </mat-select>
-</mat-form-field>

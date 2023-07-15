@@ -124,19 +124,20 @@
         <ng-container matColumnDef="Control">
           <mat-header-cell *matHeaderCellDef class="table-header" mat-header-cell> Hành động</mat-header-cell>
           <mat-cell *matCellDef="let element; let row = index;" class="table-cell" mat-cell>
-
-            <div *ngIf="element?.additionalInfo?.outputScript?.toDeviceModel" style="margin: 5px;">
-              Model: {{element?.additionalInfo?.outputScript?.toDeviceModel}}.
-            </div>
-            <div *ngIf="element?.additionalInfo?.outputScript?.toControlType" style="margin: 5px;">
-              Type: {{element?.additionalInfo?.outputScript?.toControlType}}
-            </div>
-            <div *ngIf="element?.additionalInfo?.outputScript?.toBleScene" style="margin: 5px;">
-              Scene: {{element?.additionalInfo?.outputScript?.toBleScene}}
-            </div>
-            <div *ngIf="element?.additionalInfo?.outputScript?.toBleGroup" style="margin: 5px;">
-              Group: {{element?.additionalInfo?.outputScript?.toBleGroup}}
-              - Value: {{element?.additionalInfo?.outputScript?.toBleValue}}
+            <div *ngFor="let outputScript of element?.additionalInfo?.outputScript">
+              <div *ngIf="outputScript?.toDeviceModel" style="margin: 5px;">
+                Model: {{outputScript?.toDeviceModel}}.
+              </div>
+              <div *ngIf="outputScript?.toControlType" style="margin: 5px;">
+                Type: {{outputScript?.toControlType}}
+              </div>
+              <div *ngIf="outputScript?.toBleScene" style="margin: 5px;">
+                Scene: {{outputScript?.toBleScene}}
+              </div>
+              <div *ngIf="outputScript?.toBleGroup" style="margin: 5px;">
+                Group: {{outputScript?.toBleGroup}}
+                - Value: {{outputScript?.toBleValue}}
+              </div>
             </div>
 
           </mat-cell>
@@ -171,6 +172,7 @@
                     aria-label="Clear" class="large" mat-icon-button matSuffix>
               <mat-icon>delete</mat-icon>
             </button>
+
             <button (click)="clickNodeTree(element)" [disabled]="!apollo.isAdmin || !isEdited"
                     aria-label="Clear" class="large" mat-icon-button matSuffix>
               <mat-icon>edit</mat-icon>

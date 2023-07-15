@@ -174,6 +174,33 @@ export class BleHubService extends RpcCmdService {
     return this.send(deviceId, requestBody);
   }
 
+  setCtl(deviceId: string, address: string, ctl: number, lightness: number): Observable<any> {
+    const requestBody: HubCmd = {
+      method: 'set_CTL',
+      params: {
+        type: 'ble_sigmesh',
+        unicast: address,
+        Lightness: lightness,
+        Temp: ctl
+      },
+      timeout: this.timeOut
+    };
+    return this.send(deviceId, requestBody);
+  }
+
+
+  getCtl(deviceId: string, address: string): Observable<any> {
+    const requestBody: HubCmd = {
+      method: 'get_CTL',
+      params: {
+        type: 'ble_sigmesh',
+        unicast: address
+      },
+      timeout: this.timeOut
+    };
+    return this.send(deviceId, requestBody);
+  }
+
   getAllStatus(deviceId: string, addresses: Array<string>): Observable<{
     'method': 'status_devices';
     'params': { [key: string]: any };

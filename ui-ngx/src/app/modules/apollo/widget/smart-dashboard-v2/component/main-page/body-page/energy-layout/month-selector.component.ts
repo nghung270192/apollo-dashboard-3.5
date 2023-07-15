@@ -94,7 +94,7 @@ export class MonthSelectorComponent {
       toDate = new Date(this.dateEnd?.value?.year(), this.dateEnd?.value.month(), this.dateEnd?.value.date());
     }
 
-    if (fromDate && toDate && fromDate < toDate) {
+    if (fromDate && toDate && fromDate <= toDate) {
       this.rangeMonthSelected.emit({startMonth: fromDate, endMonth: toDate});
     }
 

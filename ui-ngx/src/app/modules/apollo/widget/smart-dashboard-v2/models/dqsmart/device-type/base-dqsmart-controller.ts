@@ -45,11 +45,11 @@ export abstract class BaseDqsmartController extends DeviceControllerAbstract {
       if (res) {
         this.dqSmartGatewayNode = new DqsmartGatewayNodeTreeImpl(res, apollo);
         this.apollo.dqsmartService.getState(this.dqSmartGatewayNode.hassUrl, this.dqSmartGatewayNode.token,
-          this.iotDevice.entityId).subscribe(res => {
-          if (res) {
-            this.iotDevice = new IotDevice(res);
+          this.iotDevice.entityId).subscribe(value => {
+          if (value) {
+            this.iotDevice = new IotDevice(value);
             this.updateNewState(null);
-            this.callback(EDevCallbackEvent.UPDATE_NEW_STATE);
+            setTimeout(() => this.callback(EDevCallbackEvent.UPDATE_NEW_STATE), 1000);
           }
         });
       }

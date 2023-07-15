@@ -24,6 +24,8 @@ import {PelabService} from '@modules/apollo/widget/share/services/pelab.service'
 import {concatMap, map, mergeMap} from 'rxjs/operators';
 import {EventTask} from '@modules/apollo/widget/smart-dashboard-v2/models/common-type.model';
 import {PelabGatewayNodeTreeImpl} from '@modules/apollo/widget/smart-dashboard-v2/models/pelab/pelab.model';
+import {ZbStateParams} from '@modules/apollo/widget/share/models/zigbee/zigbee.model';
+import {AttributeScope} from "@shared/models/telemetry/telemetry.models";
 
 
 export enum DataKey {
@@ -36,6 +38,7 @@ export enum ResponseMethod {
   onOffStatus = 'onOffStatus',
   lightnessStatus = 'lightnessStatus',
   hslStatus = 'HSL_status',
+  ctlStatus = 'CTL_status',
   sensorStatus = 'sensor_status',
   vendor_status = 'vendor_status',
   disconnectedEvent = 'disconnectedEvent',
@@ -67,7 +70,26 @@ export interface LightnessParams {
   value: number;
 }
 
-export type ParamsStatus = OnOffParams & LightnessParams & EnergySensorParams & { [key: string]: any };
+export interface LightnessParams {
+  address: string;
+  value: number;
+}
+
+export interface HSLParams {
+  address: string;
+  'Lightness': number;
+  'Hue': number;
+  'Saturation': number;
+}
+
+export interface CTLParams {
+  address: string;
+  'Warm': number;
+  'White': number;
+}
+
+export type ParamsStatus = OnOffParams & LightnessParams & EnergySensorParams
+  & ZbStateParams & HSLParams & CTLParams & { [key: string]: any };
 
 export interface TelemetryIncoming {
   entityId?: string;
@@ -195,42 +217,59 @@ export class ApolloWidgetContext {
     return new Observable<any>(subscriber => {
 
       this.hubNodeTrees = new Map<string, HubController>([]);
-      if (this.subscription && Array.isArray(this.subscription)) {
-        this.subscription.forEach(sub => {
-          this.ctx.subscriptionApi.removeSubscription(sub.id);
-        });
-        this.subscription = [];
-      }
+      /*      if (this.subscription && Array.isArray(this.subscription)) {
+              this.subscription.forEach(sub => {
+                this.ctx.subscriptionApi.removeSubscription(sub.id);
+              });
+              this.subscription = [];
+            }*/
       if (hubNodeTrees && Array.isArray(hubNodeTrees) && hubNodeTrees.length > 0) {
+        hubNodeTrees.forEach(hub => {
+          const newHubController = new HubController(hub, this);
+          this.ctx.attributeService.getEntityAttributes(new DeviceId(newHubController.tbDeviceId), AttributeScope.SERVER_SCOPE, ['active'], {
+            ignoreErrors: true, ignoreLoading: true, resendRequest: false
+          })
+            .subscribe(value => {
+              if (value && value.length > 0 && !!value[0]?.value) {
+                this.hubNodeTrees.set(hub.id.id, newHubController);
+                newHubController.bleGetAllStatus([]).subscribe(res => {
+                }, error => console.log(error));
+              }
+            });
 
-        of(hubNodeTrees).pipe(
+
+        });
+
+        /*of(hubNodeTrees).pipe(
           //duyet tung hub
           mergeMap(hubs => hubs.map(
             hub => {
-              let newHubController = new HubController(hub, this);
+              const newHubController = new HubController(hub, this);
               this.hubNodeTrees.set(hub.id.id, newHubController);
+              console.log(hubNodeTrees);
               const info: NodeTreeInfoBase = hub.additionalInfo;
               const getAllStatus = newHubController.bleGetAllStatus([]);
               getAllStatus.subscribe(res => {
-                if (res && res?.params && res?.params?.data_bleSigmesh) {
+                /!*if (res && res?.params && res?.params?.data_bleSigmesh) {
                   Object.entries(res?.params?.data_bleSigmesh).map(value => this.bleNodeState.set(value[0],
                     new BleStateImpl(value[1] as BleState)));
                   newHubController = this.hubNodeTrees.get(hub.id.id);
                   newHubController.isOnline = true;
                   this.hubNodeTrees.set(hub.id.id, newHubController);
+                  console.log(newHubController);
                   this.apolloService.eventTaskSubject.next(EventTask.REQUEST_UPDATE_NEW_STATE);
                 } else {
                   subscriber.error('data_bleSigmesh not found');
-                }
+                }*!/
               }, error => console.log(error));
-              /*if (info?.tbDeviceId) {
+              /!*if (info?.tbDeviceId) {
                 return { sub: this.subscribeForValue(info.tbDeviceId), controller: newHubController };
               } else {
                 return null;
-              }*/
+              }*!/
             }
           ))
-        );/*.subscribe(res => {
+        );*//*.subscribe(res => {
           if (res && res?.controller && res.sub) {
             res.sub.subscribe(sub => this.subscription.push(sub));
             subscriber.next();
@@ -435,12 +474,18 @@ export class ApolloWidgetContext {
   dqSmartInit(gateway: Array<NodeTree>): Observable<any> {
     for (const gw of gateway) {
       const dqsGateway: DqsmartGatewayNodeTreeImpl = new DqsmartGatewayNodeTreeImpl(gw, this);
-      this.dqsmartGateway.set(dqsGateway.id.id, dqsGateway);
-
-      const hass = new HomeAssistantGateway(dqsGateway.hassUrl, dqsGateway.token);
-      hass.connect().subscribe(res => {
-        hass.subscribe().subscribe(value => this.dqsmartPublishState(value));
-      });
+      this.dqsmartService.checkApi(dqsGateway.hassUrl, dqsGateway.token)
+        .pipe(map(value => value?.message === 'API running.')).subscribe(
+        value => {
+          if (value) {
+            this.dqsmartGateway.set(dqsGateway.id.id, dqsGateway);
+            const hass = new HomeAssistantGateway(dqsGateway.hassUrl, dqsGateway.token);
+            hass.connect().subscribe(res => {
+              hass.subscribe().subscribe(value1 => this.dqsmartPublishState(value1));
+            });
+          }
+        }
+      );
     }
     return of(null);
   }
@@ -451,8 +496,20 @@ export class ApolloWidgetContext {
 
   pelabInit(gateway: Array<NodeTree>): Observable<any> {
     if (gateway && Array.isArray(gateway)) {
-      gateway.forEach(gw => {
-        this.pelabGateway.set(gw.id.id, new PelabGatewayNodeTreeImpl(gw, this));
+      gateway.forEach(gwNode => {
+        const gw = new PelabGatewayNodeTreeImpl(gwNode, this);
+
+        return this.pelabService.login(gw.hostname, gw.apiKey, {
+          Username: gw.username,
+          Password: gw.password
+        }).pipe(map(value => !!value)).subscribe(
+          value => {
+            if (value) {
+              this.pelabGateway.set(gwNode.id.id, gw);
+            }
+          }
+        );
+
       });
     }
     return of(null);

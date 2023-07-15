@@ -47,4 +47,11 @@ export class BleGroupControllerComponent extends ShareControllerComponent<BleGro
       });
     }
   }
+
+  ctlChange(event) {
+    if (this.controller) {
+      this.controller.setCtl(event).subscribe(res => {
+      });
+    }
+  }
 }

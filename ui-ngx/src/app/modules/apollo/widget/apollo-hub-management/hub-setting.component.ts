@@ -8,7 +8,6 @@ import {
 } from '@modules/apollo/widget/share/models/ble-sigmesh/network-model/network.model';
 import {AttributeScope} from '@shared/models/telemetry/telemetry.models';
 import {WidgetContext} from '@home/models/widget-component.models';
-import {HubControllerWithTbDeviceId} from '@modules/apollo/widget/smart-dashboard-v1/models/apollo-hub/apollo-hub';
 import {ThemePalette} from '@angular/material/core';
 import {JsonPipe} from '@angular/common';
 import {GroupModel} from '@modules/apollo/widget/share/models/ble-sigmesh/network-model/group.model';
@@ -88,7 +87,6 @@ export class HubSettingComponent implements OnInit {
   private subsIndexAddress = 0;
   configTaskId: any;
 
-  hubController: HubControllerWithTbDeviceId;
 
   constructor(private _formBuilder: FormBuilder,
               public dialogRef: MatDialogRef<HubSettingComponent>,

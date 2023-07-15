@@ -1,6 +1,8 @@
 mvn clean install -rf :ui-ngx -DskipTests -Dlicense.skip=true mvn clean install -rf :application -DskipTests -Dlicense.skip=true
 
-mvn clean install --% -DskipTests -Dlicense.skip=true
+mvn clean install -DskipTests --% -Dlicense.skip=true
+mvn clean install --% -Dmaven.test.skip=true -Dlicense.skip=true
+
 
 mvn clean install -Dlicense.skip=true
 

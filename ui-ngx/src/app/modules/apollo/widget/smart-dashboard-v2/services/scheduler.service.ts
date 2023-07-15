@@ -2,7 +2,10 @@ import {Injectable} from '@angular/core';
 import {DeviceService} from '@core/http/device.service';
 import {AutomationInfo} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-entity.model';
 import {Observable} from 'rxjs';
-import {renderAutoInput, renderAutoOutput} from '@modules/apollo/widget/smart-dashboard-v2/models/automation/automation.model';
+import {
+  renderAutoInput,
+  renderAutoOutput
+} from '@modules/apollo/widget/smart-dashboard-v2/models/automation/automation.model';
 import {RpcCmdService} from '@modules/apollo/widget/share/services/rpc-cmd.service';
 
 @Injectable({

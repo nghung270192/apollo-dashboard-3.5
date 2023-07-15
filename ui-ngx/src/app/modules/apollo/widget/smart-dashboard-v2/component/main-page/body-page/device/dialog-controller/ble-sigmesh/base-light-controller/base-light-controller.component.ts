@@ -46,6 +46,7 @@ export class BaseLightControllerComponent
 
   lightnessChange(event, elementIndex) {
     if (this.data?.nodeTreeController) {
+      this.lightness = event;
       this.data.nodeTreeController.setLightness({lightness: event, index: elementIndex}).subscribe(res => {
       });
     }
@@ -58,6 +59,17 @@ export class BaseLightControllerComponent
   hslChange(event, elementIndex) {
     if (this.data?.nodeTreeController) {
       this.data.nodeTreeController.setHsl({hsl: event, index: elementIndex}).subscribe(res => {
+      });
+    }
+  }
+
+  ctlChange(event, elementIndex) {
+    if (this.data?.nodeTreeController) {
+      this.data.nodeTreeController.setCtl({
+        ctl: event,
+        lightness: this.lightness,
+        index: elementIndex
+      }).subscribe(res => {
       });
     }
   }

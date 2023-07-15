@@ -39,20 +39,20 @@ export class SchedulerNodeTree extends NodeTreeImpl {
 
   createOrUpdate(): Observable<any> {
     return new Observable<any>(obs => {
-      this.apollo.apolloNodeTreeService.saveApolloNodeTree(this.nodeTree).subscribe(res => {
+      this.apollo.apolloNodeTreeService.saveApolloNodeTree(this.nodeTree).subscribe(nodeTree => {
         obs.next('Create or update to database ok');
-        const nodeController: NodeTreeImpl = new NodeTreeImpl(res);
+        const nodeController: NodeTreeImpl = new NodeTreeImpl(nodeTree);
         this.apollo.apolloNodeTreeService.getApolloNodeTree(nodeController.additionalInfo?.hubNodeTreeId?.id).subscribe(
-          res => {
+          hubNodeTree => {
             obs.next('Found tb hub');
-            const hubNodeTreeImpl: HubNodeTreeImpl = new HubNodeTreeImpl(res);
+            const hubNodeTreeImpl: HubNodeTreeImpl = new HubNodeTreeImpl(hubNodeTree);
             this.apollo.hubService.schedulerService.createOrUpdate(
               hubNodeTreeImpl.tbDeviceId,
               nodeController.id.id,
               nodeController.additionalInfo?.enable,
               renderSchedulerInput(nodeController.additionalInfo?.inputScript),
               renderAutoOutput(nodeController.additionalInfo?.outputScript)
-            ).subscribe(res => {
+            ).subscribe(value1 => {
               obs.next('Create or update scheduler successfully');
               obs.complete();
             }, error => obs.error(error));
@@ -68,15 +68,24 @@ export class SchedulerNodeTree extends NodeTreeImpl {
         res => {
           const hubNodeTree: HubNodeTreeImpl = new HubNodeTreeImpl(res);
           this.apollo.hubService.schedulerService.remove(hubNodeTree.tbDeviceId, [this.id.id]).subscribe(
-            res => {
-              this.apollo.apolloNodeTreeService.deleteApolloNodeTree(this.id.id).subscribe(res => {
+            value => {
+              this.apollo.apolloNodeTreeService.deleteApolloNodeTree(this.id.id).subscribe(value1 => {
                 observable.next('Removed successfully');
                 observable.complete();
-              }, error => observable.error('Can\'t Remove node tree in database'));
+              }, error => observable.error({errCode: 1, message: 'Can\'t Remove node tree in database'}));
 
-            }, error => observable.error('Can\'t Remove node tree in Hub')
+            }, error => observable.error({errCode: 2, message: 'Can\'t Remove node tree in Hub'})
           );
-        }, error => observable.error('Not found hub tb device'));
+        }, error => observable.error({errCode: 3, message: 'Not found hub tb device'}));
+    });
+  }
+
+  removeOnDatebase(): Observable<any> {
+    return new Observable<any>(observable => {
+      this.apollo.apolloNodeTreeService.deleteApolloNodeTree(this.id.id).subscribe(value1 => {
+        observable.next('Removed successfully');
+        observable.complete();
+      }, error => observable.error({errCode: 1, message: 'Can\'t Remove node tree in database'}));
     });
   }
 

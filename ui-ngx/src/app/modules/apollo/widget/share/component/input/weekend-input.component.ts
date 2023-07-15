@@ -83,7 +83,6 @@ export class WeekendInputComponent implements OnInit {
     this.task.subtasks.forEach(day => {
       if (day.completed == true) {this.days.push(day.value);}
     });
-    console.log(this.days);
-    this.daysChange.emit(this.days);
+     this.daysChange.emit(this.days);
   }
 }

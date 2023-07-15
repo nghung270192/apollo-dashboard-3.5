@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -12,7 +13,7 @@ import {
 
 import {
   ApolloWidgetContext,
-  DataKey
+  DataKey, TelemetryIncoming
 } from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-widget-context.model';
 import {Device} from '@shared/models/device.models';
 import {PageLink} from '@shared/models/page/page-link';
@@ -36,7 +37,7 @@ import {
 import {
   AutomationNodeTree,
   AutoTypeControl,
-  ComparisonType
+  ComparisonType, ComparisonTypeLabelMapping
 } from '@modules/apollo/widget/smart-dashboard-v2/models/automation/automation.model';
 import {GatewayModel, NodeTreeType} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-entity-type.model';
 import {ApolloNodeTreeId} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-node-tree-id';
@@ -44,14 +45,17 @@ import {
   CreateDeviceCommon
 } from '@modules/apollo/widget/smart-dashboard-v2/component/share/device/create-device-common';
 import {SchedulerNodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/scheduler/scheduler.model';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {DatePipe, JsonPipe} from '@angular/common';
 import {EventTask} from '@modules/apollo/widget/smart-dashboard-v2/models/common-type.model';
-import {FormControl} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
 import {
   SelectCmdZigbeeComponent
 } from '@modules/apollo/widget/smart-dashboard-v2/component/share/automation/input/select-cmd-zigbee.component';
+import {IWidgetSubscription, SubscriptionInfo, WidgetSubscriptionOptions} from '@core/api/widget-api.models';
+import {DatasourceType, widgetType} from '@shared/models/widget.models';
+import {EntityType} from '@shared/models/entity-type.models';
 
 export interface TableDatasource {
   zbStateParams: ZbStateParams;
@@ -64,9 +68,7 @@ export interface TableDatasource {
   templateUrl: './render-automation-node-tree.component.html',
   styleUrls: ['./render-automation-node-tree.component.scss']
 })
-export class RenderAutomationNodeTreeComponent extends CreateDeviceCommon implements OnInit, OnDestroy, OnChanges {
-
-
+export class RenderAutomationNodeTreeComponent extends CreateDeviceCommon implements OnInit, OnDestroy, OnChanges, AfterViewInit {
   @Input() apollo: ApolloWidgetContext;
   @Input() parentNodeTree: NodeTree;
   @Input() addTrigger: boolean;
@@ -76,74 +78,67 @@ export class RenderAutomationNodeTreeComponent extends CreateDeviceCommon implem
   @Output() nodeChange: EventEmitter<NodeTree> = new EventEmitter<NodeTree>();
   @Output() createEvent: EventEmitter<any> = new EventEmitter<any>();
 
-
   NodeTreeType = NodeTreeType;
   name = '';
   devices: Array<Device> = [];
-
-  inputModelFormControl = new FormControl('');
-  outputModelFormControl = new FormControl('');
-
-
-  fromDeviceModel: ApolloDeviceModel = ApolloDeviceModel.ZIGBEE;
-  toDeviceModel: ApolloDeviceModel = ApolloDeviceModel.BLE_SIG_MESH;
   ApolloDeviceArray = Object.values(ApolloDeviceModel);
   ApolloDeviceModel = ApolloDeviceModel;
-
-
   hubNodeTrees: Array<NodeTree> = [];
   hubNodeTreeIdSelected: string;
-
   bleNetwork: BleNetwork;
-
   zbNodeSource: Array<ZigbeeDevice> = [];
-  fromZbNodes: ZigbeeDevice;
-  fromZbNodeId: number;
-  fromZbEndpoint = 0;
-  fromZbValue = 0;
-  fromZbName: string;
-  comparisonType: ComparisonType;
-
   fromTime: string;
   fromWeekDays: Array<number> = [];
-
-  ZigbeeModel = ZigbeeModel;
-
-  hubController: HubController;
-
-
   bleGroupSource: Array<GroupModel> = [];
-  toBleGroup: string;
-
   bleSceneSource: Array<SceneModel> = [];
-  toBleScene: any;
-
-  toBleTarget: string;
-
   AutoTypeControl = AutoTypeControl;
+  typeControlDatasource = Object.values(AutoTypeControl);
+  comparisonTypes = Object.values(ComparisonType);
+  comparisonTypeLabelMapping = ComparisonTypeLabelMapping;
 
+  inputFormGroup: FormGroup;
+  outputFormGroup: FormGroup;
 
-  toControlType: AutoTypeControl = AutoTypeControl.ONOFF;
-  toBleValue = 0;
-  myDate = new Date();
-
-  constructor(private cd: ChangeDetectorRef, public datepipe: DatePipe, public dialog: MatDialog) {
-    super();
-  }
 
   displayedColumns: string[] = ['No', 'Cmd'];
   datasource: Array<TableDatasource> = [];
 
-  subscription: Subscription = null;
+  private subscription: Observable<IWidgetSubscription>;
   zbStateParams: ZbStateParams;
   zbModelParams: string;
   zbTimeUpdate: string;
 
-  dataSource: Array<OutputScript> = [];
+  outputScriptDataSource: Array<OutputScript> = [];
 
-  displayedColumnsRenderOutput: string[] = ['model', 'control', 'target', 'value'];
+  displayedColumnsRenderOutput: string[] = ['model', 'control', 'target', 'value', 'tool'];
+
+
+  constructor(private cd: ChangeDetectorRef, public datepipe: DatePipe, public dialog: MatDialog, private fb: FormBuilder) {
+    super();
+
+    this.inputFormGroup = fb.group({
+      deviceModel: [ApolloDeviceModel.ZIGBEE, Validators.required],
+      zigbeeNodeSelected: [null, Validators.required],
+      zbEndPoint: [0, Validators.required],
+      zbName: [null, Validators.required],
+      zbValue: [null, Validators.required],
+      compareType: [null, Validators.required]
+    });
+    this.outputFormGroup = fb.group({
+      deviceModel: [ApolloDeviceModel.BLE_SIG_MESH, Validators.required],
+      zigbeeNodeSelected: [null, Validators.required],
+      zbEndPoint: [0, Validators.required],
+      modeControl: [AutoTypeControl.ONOFF, Validators.required],
+      target: [null, Validators.required], /*ble group/device, zigbee address*/
+      value: [null, Validators.required], /*state, lightness, scene*/
+    });
+  }
 
   ngOnInit(): void {
+
+  }
+
+  ngAfterViewInit(): void {
     this.name = (this.type === NodeTreeType.SCHEDULER) ? 'New Scheduler' : 'New Automation';
     if (this.node) {
       const nodeTreeImpl: NodeTreeImpl = new NodeTreeImpl(this.node);
@@ -152,24 +147,26 @@ export class RenderAutomationNodeTreeComponent extends CreateDeviceCommon implem
 
       this.hubNodeTreeIdSelected = nodeTreeImpl.additionalInfo?.hubNodeTreeId?.id;
       this.name = nodeTreeImpl.name;
-      this.comparisonType = nodeTreeImpl.additionalInfo.comparison;
-      this.fromDeviceModel = input.fromDeviceModel;
-      this.fromZbEndpoint = input.fromZbEndpoint;
-      this.fromZbNodes = input.fromZbNodes;
-      this.fromZbNodeId = input.fromZbNodes?.addr;
-      this.fromZbValue = input.fromZbValue;
-      this.fromZbName = input.fromZbName;
+      this.inputFormGroup.patchValue({
+        deviceModel: input.fromZbEndpoint,
+        zigbeeNodeSelected: input.fromZbNodes,
+        zbEndPoint: input.fromZbEndpoint,
+        zbName: input.fromZbName,
+        zbValue: input.fromZbValue,
+        compareType: nodeTreeImpl.additionalInfo.comparison
+      });
+
+
       this.fromTime = input.fromTimes;
       this.fromWeekDays = input.fromWeekDays;
 
-      const output: OutputScriptImpl = new OutputScriptImpl(nodeTreeImpl.additionalInfo?.outputScript);
-      /*      this.toDeviceModel = output?.toDeviceModel;
-            this.toControlType = output?.toControlType;
-            this.toBleScene = output?.toBleScene;
-            this.toBleGroup = output?.toBleGroup;
-            this.toBleValue = Number(output?.toBleValue);*/
+      if (nodeTreeImpl.additionalInfo?.outputScript && Array.isArray(nodeTreeImpl.additionalInfo?.outputScript)) {
+        this.outputScriptDataSource = nodeTreeImpl.additionalInfo?.outputScript;
+      }
+      console.log(this.ApolloDeviceArray);
+      console.log(this.inputFormGroup);
 
-      this.dataSource.push(output.toData());
+      this.cd.detectChanges();
     }
 
     this.apollo.apolloNodeTreeService.getByApolloTree(this.parentNodeTree.apolloTreeId.id,
@@ -181,24 +178,39 @@ export class RenderAutomationNodeTreeComponent extends CreateDeviceCommon implem
       }
     );
 
-    this.subscription = this.apollo.apolloObserver.subscribe(res => {
-      if (res && res?.model === DataKey.ZIGBEE_KEY) {
-        // this.datasource = [];
-        // this.datasource.push({method: res.key, params: res.params});
-        this.zbStateParams = res.params;
-        this.zbModelParams = res.key;
-        this.zbTimeUpdate = this.datepipe.transform((new Date()), 'HH:mm:ss');
-        this.cd.detectChanges();
-      }
-    });
+    /*    this.subscription = this.apollo.apolloObserver.subscribe(res => {
+          if (res && res?.model === DataKey.ZIGBEE_KEY) {
+            // this.datasource = [];
+            // this.datasource.push({method: res.key, params: res.params});
+            this.zbStateParams = res.params;
+            this.zbModelParams = res.key;
+            this.zbTimeUpdate = this.datepipe.transform((new Date()), 'HH:mm:ss');
+            this.cd.detectChanges();
+          }
+        });*/
   }
 
   applyZigbeeInput() {
-    this.fromZbNodes = this.zbNodeSource.find(node => node.addr === this.zbStateParams?.addr);
-    this.fromZbNodeId = this.zbStateParams?.addr;
-    this.fromZbEndpoint = this.zbStateParams?.ep;
-    this.fromZbValue = this.zbStateParams?.state?.val;
-    this.fromZbName = this.zbStateParams?.state?.name;
+    // this.fromZbNodes = this.zbNodeSource.find(node => node.addr === this.zbStateParams?.addr);
+    // this.fromZbNodeId = this.zbStateParams?.addr;
+    console.log(this.zbStateParams);
+    const zbNode = this.zbNodeSource.find(node => node.addr === this.zbStateParams?.addr);
+    /*
+        this.inputFormGroup.get('zigbeeNodeSelected').patchValue([zbNode]);
+        this.inputFormGroup.get('zbEndPoint').patchValue([this.zbStateParams?.ep]);
+        this.inputFormGroup.get('zbName').patchValue([this.zbStateParams?.state?.name]);
+        this.inputFormGroup.get('zbValue').patchValue([this.zbStateParams?.state?.val]);
+    */
+
+    this.inputFormGroup.patchValue({
+      zigbeeNodeSelected: zbNode,
+      zbEndPoint: this.zbStateParams?.ep,
+      zbName: this.zbStateParams?.state?.name,
+      zbValue: this.zbStateParams?.state?.val,
+    });
+
+    console.log(this.inputFormGroup);
+
     this.cd.detectChanges();
   }
 
@@ -206,12 +218,15 @@ export class RenderAutomationNodeTreeComponent extends CreateDeviceCommon implem
     if (this.hubNodeTreeIdSelected) {
       this.apollo.apolloNodeTreeService.getApolloNodeTree(this.hubNodeTreeIdSelected).subscribe(res => {
         const hubController = new HubController(res, this.apollo);
-        if (this.type === NodeTreeType.AUTOMATION && this.fromDeviceModel === ApolloDeviceModel.ZIGBEE) {
-          this.renderZbDeviceFromHub(hubController);
-        }
-        if (this.toDeviceModel === ApolloDeviceModel.BLE_SIG_MESH) {
-          this.renderBleDeviceFromHub(hubController);
-        }
+        console.log(hubController, this.inputFormGroup.get('deviceModel').value);
+        /*        if (this.type === NodeTreeType.AUTOMATION && this.inputFormGroup.get('deviceModel').value === ApolloDeviceModel.ZIGBEE) {
+                  this.renderZbDeviceFromHub(hubController);
+                }*/
+        this.renderZbDeviceFromHub(hubController);
+        this.renderBleDeviceFromHub(hubController);
+        /*        if (this.inputFormGroup.get('deviceModel').value === ApolloDeviceModel.BLE_SIG_MESH) {
+                  this.renderBleDeviceFromHub(hubController);
+                }*/
       });
     }
   }
@@ -222,10 +237,26 @@ export class RenderAutomationNodeTreeComponent extends CreateDeviceCommon implem
         if (res && Array.isArray(res)) {
           this.zbNodeSource = res;
           this.renderZigbeeDeviceFromId();
+          const addressKeys = this.zbNodeSource.map(zb => `data_zigbee_${zb?.addr}`);
+          this.subscribeForValue(new DeviceId(hubController.tbDeviceId), addressKeys);
           this.cd.detectChanges();
         }
       }
     );
+
+    /*    if (this.data.hubNodeTreeIdSelected) {
+          this.data.apollo.apolloNodeTreeService.getApolloNodeTree(this.data.hubNodeTreeIdSelected)
+            .subscribe(hubNodeTree => {
+              this.data.apollo.hubService.zigbeeHubService.getDevices(hubNodeTree?.additionalInfo?.tbDeviceId?.id)
+                .subscribe(value => {
+                  if (value && value?.params) {
+                    let listAddress = Object.keys(value.params);
+                    listAddress = listAddress.map(value1 => `data_zigbee_${value1}`);
+                    this.subscribeForValue(hubNodeTree?.additionalInfo?.tbDeviceId, listAddress);
+                  }
+                });
+            });
+        }*/
   }
 
   renderBleDeviceFromHub(hubController: HubController) {
@@ -254,33 +285,35 @@ export class RenderAutomationNodeTreeComponent extends CreateDeviceCommon implem
   }
 
   renderZigbeeDeviceFromId() {
-    if (this.zbNodeSource && Array.isArray(this.zbNodeSource)) {
+    /*if (this.zbNodeSource && Array.isArray(this.zbNodeSource)) {
       this.fromZbNodes = this.zbNodeSource.find(res => res.addr === this.fromZbNodeId);
-    }
+    }*/
   }
+
+  /*  renderZigbeeDeviceFromIdForOutput() {
+      if (this.zbNodeSource && Array.isArray(this.zbNodeSource)) {
+        this.toZbNodes = this.zbNodeSource.find(res => res.addr === this.toZbNodeId);
+      }
+    }*/
+
 
   renderAndExportNodeEntity() {
     const additionalInfo: NodeTreeInfoBase = {
       hubNodeTreeId: new ApolloNodeTreeId(this.hubNodeTreeIdSelected),
       enable: true,
-      comparison: this.comparisonType,
+      comparison: this.inputFormGroup.get('compareType').value,
       inputScript: {
-        fromDeviceModel: this.fromDeviceModel,
-        fromZbNodes: this.fromZbNodes,
-        fromZbEndpoint: this.fromZbEndpoint,
-        fromZbName: this.fromZbName,
-        fromZbValue: this.fromZbValue,
+        fromDeviceModel: this.inputFormGroup.get('deviceModel').value,
+        fromZbNodes: this.inputFormGroup.get('zigbeeNodeSelected').value,
+        fromZbEndpoint: this.inputFormGroup.get('zbEndPoint').value,
+        fromZbName: this.inputFormGroup.get('zbName').value,
+        fromZbValue: this.inputFormGroup.get('zbValue').value,
         fromTimes: this.fromTime,
         fromWeekDays: this.fromWeekDays
       },
-      outputScript: {
-        toDeviceModel: this.toDeviceModel,
-        toControlType: this.toControlType,
-        toBleScene: this.toBleScene,
-        toBleGroup: this.toBleGroup,
-        toBleValue: this.toBleValue
-      }
+      outputScript: this.outputScriptDataSource
     };
+
     if (this.node) {
       this.node.name = this.name;
       this.node.additionalInfo = additionalInfo;
@@ -297,30 +330,31 @@ export class RenderAutomationNodeTreeComponent extends CreateDeviceCommon implem
 
       this.node = nodeTree;
     }
-
     console.log(this.node);
+
+
   }
 
-  loadNetwork(tbDeviceId: DeviceId) {
-    if (tbDeviceId) {
-      this.apollo.ctx.attributeService.getEntityAttributes(tbDeviceId,
-        AttributeScope.SHARED_SCOPE, ['data_bleSigmesh']).subscribe(
-        att => {
-          const data = att.find((key) => {
-            if (key.key === 'data_bleSigmesh') {
-              return att;
+  /*  loadNetwork(tbDeviceId: DeviceId) {
+      if (tbDeviceId) {
+        this.apollo.ctx.attributeService.getEntityAttributes(tbDeviceId,
+          AttributeScope.SHARED_SCOPE, ['data_bleSigmesh']).subscribe(
+          att => {
+            const data = att.find((key) => {
+              if (key.key === 'data_bleSigmesh') {
+                return att;
+              }
+            });
+            if (data) {
+              this.bleNetwork = new BleNetwork(JSON.parse(data.value));
+
+            } else {
+              confirm('Chưa import ble network.');
             }
-          });
-          if (data) {
-            this.bleNetwork = new BleNetwork(JSON.parse(data.value));
-
-          } else {
-            confirm('Chưa import ble network.');
           }
-        }
-      );
-    }
-  }
+        );
+      }
+    }*/
 
   checkZbNodeAvailable(zbNodes: ZigbeeDevice): boolean {
     return !!(zbNodes && zbNodes?.model && zbNodes?.addr);
@@ -328,7 +362,8 @@ export class RenderAutomationNodeTreeComponent extends CreateDeviceCommon implem
 
   ngOnDestroy(): void {
     if (this.subscription) {
-      this.subscription.unsubscribe();
+      // this.subscription?.unsubscribe();
+      this.subscription.subscribe(value => this.apollo.ctx.subscriptionApi.removeSubscription(value.id));
     }
   }
 
@@ -338,7 +373,8 @@ export class RenderAutomationNodeTreeComponent extends CreateDeviceCommon implem
     if (this.type === NodeTreeType.AUTOMATION) {
       const automationNodeTree: AutomationNodeTree = new AutomationNodeTree(this.node, this.apollo);
       automationNodeTree.createOrUpdate().subscribe(
-        res => console.log(res),
+        res => {
+        },
         error => new JsonPipe().transform(error),
         () => {
           this.loading = false;
@@ -348,7 +384,8 @@ export class RenderAutomationNodeTreeComponent extends CreateDeviceCommon implem
     } else if (this.type === NodeTreeType.SCHEDULER) {
       const schedulerNodeTree: SchedulerNodeTree = new SchedulerNodeTree(this.node, this.apollo);
       schedulerNodeTree.createOrUpdate().subscribe(
-        res => console.log(res),
+        res => {
+        },
         error => alert(new JsonPipe().transform(error)),
         () => {
           this.loading = false;
@@ -374,11 +411,13 @@ export class RenderAutomationNodeTreeComponent extends CreateDeviceCommon implem
       panelClass: ['tb-dialog', 'tb-fullscreen-dialog'],
       data: {
         apollo: this.apollo,
+        hubNodeTreeIdSelected: this.hubNodeTreeIdSelected,
       }
     };
     this.dialog.open(SelectCmdZigbeeComponent, dialogConfig).afterClosed().subscribe(res => {
       if (res && res?.data && res?.data?.zbStateParams) {
         this.zbStateParams = res?.data?.zbStateParams;
+        this.zbTimeUpdate = res?.data?.zbTimeUpdate;
         this.applyZigbeeInput();
       }
     });
@@ -386,12 +425,103 @@ export class RenderAutomationNodeTreeComponent extends CreateDeviceCommon implem
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.addTrigger && changes.addTrigger.isFirstChange() === false && changes.addTrigger?.previousValue != changes.addTrigger?.currentValue) {
+    if (changes.addTrigger && changes.addTrigger.isFirstChange() === false
+      && changes.addTrigger?.previousValue !== changes.addTrigger?.currentValue) {
       this.save();
     }
   }
 
   addNewOutputScript() {
+    const tmp = this.outputScriptDataSource;
+    tmp.push(
+      {
+        toTarget: this.outputFormGroup.get('target').value,
+        toDeviceModel: this.outputFormGroup.get('deviceModel').value,
+        toControlType: this.outputFormGroup.get('modeControl').value,
+        toValue: this.outputFormGroup.get('value').value,
+        toOptionTarget: this.outputFormGroup.get('zbEndPoint').value
+      }
+    );
+    this.outputScriptDataSource = tmp;
+
+    this.cd.detectChanges();
+  }
+
+  removeOutputScript(idx: number) {
+    this.outputScriptDataSource.splice(idx, 1);
+    this.cd.detectChanges();
+  }
+
+  parseDateCallback(data: TelemetryIncoming) {
+    if (data && data?.data && Array.isArray(data?.data) && data?.data.length > 0) {
+      // const params = new ZbStateParamsImpl(data.data[0]?.params as ZbStateParams);
+      this.zbStateParams = data?.data[0].params as ZbStateParams;
+      this.zbModelParams = data?.data[0].method;
+
+      this.zbTimeUpdate = this.datepipe.transform((new Date()), 'HH:mm:ss');
+
+      this.cd.detectChanges();
+    }
+  }
+
+  private subscribeForValue(deviceId: DeviceId, addresses: Array<string>): Observable<IWidgetSubscription> {
+
+    const valueSubscriptionInfo: SubscriptionInfo[] = [];
+    const subscriptionInfo: SubscriptionInfo = {
+      type: DatasourceType.entity,
+      entityType: EntityType.DEVICE,
+      entityId: deviceId.id,
+      timeseries: addresses.map(value => ({name: value}))
+    };
+    // subscriptionInfo.timeseries.push({name: `data_zigbee_${this.addr}`});
+
+    valueSubscriptionInfo.push(subscriptionInfo);
+
+
+    const subscriptionOptions: WidgetSubscriptionOptions = {
+      callbacks: {
+        onDataUpdated: (subscription, detectChanges) => this.apollo.ctx.ngZone.run(() => {
+          this.onDataUpdated(subscription);
+        })
+      }
+    };
+    return this.apollo.ctx.subscriptionApi.createSubscriptionFromInfo(
+      widgetType.latest, valueSubscriptionInfo, subscriptionOptions, false, true);
 
   }
+
+  private onDataUpdated(subscription: IWidgetSubscription) {
+    const data = subscription.data;
+
+    if (data && Array.isArray(data)) {
+      const arr = [];
+      for (const dt of data) {
+        let model = DataKey.UNKNOW_KEY;
+        let unicastAddress = '';
+
+        if (dt && dt.dataKey && dt.dataKey?.name) {
+          model = DataKey.ZIGBEE_KEY;
+          unicastAddress = dt.dataKey?.name.substring(-4);
+        }
+
+        const ds: TelemetryIncoming = {
+          entityId: dt.datasource.entityId,
+          entityName: dt.datasource.entityName,
+          time: dt.data[0][0],
+          model,
+          unicastAddress,
+          data: JSON.parse(dt.data[0][1])
+        };
+        /*        this.subject.next(ds);*/
+        this.parseDateCallback(ds);
+      }
+    }
+
+  }
+
+
+  // protected readonly ComparisonTypeLabelMapping = ComparisonTypeLabelMapping;
+  compareZbNode(a: ZigbeeDevice, b: ZigbeeDevice) {
+    return a.addr === b.addr;
+  };
 }

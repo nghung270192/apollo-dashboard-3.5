@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {HassEntity} from 'home-assistant-js-websocket';
+import {InterceptorHttpParams} from "@core/interceptors/interceptor-http-params";
+import {InterceptorConfig} from "@core/interceptors/interceptor-config";
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +56,8 @@ export class DqsmartService {
     return this.http.get<any>(`/api/dqsmart/`, {
       headers: {
         token: hassToken, baseUrl: hassUrl, api: '/api/'
-      }
+      },
+      params: new InterceptorHttpParams(new InterceptorConfig(true, true, false))
     });
   }
 
@@ -69,7 +72,6 @@ export class DqsmartService {
             "token": hassToken, "baseUrl": hassUrl
           }
         });*/
-
 
 
     return this.http.post<any>(`/api/dqsmart/`, serviceData, {

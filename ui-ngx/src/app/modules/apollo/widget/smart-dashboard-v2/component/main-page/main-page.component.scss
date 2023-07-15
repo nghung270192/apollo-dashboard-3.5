@@ -29,18 +29,17 @@ $header-height: 40px;
       .mpb-toolbar {
         width: 100%;
         background-color: #0F8AFD;
-       }
+      }
 
       .body-content-v2 {
         width: 100%;
-        border: red dotted 2px;
         flex: 1;
         display: flex;
 
-/*        .mat-toolbar-tools {
-          padding: 0 20px !important;
-          margin-top: 3px;
-        }*/
+        /*        .mat-toolbar-tools {
+                  padding: 0 20px !important;
+                  margin-top: 3px;
+                }*/
 
         .body-sidenav-content {
           display: inline;

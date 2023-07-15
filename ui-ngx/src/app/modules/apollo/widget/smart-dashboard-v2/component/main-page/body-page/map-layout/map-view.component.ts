@@ -127,7 +127,7 @@ export class MapViewComponent implements OnInit, OnChanges, OnDestroy, AfterView
       this.parentNode = new NodeTreeImpl(this.parent);
       if (this.childrenNodeTree && Array.isArray(this.childrenNodeTree)) {
         this.nodeTrees = this.childrenNodeTree.filter(
-          node => node.type === NodeTreeType.DEVICE || node.type === NodeTreeType.GROUP
+          node => node.type === NodeTreeType.AREA || node.type === NodeTreeType.DEVICE || node.type === NodeTreeType.GROUP
             || node.type === NodeTreeType.GATEWAY || node.type === NodeTreeType.HUB)
           .map(value => new NodeTreeImpl(value));
       }

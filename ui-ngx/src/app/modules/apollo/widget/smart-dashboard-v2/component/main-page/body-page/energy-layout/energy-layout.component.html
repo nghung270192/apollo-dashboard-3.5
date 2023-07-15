@@ -1,7 +1,19 @@
 <div class="el-container" fxLayout="column" fxLayoutAlign="center start">
-
-  <div class="el-title">
-    <p>GIÁM SÁT NĂNG LƯỢNG ĐIỆN TIÊU THỤ</p>
+  <mat-progress-bar *ngIf="isLoading$ | async" color="warn" mode="indeterminate">
+  </mat-progress-bar>
+  <div class="el-title" fxLayout="row">
+    <div style="text-align: center; width: 100%">
+      <h4>GIÁM SÁT NĂNG LƯỢNG ĐIỆN TIÊU THỤ</h4>
+    </div>
+    <span fxFlex></span>
+    <div>
+      <label>{{today|date:"dd/MM/yyyy"}}</label>
+    </div>
+    <div>
+      <button mat-icon-button (click)="PriceSetting()">
+        <mat-icon>settings</mat-icon>
+      </button>
+    </div>
   </div>
   <div class="el-content">
     <tb-device-layout
@@ -10,137 +22,236 @@
       [nodeTrees]="energyNodetrees">
     </tb-device-layout>
     <mat-divider></mat-divider>
-    <div>
-      <form [formGroup]="rangeDateFormGroup">
-        <div>
-          <mat-form-field class="tb-block">
-            <mat-label>Báo cáo theo:</mat-label>
-            <mat-select formControlName="reportType">
-              <mat-option *ngFor="let reportType of ReportTypes" [value]="reportType">
-                {{reportType}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
+    <div class="quick-report" fxLayout="column" fxLayoutAlign="start start">
+      <div class="title">Báo cáo nhanh:</div>
+      <table style="margin: 0 20px;">
+        <tr>
+          <td>Tháng trước</td>
+          <td>Tháng này</td>
+          <td>Tuần trước</td>
+          <td>Tuần này</td>
+          <td>Hôm nay</td>
+        </tr>
+        <tr>
+          <td>
+            <label class="quickReportValue">
+              <mat-icon>flash_on</mat-icon>
+              {{nearTimeReport.lastMonth}} </label> (kWh)
+          </td>
+          <td>
+            <label class="quickReportValue">
+              <mat-icon>flash_on</mat-icon>
+              {{nearTimeReport.thisMonth}} </label> (kWh)
+          </td>
+          <td>
+            <label class="quickReportValue">
+              <mat-icon>flash_on</mat-icon>
+              {{nearTimeReport.lastWeek}} </label> (kWh)
+          </td>
+          <td>
+            <label class="quickReportValue">
+              <mat-icon>flash_on</mat-icon>
+              {{nearTimeReport.thisWeek}} </label> (kWh)
+          </td>
+          <td>
+            <label class="quickReportValue">
+              <mat-icon>flash_on</mat-icon>
+              {{nearTimeReport.today}} </label> (kWh)
+          </td>
+        </tr>
+        <!-- <tr class="chart">
+           <td>
+             <div>
+               <tb-base-chart chartId="reportChart2"
+                              name=""
+                              [xValues]="xChartDeviceReport"
+                              [yValues]="yChartDeviceReport">
+               </tb-base-chart>
+             </div>
+           </td>
+           <td>
+             <tb-base-chart chartId="reportChart3"
+                            name=""
+                            [xValues]="xChartDeviceReport"
+                            [yValues]="yChartDeviceReport">
+             </tb-base-chart>
+           </td>
+           <td>
+             <tb-base-chart chartId="reportChart4"
+                            name=""
+                            [xValues]="xChartDeviceReport"
+                            [yValues]="yChartDeviceReport">
+             </tb-base-chart>
 
-        <div
-          *ngIf="rangeDateFormGroup.get('reportType').value===ReportTypeEnum.Device || rangeDateFormGroup.get('reportType').value===ReportTypeEnum.Date">
-          <mat-form-field class="tb-block">
-            <mat-label>Enter a date range</mat-label>
-            <mat-date-range-input [rangePicker]="picker">
-              <input matStartDate formControlName="start" placeholder="Start date">
-              <input matEndDate formControlName="end" placeholder="End date">
-            </mat-date-range-input>
-            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
-            <mat-datepicker-toggle matIconSuffix [for]="picker">
-            </mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
+           </td>
+           <td>
+             <tb-base-chart chartId="reportChart5"
+                            name=""
+                            [xValues]="xChartDeviceReport"
+                            [yValues]="yChartDeviceReport">
+             </tb-base-chart>
+           </td>
+           <td>
+             <tb-base-chart chartId="reportChart6"
+                            name=""
+                            [xValues]="xChartDeviceReport"
+                            [yValues]="yChartDeviceReport">
+             </tb-base-chart>
+           </td>
+         </tr>-->
+      </table>
 
-            <mat-error *ngIf="rangeDateFormGroup.controls.start.hasError('matStartDateInvalid')">Invalid start date
-            </mat-error>
-            <mat-error *ngIf="rangeDateFormGroup.controls.end.hasError('matEndDateInvalid')">Invalid end date
-            </mat-error>
-          </mat-form-field>
-        </div>
-
-        <div *ngIf="rangeDateFormGroup.get('reportType').value===ReportTypeEnum.Month">
-          <datepicker-views-selection (rangeMonthSelected)="rangeMonthSelected($event)">
-
-          </datepicker-views-selection>
-        </div>
-      </form>
-
-      <button (click)="updateDate()">Load Data</button>
-      <button (click)="downloadReportTotal()">Tải báo cáo</button>
+      <!--
+            <div class="chart" fxLayout="row" fxLayoutAlign="start start">
+              <div class="child">
+                <tb-base-chart chartId="reportChart21"
+                               name=""
+                               [xValues]="xChartDeviceReport"
+                               [yValues]="yChartDeviceReport">
+                </tb-base-chart>
+              </div>
+              <div class="child">
+                <tb-base-chart chartId="reportChart22"
+                               name=""
+                               [xValues]="xChartDeviceReport"
+                               [yValues]="yChartDeviceReport">
+                </tb-base-chart>
+              </div>
+              <div class="child">
+                <tb-base-chart chartId="reportChart23"
+                               name=""
+                               [xValues]="xChartDeviceReport"
+                               [yValues]="yChartDeviceReport">
+                </tb-base-chart>
+              </div>
+              <div class="child">
+                <tb-base-chart chartId="reportChart24"
+                               name=""
+                               [xValues]="xChartDeviceReport"
+                               [yValues]="yChartDeviceReport">
+                </tb-base-chart>
+              </div>
+              <div class="child">
+                <tb-base-chart chartId="reportChart25"
+                               name="asdf"
+                               [xValues]="xChartDeviceReport"
+                               [yValues]="yChartDeviceReport">
+                </tb-base-chart>
+              </div>
+            </div>-->
     </div>
-    <div>
+
+    <mat-divider style="border-width: 2px"></mat-divider>
+
+    <div style="width: 100%" fxLayout="row">
+      <div class="title">Tra cứu:</div>
+      <!--      <div>
+              <p>Tổng số tiền: {{totalMoney}} (VND)</p>
+            </div>-->
+
     </div>
-    <div>
-      <p>Tổng năng lượng tiêu thụ: {{totalEnergy}} (Kwh)</p>
-      <p>Tổng số tiền: {{totalMoney}} (VND)</p>
+    <div class="report-time" fxLayout="row" fxLayoutAlign="center center">
+      <mat-button-toggle-group [vertical]="apollo.ctx.isMobile" [(ngModel)]="reportTime" (click)="report()"
+                               aria-label="Font Style">
+        <mat-button-toggle *ngFor="let item of repostTimes" [value]="item.value">{{item.name}}</mat-button-toggle>
+      </mat-button-toggle-group>
     </div>
 
-    <table *ngIf="bleEnergyDatasource.length>0" mat-table [dataSource]="bleEnergyDatasource" class="mat-elevation-z8">
-      <ng-container matColumnDef="no">
-        <th mat-header-cell *matHeaderCellDef> No.</th>
-        <td mat-cell *matCellDef="let element; let idx  = index"> {{idx + 1}} </td>
-      </ng-container>
-
-      <!-- Name Column -->
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name</th>
-        <td mat-cell *matCellDef="let element"> {{element?.name}} </td>
-      </ng-container>
+    <div fxLayout="row" style="margin: 10px 0" fxLayoutAlign="center center">
+      <!--      <div>
+              <p>Điện thiêu thụ (Kwh): {{totalEnergy}}</p>
+            </div>
+            <span fxFlex></span>-->
+      <div>
+        <button class="btn" mat-button color="primary" (click)="downloadReportTotal()">Tải báo cáo</button>
+      </div>
+    </div>
 
 
-      <!-- total Column -->
-      <ng-container matColumnDef="total">
-        <th mat-header-cell *matHeaderCellDef> Năng lượng tiêu thụ (Kwh)</th>
-        <td mat-cell *matCellDef="let element"> {{element?.total}} </td>
-      </ng-container>
+    <mat-divider></mat-divider>
 
-      <!-- Weight Column -->
-      <ng-container matColumnDef="price">
-        <th mat-header-cell *matHeaderCellDef> Giá (VND)</th>
-        <td mat-cell *matCellDef="let element"> {{element?.price}} </td>
-      </ng-container>
+    <div *ngIf="energyDatasource.length===0"
+         style="width: 100%;text-align: center; align-items: center;margin: 0; padding: 0;">
+      <p>Không có dữ liệu</p>
+    </div>
 
-      <!-- tool Column -->
-      <ng-container matColumnDef="tool">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-            <mat-icon>download</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="downloadReport()">
-              <mat-icon svgIcon="excel"></mat-icon>
-              <span>Theo ngày</span>
-            </button>
-            <button mat-menu-item (click)="downloadReport()">
-              <mat-icon svgIcon="excel"></mat-icon>
-              <span>Theo tháng</span>
-            </button>
-            <button mat-menu-item (click)="downloadReport()">
-              <mat-icon svgIcon="excel"></mat-icon>
-              <span>Theo năm</span>
-            </button>
-          </mat-menu>
-        </td>
-      </ng-container>
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+    <div *ngIf="energyDatasource.length>0"
+         style="width: 100%; height: 400px; text-align: center; align-items: center;margin: 0; padding: 0;"
+         fxLayout="row" fxLayoutAlign="start start">
+      <div
+        style="width: 50%; height: 100%; text-align: center; align-items: center;margin: 0; padding: 0;">
+        <tb-base-chart chartId="reportChart"
+                       name="Biểu đồ tiêu thụ điện"
+                       [xValues]="xValues"
+                       [yValues]="yValues"></tb-base-chart>
+      </div>
+      <div
+        style="width: 50%; height: 100%; text-align: center; align-items: center;margin: 0; padding: 0;">
+        <tb-base-chart chartId="reportChart1"
+                       name="Biểu đồ điện tiêu thụ thiết bị"
+                       [xValues]="xChartDeviceReport"
+                       [yValues]="yChartDeviceReport">
+        </tb-base-chart>
+      </div>
+    </div>
 
-    <!--
-        <table mat-table [dataSource]="bleEnergyLatest" class="mat-elevation-z8">
+    <mat-divider></mat-divider>
+    <ng-container *ngIf="energyDatasource.length>0">
+      <div fxLayout="row" fxLayoutAlign="start start">
+        <table *ngIf="reportType === ReportTypeEnum.Date"
+               mat-table [dataSource]="energyDatasource" class="mat-elevation-z8">
 
-          <ng-container matColumnDef="no">
-            <th mat-header-cell *matHeaderCellDef> No.</th>
-            <td mat-cell *matCellDef="let element; let idx  = index"> {{idx + 1}} </td>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef> Ngày</th>
+            <td mat-cell *matCellDef="let element"> {{element?.date}} </td>
           </ng-container>
 
-          &lt;!&ndash; Name Column &ndash;&gt;
-          <ng-container matColumnDef="time">
-            <th mat-header-cell *matHeaderCellDef> Name</th>
-            <td mat-cell *matCellDef="let element"> {{element?.name}} </td>
+          <!-- Name Column -->
+          <ng-container matColumnDef="energy">
+            <th mat-header-cell *matHeaderCellDef> Năng lượng tiêu thụ (Kwh)</th>
+            <td mat-cell *matCellDef="let element"> {{element?.energy}} </td>
           </ng-container>
 
-          &lt;!&ndash; Name Column &ndash;&gt;
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef> Name</th>
-            <td mat-cell *matCellDef="let element"> {{element?.name}} </td>
+          <!-- Weight Column -->
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef> Chi phí (VND)</th>
+            <td mat-cell *matCellDef="let element"> {{element?.price}} </td>
           </ng-container>
 
-          &lt;!&ndash; Weight Column &ndash;&gt;
-          <ng-container matColumnDef="lastEnergy">
-            <th mat-header-cell *matHeaderCellDef> Energy</th>
-            <td mat-cell *matCellDef="let element"> {{element?.lastEnergy}} </td>
+          <tr mat-header-row *matHeaderRowDef="displayedEnergyReportColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedEnergyReportColumns;"></tr>
+        </table>
+        <table *ngIf="reportType === ReportTypeEnum.Month"
+               mat-table [dataSource]="energyDatasource" class="mat-elevation-z8">
+
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef> Tháng</th>
+            <td mat-cell *matCellDef="let element"> {{element?.date}} </td>
           </ng-container>
 
-          <tr mat-header-row *matHeaderRowDef="displayedLatestColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedLatestColumns;"></tr>
-        </table>-->
+          <!-- Name Column -->
+          <ng-container matColumnDef="energy">
+            <th mat-header-cell *matHeaderCellDef> Năng lượng tiêu thụ (Kwh)</th>
+            <td mat-cell *matCellDef="let element"> {{element?.energy}} </td>
+          </ng-container>
+
+          <!-- Weight Column -->
+          <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef> Chi phí (VND)</th>
+            <td mat-cell *matCellDef="let element"> {{element?.price}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedEnergyReportColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedEnergyReportColumns;"></tr>
+        </table>
+      </div>
+
+    </ng-container>
+
   </div>
 
 </div>

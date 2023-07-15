@@ -11,6 +11,9 @@ import {
   ComparisonType
 } from '@modules/apollo/widget/smart-dashboard-v2/models/automation/automation.model';
 import {NodeTreeType} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-entity-type.model';
+import {
+  PriceForCalculating
+} from "@modules/apollo/widget/smart-dashboard-v2/component/main-page/body-page/energy-layout/energy-layout.component";
 
 export const defaultCenterLocationOpenStreetMap: MapLocation = {
   lat: 15.892163974623484,
@@ -77,7 +80,7 @@ export interface SchedulerInfo extends DqsmartInfo {
   enable?: boolean;
   hubNodeTreeId?: ApolloNodeTreeId;
   inputScript?: InputScript;
-  outputScript?: OutputScript;
+  outputScript?: Array<OutputScript>;
 }
 
 export interface InputScript {
@@ -114,36 +117,33 @@ export class InputScriptImpl implements InputScript {
 export interface OutputScript {
   toDeviceModel?: ApolloDeviceModel;
   toControlType?: AutoTypeControl;
-  toBleScene?: string;
-  toBleGroup?: string;
-  toBleTarget?: string;
-  toBleValue?: any;
+  toOptionTarget?: any;
+  toTarget?: string;
+  toValue?: any;
 }
 
 export class OutputScriptImpl implements OutputScript {
-  toBleGroup: string = null;
-  toBleScene: string = null;
-  toBleTarget: string = null;
+  toOptionTarget: any = null;
+  toTarget: string = null;
   toControlType: AutoTypeControl = null;
   toDeviceModel: ApolloDeviceModel = null;
-  toBleValue: any = null;
+  toValue: any = null;
 
   constructor(public outputScript: OutputScript) {
-    this.toBleGroup = outputScript?.toBleGroup;
-    this.toBleScene = outputScript?.toBleScene;
+    this.toOptionTarget = outputScript?.toOptionTarget;
+    this.toTarget = outputScript?.toTarget;
     this.toControlType = outputScript?.toControlType;
     this.toDeviceModel = outputScript?.toDeviceModel;
-    this.toBleValue = outputScript?.toBleValue;
+    this.toValue = outputScript?.toValue;
   }
 
   toData(): OutputScript {
     return {
-      toBleGroup: this.toBleGroup,
-      toBleScene: this.toBleScene,
+      toOptionTarget: this.toOptionTarget,
+      toTarget: this.toTarget,
       toControlType: this.toControlType,
       toDeviceModel: this.toDeviceModel,
-      toBleValue: this.toBleValue
-
+      toValue: this.toValue
     };
   }
 }
@@ -154,7 +154,7 @@ export interface AutomationInfo {
   comparison?: ComparisonType;
   hubNodeTreeId?: ApolloNodeTreeId;
   inputScript?: InputScript;
-  outputScript?: OutputScript;
+  outputScript?: Array<OutputScript>;
 }
 
 export interface TbDeviceId extends SchedulerInfo {
@@ -207,7 +207,11 @@ export interface IconInfo extends MapInfo {
 /*export interface NodeTreeInfoBase extends IconInfo {
 }*/
 
-export type NodeTreeInfoBase = HubInfo & IconInfo & GroupInfor & ZigbeeNodeTreeInfoBase & AutomationInfo;
+export interface EnergyConfig {
+  priceForCalculating?: Array<PriceForCalculating>;
+}
+
+export type NodeTreeInfoBase = HubInfo & IconInfo & GroupInfor & ZigbeeNodeTreeInfoBase & AutomationInfo & EnergyConfig;
 
 export interface ZigbeeNodeTreeInfoBase {
   gatewaySource?: ApolloNodeTreeId;
@@ -242,9 +246,10 @@ export class NodeTreeInfoBaseImpl implements NodeTreeInfoBase {
   model: string;
   bleSceneAddress: string;
   inputScript: InputScript;
-  outputScript: OutputScript;
+  outputScript: Array<OutputScript>;
   enable: boolean;
   hubNodeTreeId: ApolloNodeTreeId;
+  priceForCalculating: Array<PriceForCalculating>;
 
   constructor(info: NodeTreeInfoBase) {
     this.bleAppKeys = info?.bleAppKeys;
@@ -285,6 +290,7 @@ export class NodeTreeInfoBaseImpl implements NodeTreeInfoBase {
     this.hostname = info?.hostname;
     this.comparison = info?.comparison;
     this.multiple = info?.multiple;
+    this.priceForCalculating = info?.priceForCalculating;
 
   }
 
@@ -328,6 +334,7 @@ export class NodeTreeInfoBaseImpl implements NodeTreeInfoBase {
       hostname: this.hostname,
       comparison: this.comparison,
       multiple: this.multiple,
+      priceForCalculating: this.priceForCalculating,
     };
   }
 

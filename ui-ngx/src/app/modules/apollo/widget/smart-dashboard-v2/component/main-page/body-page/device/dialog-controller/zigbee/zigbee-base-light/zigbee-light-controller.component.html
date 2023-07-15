@@ -24,10 +24,10 @@
       </div>
       <div fxLayout="row" fxLayoutAlign="center start" style="height: 100%">
         <div>
-          <apollo-color-control (hslDefaultChange)="hslChange($event,element)"
+          <hsl-controller (hslDefaultChange)="hslChange($event,element)"
                                 *ngIf="hasHsl"
                                 [size]="!data.nodeTreeController.apollo.ctx.isMobile?215:150">
-          </apollo-color-control>
+          </hsl-controller>
         </div>
       </div>
     </div>

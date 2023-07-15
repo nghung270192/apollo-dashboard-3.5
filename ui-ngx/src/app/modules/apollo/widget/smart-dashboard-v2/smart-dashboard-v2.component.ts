@@ -37,6 +37,7 @@ export class SmartDashboardV2Component implements OnInit, AfterViewInit {
     /*  const result = PRODUCT_ID.map(obj => `'${obj.pid.toString(16)}':'${obj.pid2Enum}'`);
       console.log(result);*/
 
+
   }
 
   iconInit() {

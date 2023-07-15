@@ -25,198 +25,250 @@
 
 <fieldset>
   <legend>Cấu hình nguồn điều khiển</legend>
-  <ng-container *ngIf="type===NodeTreeType.AUTOMATION">
-    <mat-form-field class="mat-block">
-      <mat-label>Chuẩn thiết bị</mat-label>
-      <mat-select [(ngModel)]="fromDeviceModel"
-                  [formControl]="inputModelFormControl">
-        <mat-option
-          *ngFor="let key of ApolloDeviceArray "
-          [value]="key">{{key}}</mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <ng-container *ngIf="fromDeviceModel===ApolloDeviceModel.ZIGBEE">
-      <tb-zb-node-selection-with-id (closedEvent)="renderZigbeeDeviceFromId(); "
-                                    [(nodeId)]="fromZbNodeId"
-                                    [datasource]="zbNodeSource"
-                                    name="Thiết bị">
-      </tb-zb-node-selection-with-id>
-      <tb-number-input
-        [(text)]="fromZbEndpoint" name="End point">
-      </tb-number-input>
-      <tb-number-input
-        [(text)]="fromZbValue" name="Giá trị">
-      </tb-number-input>
-      <tb-text-input
-        [(text)]="fromZbName" name="Tên">
-      </tb-text-input>
-
-      <tb-comparison-selection [(selection)]="comparisonType">
-
-      </tb-comparison-selection>
-      <div>
-        <fieldset>
-          <legend>Gợi ý.</legend>
-          <div style="color: green">Trạng thái cuối cùng</div>
-          <table>
-            <tr>
-              <td> Address:</td>
-              <td>  {{zbStateParams?.addr}} </td>
-            </tr>
-            <tr>
-              <td> End point:</td>
-              <td>   {{zbStateParams?.ep}} </td>
-            </tr>
-            <tr>
-              <td> Name state:</td>
-              <td> {{zbStateParams?.state?.name}}  </td>
-            </tr>
-            <tr>
-              <td> Value:</td>
-              <td>  {{zbStateParams?.state?.val}} </td>
-            </tr>
-            <tr>
-              <td> Time update:</td>
-              <td>   {{zbTimeUpdate}}   </td>
-            </tr>
-          </table>
-          <div style="text-align: center;align-items: center;">
-            <button (click)="openDialogSelectZigbeeCmd()" style="width: 100px;margin: 10px;">Mở rộng</button>
-            <button (click)="applyZigbeeInput()" style="width: 100px;margin: 10px;">Áp dụng</button>
-          </div>
-        </fieldset>
-
-      </div>
-      <!--        <div style="width: 50%; ">
-                <div>
-                </div>
-                <label> Giá trị mới < Giá trị cài đặt</label>
-
-              </div>-->
-    </ng-container>
-    <ng-container *ngIf="fromDeviceModel===ApolloDeviceModel.BLE_SIG_MESH">
-      Đang phát triển... Vui lòng chọn model khác.
-    </ng-container>
-
-  </ng-container>
-  <ng-container *ngIf="type===NodeTreeType.SCHEDULER">
-    <tb-time-input [(text)]="fromTime">
-
-    </tb-time-input>
-    <tb-weekend-input [(days)]="fromWeekDays">
-    </tb-weekend-input>
-  </ng-container>
-</fieldset>
-
-<fieldset style="margin-top: 10px;">
-  <legend>Cấu hình mục tiêu điều khiển</legend>
-  <div style="width: 100%; align-items: end;">
-    <button mat-flat-button color="primary" (click)="addNewOutputScript()">
-      <mat-label>Thêm</mat-label>
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-    <ng-container matColumnDef="model">
-      <th mat-header-cell *matHeaderCellDef> Model</th>
-      <td mat-cell *matCellDef="let element"> {{element?.toDeviceModel}} </td>
-    </ng-container>
-
-    <!-- Name Column -->
-    <ng-container matColumnDef="control">
-      <th mat-header-cell *matHeaderCellDef> Control</th>
-      <td mat-cell *matCellDef="let element"> {{element?.toControlType}}</td>
-    </ng-container>
-
-    <!-- Weight Column -->
-    <ng-container matColumnDef="target">
-      <th mat-header-cell *matHeaderCellDef> Target</th>
-      <td mat-cell *matCellDef="let element"> {{element?.toBleTarget}} </td>
-    </ng-container>
-
-    <!-- Symbol Column -->
-    <ng-container matColumnDef="value">
-      <th mat-header-cell *matHeaderCellDef> Value</th>
-      <td mat-cell *matCellDef="let element"> {{element?.toBleValue}} </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumnsRenderOutput"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumnsRenderOutput;"></tr>
-  </table>
-
-  <div>
-    <div>
+  <form [formGroup]="inputFormGroup">
+    <ng-container *ngIf="type===NodeTreeType.AUTOMATION">
       <mat-form-field class="mat-block">
-        <mat-label>Model điều khiển</mat-label>
-        <mat-select [(ngModel)]="toDeviceModel"
-                    [formControl]="outputModelFormControl">
+        <mat-label>Chuẩn thiết bị</mat-label>
+        <mat-select formControlName="deviceModel">
           <mat-option
             *ngFor="let key of ApolloDeviceArray "
             [value]="key">{{key}}</mat-option>
         </mat-select>
       </mat-form-field>
+      <ng-container *ngIf="inputFormGroup.get('deviceModel').value===ApolloDeviceModel.ZIGBEE">
+        <!--        <tb-zb-node-selection-with-id (closedEvent)="renderZigbeeDeviceFromIdForOutput(); "
+                                              [(nodeId)]="toZbNodeId"
+                                              [datasource]="zbNodeSource"
+                                              name="Thiết bị">
+                </tb-zb-node-selection-with-id>-->
 
-    </div>
-    <ng-container *ngIf="toDeviceModel===ApolloDeviceModel.ZIGBEE">
-      <div> Đang phát triển... Vui lòng chọn model khác.
-      </div>
+        <mat-form-field class="mat-block">
+          <mat-select formControlName="zigbeeNodeSelected" [compareWith]="compareZbNode">
+            <mat-option *ngFor="let key of zbNodeSource"
+                        [value]="key">{{key?.addr}} - {{key?.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="mat-block">
+          <mat-label>End Point</mat-label>
+          <input matInput type="number" formControlName="zbEndPoint">
+        </mat-form-field>
+
+        <mat-form-field class="mat-block">
+          <mat-label>Name</mat-label>
+          <input matInput type="text" formControlName="zbName">
+        </mat-form-field>
+        <mat-form-field class="mat-block">
+          <mat-label>Value</mat-label>
+          <input matInput type="text" formControlName="zbValue">
+        </mat-form-field>
+
+        <!--        <tb-number-input
+                  [(text)]="fromZbEndpoint" name="End point">
+                </tb-number-input>-->
+
+        <!--        <tb-comparison-selection [(selection)]="comparisonType">
+
+                </tb-comparison-selection>-->
+        <mat-form-field class="mat-block">
+          <mat-label>Biểu thức so sánh</mat-label>
+          <mat-select formControlName="compareType">
+            <mat-option
+              *ngFor="let key of comparisonTypes "
+              [value]="key">{{comparisonTypeLabelMapping[key]}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div style=" width: 100%">
+          <fieldset style=" width: 100%">
+            <legend>Gợi ý.</legend>
+            <div style="color: green">Trạng thái cuối cùng</div>
+            <table style=" width: 100%">
+              <tr>
+                <td> Address:</td>
+                <td>  {{zbStateParams?.addr}} </td>
+              </tr>
+              <tr>
+                <td> End point:</td>
+                <td>   {{zbStateParams?.ep}} </td>
+              </tr>
+              <tr>
+                <td> Name state:</td>
+                <td> {{zbStateParams?.state?.name}}  </td>
+              </tr>
+              <tr>
+                <td> Value:</td>
+                <td>  {{zbStateParams?.state?.val}} </td>
+              </tr>
+              <tr>
+                <td> Time update:</td>
+                <td>   {{zbTimeUpdate}}   </td>
+              </tr>
+            </table>
+            <div style="text-align: center;align-items: center;">
+              <button (click)="openDialogSelectZigbeeCmd()" style="width: 100px;margin: 10px;">Mở rộng</button>
+              <button (click)="applyZigbeeInput()" style="width: 100px;margin: 10px;">Áp dụng</button>
+            </div>
+          </fieldset>
+
+        </div>
+        <!--        <div style="width: 50%; ">
+                  <div>
+                  </div>
+                  <label> Giá trị mới < Giá trị cài đặt</label>
+
+                </div>-->
+      </ng-container>
+      <ng-container *ngIf="inputFormGroup.get('deviceModel').value===ApolloDeviceModel.BLE_SIG_MESH">
+        Đang phát triển... Vui lòng chọn model khác.
+      </ng-container>
+
     </ng-container>
-    <ng-container *ngIf="toDeviceModel===ApolloDeviceModel.BLE_SIG_MESH">
-      <div style=" width: 100%;">
-        <tb-auto-type-control-selection [(selection)]="toControlType"
-                                        name="Kiểu điều khiển">
-        </tb-auto-type-control-selection>
+    <ng-container *ngIf="type===NodeTreeType.SCHEDULER">
+      <tb-time-input [(text)]="fromTime">
+
+      </tb-time-input>
+      <tb-weekend-input [(days)]="fromWeekDays">
+      </tb-weekend-input>
+    </ng-container>
+
+  </form>
+</fieldset>
+
+<fieldset style="margin-top: 10px; width: 100%">
+  <legend>Cấu hình mục tiêu điều khiển</legend>
+  <div style="align-items: center; justify-content: center;text-align: center;">
+    <label>Danh sách lệnh đã thêm</label>
+    <div style="width: 100%;">
+      <table *ngIf="outputScriptDataSource.length>0" style="width: 100%;">
+        <tr>
+          <th *ngFor="let header of ['Chuẩn', 'Chế độ điều khiển', 'Mục tiêu', 'Giá trị', '']">
+            {{header}}
+          </th>
+        </tr>
+        <tr *ngFor="let data of outputScriptDataSource; let idx = index">
+          <td>
+            {{data?.toDeviceModel}}
+          </td>
+          <td>
+            {{data?.toControlType}}
+          </td>
+          <td>
+            {{data?.toOptionTarget}}
+            {{data?.toTarget}}
+          </td>
+          <td>
+            {{data?.toValue}}
+          </td>
+          <td>
+            <mat-icon style="color: red" (click)="removeOutputScript(idx)">delete</mat-icon>
+          </td>
+        </tr>
+      </table>
+      <h5 *ngIf="outputScriptDataSource.length===0">Chưa có lệnh điều khiển</h5>
+    </div>
+    <mat-divider></mat-divider>
+    <form [formGroup]="outputFormGroup">
+      <div>
+        <!--Selected device if zigbee-->
+        <mat-form-field class="mat-block">
+          <mat-label>Model điều khiển</mat-label>
+          <mat-select formControlName="deviceModel">
+            <mat-option
+              *ngFor="let key of ApolloDeviceArray "
+              [value]="key">{{key}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
       </div>
+      <!--      <ng-container *ngIf="toDeviceModel===ApolloDeviceModel.ZIGBEE">
+              <div> Đang phát triển... Vui lòng chọn model khác.
+              </div>
+            </ng-container>-->
 
-      <div>Mục tiêu điều khiển</div>
 
-      <ng-container [ngSwitch]="toControlType">
+      <!--chon device zigbee if-->
+      <ng-container *ngIf="outputFormGroup.get('deviceModel').value===ApolloDeviceModel.ZIGBEE">
+        <mat-form-field class="mat-block">
+          <mat-select formControlName="target">
+            <mat-option *ngFor="let key of zbNodeSource"
+                        [value]="key.addr">{{key?.addr}} - {{key?.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="mat-block">
+          <mat-label>End Point</mat-label>
+          <input matInput type="number" formControlName="zbEndPoint">
+        </mat-form-field>
+      </ng-container>
+
+      <mat-form-field class="mat-block">
+        <mat-label>Chế độ điều khiển</mat-label>
+        <mat-select formControlName="modeControl">
+          <mat-option
+            *ngFor="let key of typeControlDatasource "
+            [value]="key">{{key}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="mat-block"
+                      *ngIf="outputFormGroup.get('deviceModel').value===ApolloDeviceModel.BLE_SIG_MESH">
+        <mat-label>Mục tiêu điều khiển</mat-label>
+        <mat-select formControlName="target">
+          <mat-option
+            *ngFor="let key of bleGroupSource"
+            [value]="key.address">{{key?.address}} - {{key?.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <ng-container [ngSwitch]="outputFormGroup.get('modeControl').value">
         <ng-container *ngSwitchCase="AutoTypeControl.ONOFF">
-          <ble-group-selection-input
-
-            [(groups)]="toBleGroup"
-            [datasource]="bleGroupSource"
-            name="Target Group">
-          </ble-group-selection-input>
-          <!--        <tb-number-input
-                    [(text)]="toBleValue" name="State (0/1)">
-                  </tb-number-input>-->
           <mat-form-field class="mat-block">
-            <mat-label>State (ON/OFF)</mat-label>
-            <mat-select [(ngModel)]="toBleValue">
+            <mat-label>Trạng thái (1 - ON/ 0 - OFF)</mat-label>
+            <mat-select formControlName="value">
               <mat-option
                 *ngFor="let key of [{value:1, name:'ON'},{value:0, name:'OFF'}] "
                 [value]="key.value">{{key.name}}</mat-option>
             </mat-select>
           </mat-form-field>
-
         </ng-container>
 
         <ng-container *ngSwitchCase="AutoTypeControl.LIGHTNESS">
-          <ble-group-selection-input
-            [(groups)]="toBleGroup"
-            [datasource]="bleGroupSource"
-            name="Target Group">
-          </ble-group-selection-input>
-          <tb-number-input
-            [(text)]="toBleValue" name="Lightness (0-100)">
-          </tb-number-input>
+          <mat-form-field class="mat-block">
+            <mat-label>Độ sáng (0-100)%</mat-label>
+            <input matInput type="number" formControlName="value">
+          </mat-form-field>
         </ng-container>
-        <ng-container *ngSwitchCase="AutoTypeControl.SCENE">
-          <ble-scene-selection-input
-            [(selection)]="toBleScene"
-            [datasource]="bleSceneSource"
-            name="Target Scene">
-          </ble-scene-selection-input>
 
-          <ble-group-selection-input
-            [(groups)]="toBleGroup"
-            [datasource]="bleGroupSource" name="Group Of Scene">
-          </ble-group-selection-input>
+        <ng-container *ngSwitchCase="AutoTypeControl.SCENE">
+          <ng-container *ngIf="outputFormGroup.get('deviceModel').value===ApolloDeviceModel.BLE_SIG_MESH">
+            <!--
+                          <ble-scene-selection-input
+                            [(selection)]="toBleScene"
+                            [datasource]="bleSceneSource"
+                            name="Ngữ cảnh">
+                          </ble-scene-selection-input>
+            -->
+            <mat-form-field class="mat-block">
+              <mat-label>Ngữ cảnh</mat-label>
+              <mat-select formControlName="value">
+                <mat-option
+                  *ngFor="let key of bleSceneSource "
+                  [value]="key.number">{{key?.number}} - {{key?.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+          <ng-container *ngIf="outputFormGroup.get('deviceModel').value===ApolloDeviceModel.ZIGBEE">
+            <p>Chưa hỗ trợ ngữ cảnh. Vui lòng quay lại sau</p>
+          </ng-container>
         </ng-container>
       </ng-container>
-    </ng-container>
+    </form>
+    <div style="width: 100%; align-items: end; justify-content: center; margin: 5px 0;">
+      <button mat-raised-button color="primary" (click)="addNewOutputScript()">
+        Thêm lệnh vào danh sách
+      </button>
+    </div>
   </div>
 </fieldset>

@@ -127,8 +127,7 @@ export class EnergySensorManagementComponent
           const todayData = new EnergySensorManagement(value);
           this.firstDataOfToday = todayData.getFirstData();
           this.lastDataOfToday = todayData.getLastData();
-          console.log(this.firstDataOfToday, this.lastDataOfToday);
-          if (this.firstDataOfToday && this.lastDataOfToday) {
+           if (this.firstDataOfToday && this.lastDataOfToday) {
             this.convertData(this.lastDataOfToday);
             /*this.energyParameters.current.value = this.lastDataOfToday.data.current;
             this.energyParameters.power.value = this.lastDataOfToday.data.power;
@@ -145,7 +144,7 @@ export class EnergySensorManagementComponent
           const lastData = this.energy.getLastData();
           this.convertData(lastData);
 
-          console.log(lastData);
+
         }
         this.cd.detectChanges();
       });
@@ -175,7 +174,7 @@ export class EnergySensorManagementComponent
     this.xValues = [];
     this.yValues = [];
 
-    console.log(this.dataOfMonth);
+
     this.dataOfMonth.dataDaily.forEach(value => {
       this.xValues.push(new Date(value.date).getDate());
       this.yValues.push(value.energy);

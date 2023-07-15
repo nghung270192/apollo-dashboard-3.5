@@ -2,20 +2,22 @@ import {NodeTree} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-
 import {ApolloWidgetContext} from '@modules/apollo/widget/smart-dashboard-v2/models/apollo-widget-context.model';
 import {ChangeDetectorRef} from '@angular/core';
 import {MatDialog, MatDialogConfig} from '@angular/material/dialog';
-import {BaseDqsmartController} from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/device-type/base-dqsmart-controller';
+import {
+  BaseDqsmartController
+} from '@modules/apollo/widget/smart-dashboard-v2/models/dqsmart/device-type/base-dqsmart-controller';
 import {Observable} from 'rxjs';
 import {
   DeviceControllerCallbackFunction,
   EntityState
 } from '@modules/apollo/widget/smart-dashboard-v2/models/device/device-controller.model';
- import {HassEntity} from 'home-assistant-js-websocket';
+import {HassEntity} from 'home-assistant-js-websocket';
 
 export class DqsmartLightController extends BaseDqsmartController {
 
   constructor(nodeTree: NodeTree,
               apollo: ApolloWidgetContext,
-               cd: ChangeDetectorRef,
-               dialog: MatDialog,
+              cd: ChangeDetectorRef,
+              dialog: MatDialog,
               callback?: DeviceControllerCallbackFunction) {
     super(nodeTree, apollo, cd, dialog, callback);
   }
@@ -31,8 +33,9 @@ export class DqsmartLightController extends BaseDqsmartController {
   renderState(): EntityState {
     return super.renderState();
   }
+
   updateNewState(hassEntity: HassEntity | null): void {
-   }
+  }
 
 
 }

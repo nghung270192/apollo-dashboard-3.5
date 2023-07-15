@@ -75,8 +75,7 @@ export class ApolloHubManagementComponent implements OnInit, AfterViewInit {
                 }
               )
             ).subscribe(res => {
-              console.log(res);
-              this.dataSource = res;
+               this.dataSource = res;
               this.cd.detectChanges();
             });
 
@@ -151,18 +150,21 @@ export class ApolloHubManagementComponent implements OnInit, AfterViewInit {
 
   setting(device: Device) {
     const dialogConfig: MatDialogConfig = {
-        disableClose: false,
-        panelClass: ['tb-dialog', 'tb-fullscreen-dialog'],
-        data: {
-          device,
-          ctx: this.ctx
-        }
+      disableClose: false,
+      panelClass: ['tb-dialog', 'tb-fullscreen-dialog'],
+      data: {
+        device,
+        ctx: this.ctx
       }
-    ;
+    };
     this.dialog.open(HubSettingComponent, dialogConfig).afterClosed().subscribe(res => {
       if (res && res?.data) {
         // this.ngAfterViewInit();
       }
     });
+  }
+
+  updateFirmware(device: Device) {
+    this.hubService.updateFirmware(device.id.id).subscribe();
   }
 }

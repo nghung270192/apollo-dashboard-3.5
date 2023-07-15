@@ -208,6 +208,7 @@ export class MainPageComponent extends PageComponent implements OnInit, AfterVie
 
   init(): Observable<any> {
 
+    console.log("init again");
     const initHub = new Observable<any>(subscriber => {
       this.apollo.apolloNodeTreeService.getByApolloTree(this.assetId, this.pageLink, 'HUB', '').subscribe(
         res => {

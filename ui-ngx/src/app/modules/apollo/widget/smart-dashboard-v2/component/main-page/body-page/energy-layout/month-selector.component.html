@@ -1,23 +1,27 @@
-<mat-form-field>
-  <mat-label>Tháng bắt đầu</mat-label>
-  <input matInput [matDatepicker]="dp" [formControl]="dateStart">
-  <mat-hint>MM/YYYY</mat-hint>
-  <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
-  <mat-datepicker #dp
-                  startView="multi-year"
-                  (monthSelected)="setStartMonthAndYear($event, dp)"
-                  panelClass="example-month-picker">
-  </mat-datepicker>
-</mat-form-field>
+<div style="width: 100%;">
+  <mat-form-field class="mat-block">
+    <mat-label>Tháng bắt đầu</mat-label>
+    <input matInput [matDatepicker]="dp" [formControl]="dateStart">
+    <mat-hint>MM/YYYY</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+    <mat-datepicker #dp
+                    startView="multi-year"
+                    (monthSelected)="setStartMonthAndYear($event, dp)"
+                    panelClass="example-month-picker">
+    </mat-datepicker>
+  </mat-form-field>
 
-<mat-form-field>
-  <mat-label>Tháng kết thúc</mat-label>
-  <input matInput [matDatepicker]="dp1" [formControl]="dateEnd">
-  <mat-hint>MM/YYYY</mat-hint>
-  <mat-datepicker-toggle matIconSuffix [for]="dp1"></mat-datepicker-toggle>
-  <mat-datepicker #dp1
-                  startView="multi-year"
-                  (monthSelected)="setEndMonthAndYear($event, dp1)"
-                  panelClass="example-month-picker">
-  </mat-datepicker>
-</mat-form-field>
+  <mat-form-field class="mat-block">
+    <mat-label>Tháng kết thúc</mat-label>
+    <input matInput [matDatepicker]="dp1" [formControl]="dateEnd">
+    <mat-hint>MM/YYYY</mat-hint>
+    <mat-datepicker-toggle matIconSuffix [for]="dp1"></mat-datepicker-toggle>
+    <mat-datepicker #dp1
+                    startView="multi-year"
+                    (monthSelected)="setEndMonthAndYear($event, dp1)"
+                    panelClass="example-month-picker">
+    </mat-datepicker>
+  </mat-form-field>
+</div>
+
+

@@ -15,10 +15,11 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {SmartDashboardV1Module} from '@modules/apollo/widget/smart-dashboard-v1/smart-dashboard-v1.module';
+// import {SmartDashboardV1Module} from '@modules/apollo/widget/smart-dashboard-v1/smart-dashboard-v1.module';
 import {ApolloHubManagementModule} from '@modules/apollo/widget/apollo-hub-management/apollo-hub-management.module';
 import {SmartDashboardV2Module} from '@modules/apollo/widget/smart-dashboard-v2/smart-dashboard-v2.module';
-import {LotsAvailableV1Module} from '@modules/apollo/widget/lots-available-v1/lots-available-v1.module';
+
+// import {LotsAvailableV1Module} from '@modules/apollo/widget/lots-available-v1/lots-available-v1.module';
 
 @NgModule({
   declarations: [],
@@ -26,18 +27,18 @@ import {LotsAvailableV1Module} from '@modules/apollo/widget/lots-available-v1/lo
     CommonModule,
     // BleMeshV1Module,
     // BleMeshV2Module,
-    SmartDashboardV1Module,
+    // SmartDashboardV1Module,
     ApolloHubManagementModule,
     SmartDashboardV2Module,
-    LotsAvailableV1Module,
+    // LotsAvailableV1Module,
   ],
   exports: [
     // BleMeshV1Module,
     // BleMeshV2Module,
-    SmartDashboardV1Module,
+    // SmartDashboardV1Module,
     ApolloHubManagementModule,
     SmartDashboardV2Module,
-    LotsAvailableV1Module,
+    // LotsAvailableV1Module,
   ],
 })
 export class ApolloWidgetModule {

@@ -1,19 +1,21 @@
-<div (click)="clickNodeTree($event,nodeTrees)" class="gateway-icon" fxLayout="column"
+<div (click)="clickNodeTree($event,nodeTree)" class="gateway-icon" fxLayout="column"
      fxLayoutAlign="center center">
 
   <div>
-    <mat-icon style="width: 50px;height: 50px"
+    <mat-icon style="width: 50px;height: 50px" [style.color]="isOnline?'green':'black'"
+              [matTooltip]="isOnline ? 'Online' : 'Offline'"
+              matTooltipPosition="above"
               svgIcon="gateway_v1">
 
     </mat-icon>
   </div>
-  <div>  {{nodeTrees?.name}} </div>
+  <div>  {{nodeTree?.name}} </div>
 
   <div *ngIf="isEdited" fxLayout="row" fxLayoutAlign="end center" style="width: 100%;">
-    <tb-edit-entity hasSetting="true"  (settingEvent)="settingNodeTree($event,nodeTrees)"
+    <tb-edit-entity hasSetting="true" (settingEvent)="settingNodeTree($event,nodeTree)"
                     [(selection)]="selection"
                     [apollo]="apollo"
-                    [nodeTree]="nodeTrees">
+                    [nodeTree]="nodeTree">
 
     </tb-edit-entity>
     <!--    <mat-icon (click)="removeNodeTree($event,nodeTrees)" matTooltip="Xóa"
